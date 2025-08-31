@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Clone - Sign In</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'facebook-blue': '#1877f2',
+                        'facebook-green': '#42b883',
+                        'facebook-light-blue': '#e7f3ff',
+                        'facebook-gray': '#f0f2f5',
+                        'facebook-dark-gray': '#65676b',
+                        'facebook-border': '#dddfe2'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .facebook-shadow {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+        }
+
+        .facebook-button-shadow {
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .15);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-facebook-gray min-h-screen">
+<!-- Sign In Page -->
+<div class="min-h-screen">
+    <!-- Header -->
+    <div class="bg-white border-b border-facebook-border">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
+            <div class="text-2xl font-bold text-facebook-blue">facebook</div>
+            <div>
+                <a th:href="@{/facebook/auth/signUp}" class="text-facebook-blue hover:underline font-medium">
+                    Create new account
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex items-center justify-center min-h-screen -mt-16 px-4">
+        <div class="max-w-6xl w-full grid lg:grid-cols-2 gap-20 items-center">
+            <!-- Left -->
+            <div class="text-center lg:text-left">
+                <h1 class="text-6xl font-bold text-facebook-blue mb-6">facebook</h1>
+                <p class="text-2xl text-gray-600 max-w-lg">
+                    Connect with friends and the world around you on Facebook.
+                </p>
+            </div>
+
+            <!-- Right - Login Form -->
+            <div class="max-w-md mx-auto lg:mx-0">
+                <div class="bg-white rounded-lg facebook-shadow p-6">
+                    <form th:action="@{/process-signIn}" method="post" class="space-y-4">
+                        <input
+                                type="email"
+                                name="username"
+                                placeholder="Email or phone number"
+                                class="w-full px-4 py-3 border border-facebook-border rounded-md text-lg focus:border-facebook-blue transition-colors"
+                                required
+                        >
+                        <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                class="w-full px-4 py-3 border border-facebook-border rounded-md text-lg focus:border-facebook-blue transition-colors"
+                                required
+                        >
+                        <button
+                                type="submit"
+                                class="w-full bg-facebook-blue hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-md text-lg facebook-button-shadow transition-colors"
+                        >
+                            Log In
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <a href="#" class="text-facebook-blue hover:underline text-sm">
+                            Forgotten password?
+                        </a>
+                    </div>
+
+                    <hr class="my-6 border-facebook-border">
+
+                    <div class="text-center">
+                        <a th:href="@{/facebook/auth/signUp}"
+                           class="inline-block bg-facebook-green hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md facebook-button-shadow transition-colors">
+                            Create new account
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-center mt-6">
+                    <p class="text-sm text-facebook-dark-gray">
+                        <a href="#" class="font-bold hover:underline">Create a Page</a> for a celebrity, brand or business.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-white border-t border-facebook-border mt-auto">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 text-sm text-facebook-dark-gray">
+            <div class="space-y-2">
+                <a href="#" class="block hover:underline">English (US)</a>
+                <a href="#" class="block hover:underline">Español</a>
+                <a href="#" class="block hover:underline">Français (France)</a>
+            </div>
+            <div class="space-y-2">
+                <a href="#" class="block hover:underline">中文(简体)</a>
+                <a href="#" class="block hover:underline">العربية</a>
+                <a href="#" class="block hover:underline">Português (Brasil)</a>
+            </div>
+            <div class="space-y-2">
+                <a href="#" class="block hover:underline">Italiano</a>
+                <a href="#" class="block hover:underline">한국어</a>
+                <a href="#" class="block hover:underline">Deutsch</a>
+            </div>
+            <div class="space-y-2">
+                <a href="#" class="block hover:underline">हिन्दी</a>
+                <a href="#" class="block hover:underline">日本語</a>
+                <a th:href="@{/facebook/auth/signUp}" class="block hover:underline">Sign Up</a>
+            </div>
+            <div class="space-y-2">
+                <a th:href="@{/facebook/auth/signIn}" class="block hover:underline">Log In</a>
+                <a href="#" class="block hover:underline">Messenger</a>
+                <a href="#" class="block hover:underline">Facebook Lite</a>
+            </div>
+            <div class="space-y-2">
+                <a href="#" class="block hover:underline">Watch</a>
+                <a href="#" class="block hover:underline">Places</a>
+                <a href="#" class="block hover:underline">Games</a>
+            </div>
+            <div class="space-y-2">
+                <a href="#" class="block hover:underline">Marketplace</a>
+                <a href="#" class="block hover:underline">Facebook Pay</a>
+                <a href="#" class="block hover:underline">Oculus</a>
+            </div>
+            <div class="space-y-2">
+                <a href="#" class="block hover:underline">Portal</a>
+                <a href="#" class="block hover:underline">Instagram</a>
+                <a href="#" class="block hover:underline">Bulletin</a>
+            </div>
+        </div>
+
+        <hr class="my-6 border-facebook-border">
+
+        <div class="flex flex-wrap gap-4 text-xs text-facebook-dark-gray">
+            <a href="#" class="hover:underline">Privacy</a>
+            <a href="#" class="hover:underline">Terms</a>
+            <a href="#" class="hover:underline">Advertising</a>
+            <a href="#" class="hover:underline">Ad Choices</a>
+            <a href="#" class="hover:underline">Cookies</a>
+            <a href="#" class="hover:underline">More</a>
+            <span class="ml-auto">Meta © 2025</span>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
