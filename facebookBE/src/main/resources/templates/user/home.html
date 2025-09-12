@@ -1,23 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"  lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediaBook - Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" href="/images/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>MediaBook</title>
 </head>
-<body class="bg-gray-100" th:object="${user}" >
-
-<!-- Navbar -->
-<nav class="flex justify-between items-center bg-white px-6 py-3 shadow sticky top-0 z-50">
-    <!-- Left -->
-    <div class="flex items-center space-x-3">
-        <img src="images/logo.png" alt="Logo" class="w-10 h-10">
-        <input type="text" placeholder="Search Mediabook.." class="px-4 py-2 rounded-full bg-gray-100 focus:outline-none">
+<body class="bg-gray-100 font-sans">
+<nav class="flex items-center justify-between bg-white px-6 py-3 shadow">
+    <div class="flex items-center space-x-4">
+        <img th:src="@{/images/logo.png}" src="/images/logo.png" alt="Logo" class="h-10 w-10 rounded-full">
+        <input type="text" placeholder="Search Mediabook.." class="border rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400">
     </div>
-
-    <!-- Middle -->
-    <div class="flex space-x-8">
+    <div class="flex space-x-6">
         <a href="#" class="text-blue-600">
             <i class="fa fa-home text-2xl"></i>
         </a>
@@ -31,131 +32,338 @@
             <i class="fa fa-users text-2xl"></i>
         </a>
     </div>
-
-    <!-- Right -->
     <div class="flex items-center space-x-4">
-        <div class="w-10 h-10 rounded-full bg-gray-300"></div>
-        <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-            <i class="fa fa-bell"></i>
+        <span>
+            <img th:src="@{/images/default-avatar.svg}"
+                 src="/images/default-avatar.svg"
+                 alt="Profile" class="h-10 w-10 rounded-full object-cover">
+        </span>
+        <a href="#" class="text-gray-600 hover:text-blue-600">
+            <i class="fa fa-bell text-xl"></i>
         </a>
-        <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-            <i class="fas fa-ellipsis-h"></i>
+        <a href="#" class="text-gray-600 hover:text-blue-600">
+            <i class="fas fa-ellipsis-h text-xl"></i>
         </a>
     </div>
 </nav>
 
-<!-- Main Layout -->
-<div class="flex max-w-7xl mx-auto mt-4 space-x-4 px-4">
+<div class="container mx-auto flex mt-6 space-x-6">
     <!-- Left Panel -->
-    <aside class="w-64 bg-white p-4 rounded-lg shadow space-y-4 sticky top-20">
+    <div class="w-1/4 bg-white rounded-lg shadow p-4">
         <ul class="space-y-3">
-            <li class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-2 rounded">
-                <div class="w-10 h-10 rounded-full bg-gray-300"></div>
-                <p>
-                    <span th:text="${user.getFirstName()}"></span>
-                    <span th:text="${user.getLastName()}"></span>
-                </p>
+            <li class="flex items-center space-x-3">
+                <span>
+                    <img th:src="@{/images/default-avatar.svg}"
+                         src="/images/default-avatar.svg"
+                         alt="Profile" class="h-10 w-10 rounded-full object-cover">
+                </span>
+                <p th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
             </li>
-            <li class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-2 rounded">
-                <i class="fa fa-user-friends text-blue-500"></i>
-                <span>Friends</span>
-            </li>
-            <li class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-2 rounded">
-                <i class="fa fa-play-circle text-purple-500"></i>
-                <span>Videos</span>
-            </li>
-            <li class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-2 rounded">
-                <i class="fa fa-flag text-red-500"></i>
-                <span>Pages</span>
-            </li>
-            <li class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-2 rounded">
-                <i class="fa fa-users text-green-500"></i>
-                <span>Groups</span>
-            </li>
+            <li class="flex items-center space-x-3"><i class="fa fa-user-friends"></i><p>Friends</p></li>
+            <li class="flex items-center space-x-3"><i class="fa fa-play-circle"></i><p>Videos</p></li>
+            <li class="flex items-center space-x-3"><i class="fa fa-flag"></i><p>Pages</p></li>
+            <li class="flex items-center space-x-3"><i class="fa fa-users"></i><p>Groups</p></li>
+            <li class="flex items-center space-x-3"><i class="fa fa-bookmark"></i><p>Bookmark</p></li>
+            <li class="flex items-center space-x-3"><i class="fab fa-facebook-messenger"></i><p>Inbox</p></li>
+            <li class="flex items-center space-x-3"><i class="fas fa-calendar-week"></i><p>Events</p></li>
+            <li class="flex items-center space-x-3"><i class="fa fa-bullhorn"></i><p>Ads</p></li>
+            <li class="flex items-center space-x-3"><i class="fas fa-hands-helping"></i><p>Offers</p></li>
+            <li class="flex items-center space-x-3"><i class="fas fa-briefcase"></i><p>Jobs</p></li>
+            <li class="flex items-center space-x-3"><i class="fa fa-star"></i><p>Favourites</p></li>
         </ul>
-        <div class="flex flex-col space-y-1 text-sm text-gray-500">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Advance</a>
-            <a href="#">More</a>
+        <div class="mt-6 flex flex-wrap gap-2 text-xs text-gray-500">
+            <a href="#" class="hover:underline">Privacy</a>
+            <a href="#" class="hover:underline">Terms</a>
+            <a href="#" class="hover:underline">Advance</a>
+            <a href="#" class="hover:underline">More</a>
         </div>
-    </aside>
+    </div>
 
     <!-- Middle Panel -->
-    <main class="flex-1 space-y-4">
-        <!-- Stories -->
-        <div class="flex space-x-3 overflow-x-auto p-2">
-
-            <!-- Add more stories similarly -->
+    <div class="w-2/4 space-y-6">
+        <!-- Story Section -->
+        <div class="flex space-x-3">
+            <!-- Create Story -->
+            <div class="flex flex-col items-center bg-white rounded-lg p-2 shadow w-24">
+                <div class="relative">
+                    <img th:src="@{/images/default-avatar.svg}"
+                         src="/images/default-avatar.svg"
+                         alt="Profile pic" class="h-16 w-16 rounded-full border-2 border-blue-500">
+                    <span class="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-1">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                </div>
+                <span class="mt-2 text-xs font-semibold">Create Story</span>
+            </div>
+            <!-- Stories mẫu test -->
+            <div class="flex flex-col items-center bg-white rounded-lg p-2 shadow w-24">
+                <img th:src="@{/images/model.jpg}" src="/images/model.jpg" alt="Story" class="h-16 w-16 rounded-lg">
+                <div class="relative -mt-6 mb-2">
+                    <img th:src="@{/images/girl.jpg}" src="/images/girl.jpg" alt="" class="h-6 w-6 rounded-full border-2 border-white">
+                </div>
+                <p class="text-xs font-semibold">Anuska Sharma</p>
+            </div>
+            <div class="flex flex-col items-center bg-white rounded-lg p-2 shadow w-24">
+                <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" alt="Story" class="h-16 w-16 rounded-lg">
+                <div class="relative -mt-6 mb-2">
+                    <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" alt="" class="h-6 w-6 rounded-full border-2 border-white">
+                </div>
+                <p class="text-xs font-semibold">Gaurav Gall</p>
+            </div>
+            <div class="flex flex-col items-center bg-white rounded-lg p-2 shadow w-24">
+                <img th:src="@{/images/mountains.jpg}" src="/images/mountains.jpg" alt="Story" class="h-16 w-16 rounded-lg">
+                <div class="relative -mt-6 mb-2">
+                    <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" alt="" class="h-6 w-6 rounded-full border-2 border-white">
+                </div>
+                <p class="text-xs font-semibold">Priyank Saksena</p>
+            </div>
+            <div class="flex flex-col items-center bg-white rounded-lg p-2 shadow w-24">
+                <img th:src="@{/images/shoes.jpg}" src="/images/shoes.jpg" alt="Story" class="h-16 w-16 rounded-lg">
+                <div class="relative -mt-6 mb-2">
+                    <img th:src="@{/images/model.jpg}" src="/images/model.jpg" alt="" class="h-6 w-6 rounded-full border-2 border-white">
+                </div>
+                <p class="text-xs font-semibold">Pragati Adhikari</p>
+            </div>
         </div>
 
-        <!-- Posts -->
-        <div class="space-y-4">
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-10 h-10 rounded-full bg-gray-300"></div>
+        <!-- Create Post -->
+        <!--        <div class="bg-white rounded-lg shadow p-4">-->
+        <!--            <form th:action="@{/facebook/status/post}" method="post">-->
+        <!--                <div class="flex items-center space-x-3 mb-3">-->
+        <!--                    <div class="h-10 w-10 rounded-full overflow-hidden">-->
+        <!--                        <img th:src="@{/images/default-avatar.svg}" alt="">-->
+        <!--                    </div>-->
+        <!--                    <input type="text" name="content"-->
+        <!--                           th:placeholder="'What\'s on your mind, ' + ${user.firstName} + ' ?'"-->
+        <!--                           class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">-->
+        <!--                </div>-->
+        <!--                <div class="flex justify-between mt-2">-->
+        <!--                    <input type="text" name="picture" placeholder="Image URL (optional)"-->
+        <!--                           class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 mr-2">-->
+        <!--                    <button type="submit"-->
+        <!--                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">-->
+        <!--                        Post-->
+        <!--                    </button>-->
+        <!--                </div>-->
+        <!--            </form>-->
+        <!--        </div>-->
+        <!-- Create Post Box -->
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center space-x-3 cursor-pointer"
+                 onclick="openCreatePostModal()">
+                <div class="h-10 w-10 rounded-full overflow-hidden">
+                    <img th:src="@{/images/default-avatar.svg}" alt="">
+                </div>
+                <div class="flex-1 bg-[#f0f2f5] rounded-full px-3 py-2 text-gray-600 hover:bg-gray-200">
+            <span th:text="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'">
+                Bạn đang nghĩ gì thế?
+            </span>
+                </div>
+            </div>
+            <!-- Action bar dưới -->
+            <div class="flex justify-around mt-3 border-t pt-2 text-sm text-gray-600">
+                <div class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
+                    <i class="fas fa-video text-red-500"></i><span>Video trực tiếp</span>
+                </div>
+                <div class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
+                    <i class="fas fa-image text-green-500"></i><span>Ảnh/video</span>
+                </div>
+                <div class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
+                    <i class="far fa-smile text-yellow-500"></i><span>Cảm xúc/hoạt động</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Create Post -->
+        <div id="createPostModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
+            <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
+                <!-- Header -->
+                <div class="flex justify-between items-center border-b p-3">
+                    <div class="w-6"></div>
+                    <h2 class="text-lg font-semibold">Tạo bài viết</h2>
+                    <button onclick="closeCreatePostModal()" class="text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+                </div>
+
+                <!-- Body -->
+                <form th:action="@{/facebook/status/post}" method="post" enctype="multipart/form-data" class="p-4">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="h-10 w-10 rounded-full overflow-hidden">
+                            <img th:src="@{/images/default-avatar.svg}" alt="">
+                        </div>
+                        <div>
+                            <p class="font-semibold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
+                            <select name="privacy"
+                                    class="text-xs border rounded px-2 py-1 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-400 bg-[#f0f2f5]">
+                                <option value="public">🌍 Công khai</option>
+                                <option value="friends">👥 Bạn bè</option>
+                                <option value="private">🔒 Chỉ mình tôi</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Nội dung -->
+                    <textarea name="content" rows="4"
+                              th:placeholder="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'"
+                              class="w-full bg-[#f0f2f5] border-none rounded-lg p-2 focus:outline-none resize-none text-lg"></textarea>
+
+                    <!-- Upload ảnh -->
+                    <div class="mt-3 border rounded-lg p-3 cursor-pointer hover:bg-gray-50 bg-[#f0f2f5]">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <i class="fas fa-image text-green-500"></i>
+                            <span class="text-sm">Thêm ảnh/video</span>
+                            <input type="file" name="pictureFile" accept="image/*" class="hidden">
+                        </label>
+                    </div>
+
+                    <!-- Nút đăng -->
+                    <button type="submit"
+                            class="w-full bg-blue-500 text-white py-2 mt-3 rounded-lg hover:bg-blue-600">
+                        Đăng
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function openCreatePostModal() {
+                document.getElementById("createPostModal").classList.remove("hidden");
+                document.getElementById("createPostModal").classList.add("flex");
+            }
+            function closeCreatePostModal() {
+                document.getElementById("createPostModal").classList.add("hidden");
+                document.getElementById("createPostModal").classList.remove("flex");
+            }
+        </script>
+
+
+
+        <!-- hiển thị post -->
+        <div th:each="status : ${statuses}" class="bg-white rounded-lg shadow p-4 mt-4">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-3">
+                    <div class="h-10 w-10 rounded-full overflow-hidden">
+                        <img th:src="@{/images/default-avatar.svg}" alt="">
+                    </div>
+                    <div>
+                        <p class="font-semibold" th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">User Name</p>
+                        <span class="text-xs text-gray-500"
+                              th:text="${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')}">Just now</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2 text-gray-800" th:text="${status.content}">Post content here</div>
+            <div th:if="${status.picture}">
+                <img th:src="${status.picture}" alt="Post Image" class="mt-2 rounded-lg">
+            </div>
+            <div class="flex justify-between text-gray-500 text-sm mt-2">
+                <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+                    <i class="far fa-thumbs-up"></i><span>Like</span>
+                </div>
+                <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+                    <i class="far fa-comment"></i><span>Comment</span>
+                </div>
+                <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+                    <i class="fa fa-share"></i><span>Share</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post mẫu test -->
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-3">
+                    <div class="h-10 w-10 rounded-full overflow-hidden">
+                        <img th:src="@{/images/girl.jpg}" src="/images/girl.jpg" alt="">
+                    </div>
                     <div>
                         <p class="font-semibold">Anuska Sharma</p>
-                        <span class="text-gray-500 text-xs">12 hrs ago</span>
+                        <span class="text-xs text-gray-500">12 hrs ago</span>
                     </div>
                 </div>
-                <p>Roses are red <br> Violets are blue <br> I'm ugly & you are too 😏</p>
+                <i class="fas fa-ellipsis-h text-gray-400"></i>
             </div>
-
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-10 h-10 rounded-full bg-gray-300"></div>
-                    <div>
-                        <p class="font-semibold">Ramesh GC</p>
-                        <span class="text-gray-500 text-xs">2 days ago</span>
-                    </div>
-                </div>
-                <p>Mountains are so cool</p>
-                <img src="images/mountains.jpg" alt="" class="mt-2 rounded-lg">
+            <div class="mb-2 text-gray-800">
+                Roses are red <br>
+                Violets are blue <br>
+                I'm ugly & you are too😏
             </div>
-
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-10 h-10 rounded-full bg-gray-300"></div>
-                    <div>
-                        <p class="font-semibold">Priyank Saksena</p>
-                        <span class="text-gray-500 text-xs">1 week ago</span>
-                    </div>
+            <div class="flex justify-between text-gray-500 text-sm mt-2">
+                <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+                    <i class="far fa-thumbs-up"></i><span>Like</span>
                 </div>
-                <p>Happy birthday dear</p>
-                <img src="images/girl_with_light.jpg" alt="" class="mt-2 rounded-lg">
+                <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+                    <i class="far fa-comment"></i><span>Comment</span>
+                </div>
+                <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+                    <i class="fa fa-share"></i><span>Share</span>
+                </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <!-- Right Panel -->
-    <aside class="w-64 bg-white p-4 rounded-lg shadow space-y-4 sticky top-20">
-        <div>
+    <div class="w-1/4 space-y-6">
+        <div class="bg-white rounded-lg shadow p-4">
             <h4 class="font-semibold mb-2">Your pages</h4>
-            <div class="flex items-center space-x-3 mb-2 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-gray-300"></div>
-                <span>Cody</span>
-            </div>
-            <div class="flex items-center space-x-3 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-gray-300"></div>
-                <span>Cody Tutorials</span>
-            </div>
+            <a class="flex items-center space-x-3 mb-2" href="#">
+                <div class="h-8 w-8 rounded-full overflow-hidden">
+                    <img th:src="@{/images/logo.png}" src="/images/logo.png" alt="">
+                </div>
+                <p class="font-medium">Cody</p>
+            </a>
+            <a class="flex items-center space-x-3" href="#">
+                <div class="h-8 w-8 rounded-full overflow-hidden">
+                    <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" alt="">
+                </div>
+                <p class="font-medium">Cody Tutorials</p>
+            </a>
         </div>
-
-        <div>
+        <div class="bg-white rounded-lg shadow p-4">
             <h4 class="font-semibold mb-2">Friends</h4>
-            <div class="flex items-center space-x-3 mb-2 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-gray-300"></div>
-                <span>Henry Mosely</span>
-            </div>
-            <div class="flex items-center space-x-3 mb-2 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-gray-300"></div>
-                <span>George</span>
-            </div>
-            <!-- Add more friends -->
+            <a class="flex items-center space-x-3 mb-2" href="#">
+                <div class="h-8 w-8 rounded-full overflow-hidden">
+                    <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" alt="">
+                </div>
+                <p class="font-medium">Henry Mosely</p>
+            </a>
+            <a class="flex items-center space-x-3 mb-2" href="#">
+                <div class="h-8 w-8 rounded-full overflow-hidden">
+                    <img th:src="@{/images/shoes.jpg}" src="/images/shoes.jpg" alt="">
+                </div>
+                <p class="font-medium">George</p>
+            </a>
+            <a class="flex items-center space-x-3 mb-2" href="#">
+                <div class="h-8 w-8 rounded-full overflow-hidden">
+                    <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" alt="">
+                </div>
+                <p class="font-medium">Aakash Malhotra</p>
+            </a>
+            <a class="flex items-center space-x-3 mb-2" href="#">
+                <div class="h-8 w-8 rounded-full overflow-hidden">
+                    <img th:src="@{/images/model.jpg}" src="/images/model.jpg" alt="">
+                </div>
+                <p class="font-medium">Ragini Khanna</p>
+            </a>
+            <a class="flex items-center space-x-3 mb-2" href="#">
+                <div class="h-8 w-8 rounded-full overflow-hidden">
+                    <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" alt="">
+                </div>
+                <p class="font-medium">Justin Bieber</p>
+            </a>
+            <a class="flex items-center space-x-3 mb-2" href="#">
+                <div class="h-8 w-8 rounded-full overflow-hidden">
+                    <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" alt="">
+                </div>
+                <p class="font-medium">Ramesh GC</p>
+            </a>
+            <a class="flex items-center space-x-3" href="#">
+                <div class="h-8 w-8 rounded-full overflow-hidden">
+                    <img th:src="@{/images/model.jpg}" src="/images/model.jpg" alt="">
+                </div>
+                <p class="font-medium">Sajita Gurung</p>
+            </a>
         </div>
-    </aside>
+    </div>
 </div>
-
 </body>
 </html>

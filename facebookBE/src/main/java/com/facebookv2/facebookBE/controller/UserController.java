@@ -5,10 +5,7 @@ import com.facebookv2.facebookBE.model.UserPrincipal;
 import com.facebookv2.facebookBE.service.UserService;
 import com.facebookv2.facebookBE.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,13 +20,17 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/facebook/user")
 public class UserController {
+
     @Autowired
     UserServiceImpl userServiceImpl;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/home")
-    public String HomePage( Model model, Principal principal) {
-        String email = principal.getName();
-        User user = userServiceImpl.getUserByEmail(email);
+    public String HomePage(Model model, Authentication authentication){
+        String email = authentication.getName(); // lấy email từ principal
+        User user = userService.getUserByEmail(email);
         model.addAttribute("user", user);
         return "user/home";
     }
