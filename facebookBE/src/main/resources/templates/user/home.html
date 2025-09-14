@@ -52,12 +52,14 @@
     <div class="w-1/4 bg-white rounded-lg shadow p-4">
         <ul class="space-y-3">
             <li class="flex items-center space-x-3">
+                <a th:href="@{/facebook/profile}" class="flex items-center space-x-3">
                 <span>
                     <img th:src="@{/images/default-avatar.svg}"
                          src="/images/default-avatar.svg"
                          alt="Profile" class="h-10 w-10 rounded-full object-cover">
                 </span>
                 <p th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
+                </a>
             </li>
             <li class="flex items-center space-x-3"><i class="fa fa-user-friends"></i><p>Friends</p></li>
             <li class="flex items-center space-x-3"><i class="fa fa-play-circle"></i><p>Videos</p></li>
