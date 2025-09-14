@@ -25,18 +25,18 @@ public class ProfileController {
 
     @GetMapping
     public String profile(Model model) {
-        // Tạm thời fix user đăng nhập = user id=1 để test
+
         User user = userRepository.findById(1L)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Lấy tất cả status mới nhất
+
         List<Status> statuses = statusRepository.findAllByOrderByCreatedTimeDesc();
 
-        // Đẩy vào model cho Thymeleaf
+
         model.addAttribute("user", user);
         model.addAttribute("statuses", statuses);
 
-        return "user/profile"; // => src/main/resources/templates/user/profile.html
+        return "user/profile";
     }
 }
 
