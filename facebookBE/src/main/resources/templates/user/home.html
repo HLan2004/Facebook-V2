@@ -13,6 +13,7 @@
     <title>MediaBook</title>
 </head>
 <body class="bg-gray-100 font-sans">
+<!--    nav-->
 <nav class="flex items-center justify-between bg-white px-6 py-3 shadow">
     <div class="flex items-center space-x-4">
         <img th:src="@{/images/logo.png}" src="/images/logo.png" alt="Logo" class="h-10 w-10 rounded-full">
@@ -41,9 +42,36 @@
         <a href="#" class="text-gray-600 hover:text-blue-600">
             <i class="fa fa-bell text-xl"></i>
         </a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">
-            <i class="fas fa-ellipsis-h text-xl"></i>
-        </a>
+        <div class = "relative">
+            <!-- Nút mở menu -->
+            <button id="menu-button" class="flex items-center text-gray-600 hover:text-blue-600 focus:outline-none">
+                <i class="fas fa-ellipsis-h text-xl"></i>
+            </button>
+            <!-- Menu dropdown -->
+            <div id="dropdown-menu"
+                 class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                <ul class="py-2">
+                    <li>
+                        <a href="/facebook/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            Hồ sơ cá nhân
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            Cài đặt
+                        </a>
+                    </li>
+                    <li>
+                        <form th:action="@{/logout}" method="post" class="block">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                Đăng xuất
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </nav>
 
@@ -366,5 +394,22 @@
         </div>
     </div>
 </div>
+<script>
+    const menuButton = document.getElementById('menu-button');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+
+    // Toggle menu khi bấm vào icon
+    menuButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Ngăn click lan ra ngoài
+        dropdownMenu.classList.toggle('hidden');
+    });
+
+    // Ẩn menu khi click ra ngoài
+    window.addEventListener('click', (e) => {
+        if (!dropdownMenu.contains(e.target) && !menuButton.contains(e.target)) {
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+</script>
 </body>
 </html>
