@@ -4,6 +4,8 @@ import com.facebookv2.facebookBE.model.Status;
 import com.facebookv2.facebookBE.model.User;
 import com.facebookv2.facebookBE.repository.StatusRepository;
 import com.facebookv2.facebookBE.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import java.util.List;
 @RequestMapping("/facebook/profile")
 public class ProfileController {
 
+
     private final UserRepository userRepository;
     private final StatusRepository statusRepository;
 
@@ -24,13 +27,13 @@ public class ProfileController {
     }
 
     @GetMapping
-    public String profile(Model model) {
+    public String profile(Model model, Authentication authentication) {
 
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
 
 
-        List<Status> statuses = statusRepository.findAllByOrderByCreatedTimeDesc();
+        List<Status> statuses = statusRepository.findAllByIdOrderByCreatedTimeDesc(user.getId());
 
 
         model.addAttribute("user", user);

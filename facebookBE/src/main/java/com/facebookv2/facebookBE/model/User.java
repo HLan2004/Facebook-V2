@@ -28,7 +28,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String imageUrl;
+    private String avatar;
+    private String backGround;
 
     // Birthday
     private Integer birthDay;

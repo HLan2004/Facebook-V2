@@ -63,7 +63,7 @@ public class AuthController {
             user.setGender(userDTO.getGender());
 
             // Đặt avatar mặc định (user sẽ tự upload sau)
-            user.setImageUrl("default.png");
+            user.setAvatar("default.png");
 
             // lấy ROLE_USER từ DB
             Role roleUser = roleRepository.findByName("ROLE_USER");

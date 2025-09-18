@@ -7,4 +7,5 @@ import java.util.List;
 public interface StatusService {
     Status saveStatus(Status status);
     List<Status> getAllStatuses();
+    List<Status> getAllStatusesByIdOrderByCreatedTimeDesc(Long id);
 }

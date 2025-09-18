@@ -24,4 +24,8 @@ public class StatusServiceImpl implements StatusService {
 
         return statusRepository.findAllByOrderByCreatedTimeDesc();
     }
+    @Override
+    public List<Status> getAllStatusesByIdOrderByCreatedTimeDesc(Long id) {
+        return statusRepository.findAllByIdOrderByCreatedTimeDesc(id);
+    }
 }
