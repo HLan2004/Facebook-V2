@@ -400,21 +400,21 @@
             }
 
             function selectPrivacy(value, text, iconClass) {
-                // Cập nhật giá trị input ẩn để gửi đi
+
                 privacyInput.value = value;
 
-                // Cập nhật nội dung nút bấm
+
                 privacyButtonText.textContent = text;
 
-                // Cập nhật icon trên nút bấm
+
                 const icon = privacyButton.querySelector('i');
                 icon.className = `fas ${iconClass} text-xs`;
 
-                // Đóng modal chọn đối tượng
+
                 closePrivacyModal();
             }
 
-            /* ... Các hàm và event listener khác giữ nguyên ... */
+
             function openCreatePostModal() {
                 document.getElementById("createPostModal").classList.remove("hidden");
                 document.getElementById("createPostModal").classList.add("flex");
