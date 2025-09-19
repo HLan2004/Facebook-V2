@@ -67,121 +67,261 @@
   <div class="flex-1 space-y-4">
     <!-- Create Post Box -->
     <div class="bg-white rounded-lg shadow p-4">
-      <div class="flex items-center space-x-3 cursor-pointer">
-        <div class="h-10 w-10 rounded-full overflow-hidden">
-          <img th:src="@{/images/default-avatar.svg}" alt="">
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
+          <img th:src="@{/images/default-avatar.svg}" alt="Avatar">
         </div>
-        <div class="flex-1 bg-[#f0f2f5] rounded-full px-3 py-2 text-gray-600 hover:bg-gray-200" onclick="openCreatePostModal()">
+        <div class="flex-1 bg-[#f0f2f5] rounded-full px-4 py-2 text-gray-500 hover:bg-gray-200 cursor-pointer" onclick="openCreatePostModal()">
             <span th:text="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'">
                 Bạn đang nghĩ gì thế?
             </span>
         </div>
       </div>
-      <!-- Action bar dưới -->
-      <div class="flex justify-around mt-3 border-t pt-2 text-sm text-gray-600">
-        <div class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
-          <i class="fas fa-video text-red-500"></i><span>Video trực tiếp</span>
+
+      <hr class="my-3">
+
+      <div class="flex justify-around text-sm">
+        <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yr/r/c0dWho49-X3.png" alt="Live Video Icon" class="w-6 h-6">
+          <span class="font-semibold text-gray-600">Video trực tiếp</span>
         </div>
-        <div class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
-          <i class="fas fa-image text-green-500"></i><span>Ảnh/video</span>
+
+        <div onclick="document.getElementById('pictureFileInput').click(); openCreatePostModal()" class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png" alt="Photo/Video Icon" class="w-6 h-6">
+          <span class="font-semibold text-gray-600">Ảnh/video</span>
         </div>
-        <div class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
-          <i class="far fa-smile text-yellow-500"></i><span>Cảm xúc/hoạt động</span>
+
+        <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png" alt="Feeling/Activity Icon" class="w-6 h-6">
+          <span class="font-semibold text-gray-600">Cảm xúc/hoạt động</span>
         </div>
       </div>
     </div>
 
-    <!-- Modal Create Post -->
-    <div id="createPostModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
-      <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
-        <!-- Header -->
-        <div class="flex justify-between items-center border-b p-3">
-          <div class="w-6"></div>
-          <h2 class="text-lg font-semibold">Tạo bài viết</h2>
-          <button onclick="closeCreatePostModal()" class="text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+    <div id="createPostModal" class="fixed inset-0 bg-white bg-opacity-80 hidden items-center justify-center z-50 p-4">
+      <div class="bg-white w-full max-w-lg rounded-lg shadow-xl border border-gray-300 flex flex-col" style="height: 500px;">
+        <div class="relative flex-shrink-0 flex justify-center items-center border-b p-3">
+          <h2 class="text-xl font-bold">Tạo bài viết</h2>
+          <button onclick="closeCreatePostModal()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-gray-600 text-2xl">&times;</button>
         </div>
 
-        <!-- Body -->
-        <form th:action="@{/facebook/status/post}" method="post" enctype="multipart/form-data" class="p-4">
-          <div class="flex items-center space-x-3 mb-3">
+        <form th:action="@{/facebook/status/post}" method="post" enctype="multipart/form-data" class="p-4 flex flex-col flex-grow overflow-y-auto">
+          <div class="flex-shrink-0 flex items-center space-x-3 mb-4">
             <div class="h-10 w-10 rounded-full overflow-hidden">
-              <img th:src="@{/images/default-avatar.svg}" alt="">
+              <img th:src="@{/images/default-avatar.svg}" alt="Avatar">
             </div>
             <div>
               <p class="font-semibold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
-              <select name="privacy"
-                      class="text-xs border rounded px-2 py-1 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-400 bg-[#f0f2f5]">
-                <option value="public">🌍 Công khai</option>
-                <option value="friends">👥 Bạn bè</option>
-                <option value="private">🔒 Chỉ mình tôi</option>
-              </select>
+              <button type="button" id="privacyButton" onclick="openPrivacyModal()" class="bg-gray-200 rounded px-2 py-0.5 text-xs font-semibold text-gray-700 flex items-center gap-x-1 hover:bg-gray-300">
+                <i class="fas fa-user-friends text-xs"></i>
+                <span id="privacyButtonText">Bạn bè</span>
+                <i class="fas fa-caret-down text-xs ml-1"></i>
+              </button>
+              <input type="hidden" id="privacyInput" name="privacy" value="friends">
             </div>
           </div>
 
-          <!-- Nội dung -->
-          <textarea name="content" rows="4"
-                    th:placeholder="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'"
-                    class="w-full bg-[#f0f2f5] border-none rounded-lg p-2 focus:outline-none resize-none text-lg"></textarea>
-
-          <!-- Upload ảnh -->
-          <div class="mt-3 border rounded-lg p-3 cursor-pointer hover:bg-gray-50 bg-[#f0f2f5]">
-            <label class="flex items-center space-x-2 cursor-pointer">
-              <i class="fas fa-image text-green-500"></i>
-              <span class="text-sm">Thêm ảnh/video</span>
-              <input type="file" name="pictureFile" accept="image/*" class="hidden">
-            </label>
+          <div class="flex-grow relative">
+                <textarea id="postContentTextarea" name="content"
+                          th:placeholder="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'"
+                          class="w-full h-full border-none focus:outline-none resize-none text-2xl placeholder-gray-500 p-0 bg-transparent overflow-y-auto"></textarea>
+            <i class="far fa-smile text-gray-400 text-2xl absolute bottom-6 right-0 cursor-pointer"></i>
           </div>
 
-          <!-- Nút đăng -->
-          <button type="submit"
-                  class="w-full bg-blue-500 text-white py-2 mt-3 rounded-lg hover:bg-blue-600">
-            Đăng
-          </button>
+          <div id="imagePreviewContainer" class="flex-shrink-0 mt-3 hidden"></div>
+
+          <div class="flex-shrink-0 flex items-center justify-between border border-gray-300 rounded-lg p-3 mt-3">
+            <span class="font-semibold text-gray-600">Thêm vào bài viết của bạn</span>
+            <div class="flex items-center space-x-2">
+              <label for="pictureFileInput" class="cursor-pointer" title="Ảnh/video"><img src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png" alt="Photo/Video" class="w-6 h-6"></label>
+              <input type="file" id="pictureFileInput" name="pictureFile" accept="image/*" class="hidden">
+              <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yq/r/b37mHA1PjfK.png" alt="Tag People" class="w-6 h-6 cursor-pointer" title="Gắn thẻ người khác">
+              <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png" alt="Feeling/Activity" class="w-6 h-6 cursor-pointer" title="Cảm xúc/hoạt động">
+              <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y1/r/8zlaieBcZ72.png" alt="Check In" class="w-6 h-6 cursor-pointer" title="Check in">
+              <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yT/r/q7MiRkL7MLC.png" alt="GIF" class="w-6 h-6 cursor-pointer" title="GIF">
+              <i class="fas fa-ellipsis-h text-gray-500 cursor-pointer"></i>
+            </div>
+          </div>
+
+          <button id="postSubmitButton" type="submit" disabled class="flex-shrink-0 w-full bg-gray-200 text-gray-400 font-bold py-2 px-4 rounded-lg mt-3 cursor-not-allowed">Đăng</button>
         </form>
       </div>
     </div>
 
+    <div id="privacyModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+      <div class="bg-white w-full max-w-lg rounded-lg shadow-xl border">
+        <div class="relative flex justify-center items-center border-b p-3">
+          <button onclick="closePrivacyModal()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <h2 class="text-xl font-bold">Đối tượng của bài viết</h2>
+        </div>
+        <div class="p-4 space-y-2">
+          <div class="font-semibold">Ai có thể xem bài viết của bạn?</div>
+          <p class="text-sm text-gray-600">Bài viết của bạn sẽ hiển thị trên Bảng tin, trang cá nhân và kết quả tìm kiếm.</p>
+
+          <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+            <div class="flex items-center gap-x-3">
+              <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i class="fas fa-globe-americas text-2xl"></i></div>
+              <div>
+                <div class="font-semibold">Công khai</div>
+                <p class="text-sm text-gray-600">Bất kỳ ai ở trên hoặc ngoài Facebook</p>
+              </div>
+            </div>
+            <input type="radio" name="privacy_option" value="public" onchange="selectPrivacy('public', 'Công khai', 'fa-globe-americas')">
+          </label>
+
+          <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer bg-blue-100">
+            <div class="flex items-center gap-x-3">
+              <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i class="fas fa-user-friends text-2xl"></i></div>
+              <div>
+                <div class="font-semibold">Bạn bè</div>
+                <p class="text-sm text-gray-600">Bạn bè của bạn trên Facebook</p>
+              </div>
+            </div>
+            <input type="radio" name="privacy_option" value="friends" onchange="selectPrivacy('friends', 'Bạn bè', 'fa-user-friends')" checked>
+          </label>
+
+          <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+            <div class="flex items-center gap-x-3">
+              <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i class="fas fa-lock text-2xl"></i></div>
+              <div>
+                <div class="font-semibold">Chỉ mình tôi</div>
+              </div>
+            </div>
+            <input type="radio" name="privacy_option" value="private" onchange="selectPrivacy('private', 'Chỉ mình tôi', 'fa-lock')">
+          </label>
+
+        </div>
+        <div class="p-4 flex justify-end gap-x-2 border-t">
+          <button onclick="closePrivacyModal()" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy</button>
+          <button onclick="closePrivacyModal()" class="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Xong</button>
+        </div>
+      </div>
+    </div>
+
     <script>
+      // --- Các hàm có sẵn ---
+      function openCreatePostModal() { /* ... */ }
+      const postContentTextarea = document.getElementById('postContentTextarea');
+      /* ... các const khác ... */
+
+      // =============================================
+      // SCRIPT MỚI: ĐIỀU KHIỂN MODAL CHỌN ĐỐI TƯỢNG
+      // =============================================
+      const createPostModal = document.getElementById('createPostModal');
+      const privacyModal = document.getElementById('privacyModal');
+      const privacyButtonText = document.getElementById('privacyButtonText');
+      const privacyButton = document.getElementById('privacyButton');
+      const privacyInput = document.getElementById('privacyInput');
+
+      function openPrivacyModal() {
+        privacyModal.classList.remove('hidden');
+        privacyModal.classList.add('flex');
+      }
+
+      function closePrivacyModal() {
+        privacyModal.classList.add('hidden');
+        privacyModal.classList.remove('flex');
+      }
+
+      function selectPrivacy(value, text, iconClass) {
+        // Cập nhật giá trị input ẩn để gửi đi
+        privacyInput.value = value;
+
+        // Cập nhật nội dung nút bấm
+        privacyButtonText.textContent = text;
+
+        // Cập nhật icon trên nút bấm
+        const icon = privacyButton.querySelector('i');
+        icon.className = `fas ${iconClass} text-xs`;
+
+        // Đóng modal chọn đối tượng
+        closePrivacyModal();
+      }
+
+      /* ... Các hàm và event listener khác giữ nguyên ... */
       function openCreatePostModal() {
         document.getElementById("createPostModal").classList.remove("hidden");
         document.getElementById("createPostModal").classList.add("flex");
       }
+      const pictureFileInput = document.getElementById('pictureFileInput');
+      const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+      const postSubmitButton = document.getElementById('postSubmitButton');
+      function updatePostButtonState() {
+        const hasText = postContentTextarea.value.trim() !== '';
+        const hasImage = pictureFileInput.files.length > 0;
+        if (hasText || hasImage) {
+          postSubmitButton.disabled = false;
+          postSubmitButton.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+          postSubmitButton.classList.add('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+        } else {
+          postSubmitButton.disabled = true;
+          postSubmitButton.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+          postSubmitButton.classList.remove('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+        }
+      }
+      pictureFileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const previewHtml = `<div class="preview-wrapper"><img src="${e.target.result}" alt="Image Preview"><div class="preview-actions"><button type="button" class="action-btn"><i class="fas fa-edit"></i> Chỉnh sửa</button></div><button type="button" class="remove-image-btn" onclick="removeImagePreview()">&times;</button></div>`;
+            imagePreviewContainer.innerHTML = previewHtml;
+            imagePreviewContainer.classList.remove('hidden');
+          };
+          reader.readAsDataURL(file);
+        }
+        updatePostButtonState();
+      });
+      function removeImagePreview() {
+        imagePreviewContainer.innerHTML = '';
+        imagePreviewContainer.classList.add('hidden');
+        pictureFileInput.value = null;
+        updatePostButtonState();
+      }
+      postContentTextarea.addEventListener('input', updatePostButtonState);
       function closeCreatePostModal() {
         document.getElementById("createPostModal").classList.add("hidden");
         document.getElementById("createPostModal").classList.remove("flex");
+        removeImagePreview();
+        postContentTextarea.value = '';
       }
     </script>
 
-
-    <!-- Posts -->
-    <div th:each="status : ${statuses}" class="bg-white rounded-lg shadow p-4">
+    <div th:each="status : ${statuses}" class="bg-white rounded-lg shadow p-4 mt-4">
       <div class="flex items-center justify-between mb-2">
         <div class="flex items-center space-x-3">
-          <img th:src="@{/images/default-avatar.svg}" alt="Avatar" class="h-10 w-10 rounded-full">
+          <div class="h-10 w-10 rounded-full overflow-hidden">
+            <img th:src="@{/images/default-avatar.svg}" alt="">
+          </div>
           <div>
             <p class="font-semibold" th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">User Name</p>
             <span class="text-xs text-gray-500"
                   th:text="${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')}">Just now</span>
           </div>
         </div>
-        <i class="fa-solid fa-ellipsis-h text-gray-500 cursor-pointer"></i>
       </div>
-      <p class="mb-2 text-gray-800" th:text="${status.content}">Post content here</p>
-      <div th:if="${status.picture}">
-        <img th:src="${status.picture}" alt="Post Image" class="mt-2 rounded-lg">
+      <div class="mb-2 text-gray-800" th:text="${status.content}">Post content here</div>
+
+      <div th:if="${status.picture != null and !status.picture.isEmpty()}">
+        <img th:src="@{/images/{filename}(filename=${status.picture})}" alt="Post Image" class="mt-2 rounded-lg w-full">
       </div>
-      <div class="flex justify-between text-gray-500 text-sm mt-3 border-t pt-2">
+
+      <div class="flex justify-between text-gray-500 text-sm mt-2">
         <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
-          <i class="far fa-thumbs-up"></i><span>Thích</span>
+          <i class="far fa-thumbs-up"></i><span>Like</span>
         </div>
         <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
-          <i class="far fa-comment"></i><span>Bình luận</span>
+          <i class="far fa-comment"></i><span>Comment</span>
         </div>
         <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
-          <i class="fa fa-share"></i><span>Chia sẻ</span>
+          <i class="fa fa-share"></i><span>Share</span>
         </div>
       </div>
     </div>
+
+
   </div>
 </div>
 
