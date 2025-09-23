@@ -105,7 +105,7 @@
           <button onclick="closeCreatePostModal()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-gray-600 text-2xl">&times;</button>
         </div>
 
-        <form th:action="@{/facebook/status/post}" method="post" enctype="multipart/form-data" class="p-4 flex flex-col flex-grow overflow-y-auto">
+        <form th:action="@{/facebook/profile/profilepost}" method="post" enctype="multipart/form-data" class="p-4 flex flex-col flex-grow overflow-y-auto">
           <div class="flex-shrink-0 flex items-center space-x-3 mb-4">
             <div class="h-10 w-10 rounded-full overflow-hidden">
               <img th:src="@{/images/default-avatar.svg}" alt="Avatar">

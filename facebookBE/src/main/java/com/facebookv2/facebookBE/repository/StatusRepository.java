@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface StatusRepository extends JpaRepository<Status, Long> {
     List<Status> findAllByOrderByCreatedTimeDesc();
-    List<Status> findAllByIdOrderByCreatedTimeDesc(Long id);
+    List<Status> getAllStatusesByUserIdOrderByCreatedTimeDesc(Long userId);
 }
