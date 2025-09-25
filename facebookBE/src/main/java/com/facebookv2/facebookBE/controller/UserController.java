@@ -26,22 +26,39 @@ public class UserController {
     @Autowired
     private StatusServiceImpl statusServiceImpl;
 
-//    @GetMapping("/home")
-//    public String HomePage(Model model, Authentication authentication){
-//
-//        String email = authentication.getName(); // lấy email từ principal
-//        User user = userService.getUserByEmail(email);
-//        model.addAttribute("user", user);
-//        return "user/home";
-//    }
-@GetMapping("/home")
-public String home(Model model, Authentication authentication) {
-    String email = authentication.getName();
-    User user = userService.getUserByEmail(email);
-    List<Status> statuses = statusServiceImpl.getAllStatuses();
-    model.addAttribute("user", user);
-    model.addAttribute("statuses", statuses);
-    model.addAttribute("newStatus", new Status());
-    return "user/home";
+
+    @GetMapping("/home")
+    public String home(Model model, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email);
+        List<Status> statuses = statusServiceImpl.getAllStatuses();
+        model.addAttribute("user", user);
+        model.addAttribute("statuses", statuses);
+        model.addAttribute("newStatus", new Status());
+        return "user/home";
+    }
+
+    @GetMapping("/messages")
+    public String messages(Model model, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email);
+        model.addAttribute("user", user);
+
+
+        // TODO: nếu bạn có MessageService/ConversationService, thay đoạn dưới bằng call service thật
+        // model.addAttribute("conversations", conversationService.getConversationsForUser(user.getId()));
+        // model.addAttribute("activeConversation", conversationService.getDefaultConversation(user.getId()));
+        // model.addAttribute("unreadMessages", messageService.countUnreadForUser(user.getId()));
+
+
+        // Hiện tại tạm thời set bằng 0 để badge không hiển thị
+        model.addAttribute("unreadMessages", 0);
+
+
+        return "user/messenger";
+    }
+
+
 }
-}
+
+

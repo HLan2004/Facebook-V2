@@ -73,6 +73,27 @@
         .remove-image-btn:hover {
             background-color: #f0f2f5;
         }
+
+        /* Badge nhỏ cho icon messenger */
+        .icon-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background-color: #ff3b30;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+        .icon-wrapper { position: relative; display: inline-flex; align-items:center; }
+
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -97,11 +118,20 @@
         </a>
     </div>
     <div class="flex items-center space-x-4">
-        <span>
-            <img th:src="@{/images/default-avatar.svg}"
-                 src="/images/default-avatar.svg"
-                 alt="Profile" class="h-10 w-10 rounded-full object-cover">
-        </span>
+    <span>
+        <img th:src="@{/images/default-avatar.svg}"
+             src="/images/default-avatar.svg"
+             alt="Profile" class="h-10 w-10 rounded-full object-cover">
+    </span>
+
+        <!-- Messenger icon: dẫn sang trang tin nhắn -->
+        <a th:href="@{/facebook/user/messages}" class="text-gray-600 hover:text-blue-600">
+            <div class="icon-wrapper">
+                <i class="fab fa-facebook-messenger text-2xl"></i>
+                <span class="icon-badge" th:if="${unreadMessages != null and unreadMessages > 0}" th:text="${unreadMessages}"></span>
+            </div>
+        </a>
+
         <a href="#" class="text-gray-600 hover:text-blue-600">
             <i class="fa fa-bell text-xl"></i>
         </a>
@@ -136,6 +166,7 @@
             </div>
         </div>
     </div>
+
 </nav>
 
 <div class="container mx-auto flex mt-6 space-x-6">
