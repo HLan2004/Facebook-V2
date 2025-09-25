@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messenger - Facebook Clone</title>
+    <!-- Link CSS an toàn (context path tự động) -->
+    <link rel="stylesheet" th:href="@{/css/messenger.css}">
+</head>
+<body>
+<!-- Header -->
+<div class="header">
+    <div class="header-left">
+        <a th:href="@{/facebook/user/home}" class="facebook-logo">f</a>
+        <input type="text" class="search-box" placeholder="Tìm kiếm trên Facebook">
+    </div>
+
+    <div class="nav-icons">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-icon">👥</div>
+        <div class="nav-icon">📺</div>
+        <div class="nav-icon">🏪</div>
+        <div class="nav-icon active">💬</div>
+    </div>
+
+    <div class="header-right">
+        <div class="header-btn">⊞</div>
+        <div class="header-btn">💬</div>
+        <div class="header-btn">🔔</div>
+        <div class="profile-btn"></div>
+    </div>
+</div>
+
+<!-- Main Container -->
+<div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Đoạn chat</h2>
+            <input type="text" class="search-conversations" placeholder="Tìm kiếm trên Messenger">
+
+            <div class="sidebar-tabs">
+                <div class="sidebar-tab active">Tất cả</div>
+                <div class="sidebar-tab">Chưa đọc</div>
+                <div class="sidebar-tab">Nhóm</div>
+            </div>
+        </div>
+
+        <div class="conversations-list">
+            <!-- Single Conversation for Demo -->
+            <div class="conversation-item active">
+                <div class="conversation-avatar">
+                    HP
+                    <div class="online-dot"></div>
+                </div>
+                <div class="conversation-content">
+                    <div class="conversation-name">Hoang Phat, Professor Shadow, Đức Duy</div>
+                    <div class="conversation-preview">
+                        Bạn: Đis di <span class="conversation-time">· 21 phút</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+        <div class="chat-header">
+            <div class="chat-header-left">
+                <div class="chat-avatar">
+                    HP
+                    <div class="online-dot"></div>
+                </div>
+                <div class="chat-info">
+                    <h3>Hoang Phat, Professor Shadow, Đức Duy</h3>
+                    <div class="chat-status">Đang hoạt động</div>
+                </div>
+            </div>
+
+            <div class="chat-actions">
+                <div class="chat-action-btn">📞</div>
+                <div class="chat-action-btn">📹</div>
+                <div class="chat-action-btn">ℹ️</div>
+            </div>
+        </div>
+
+        <div class="messages-container">
+            <!-- System Messages -->
+            <div class="system-message">Có ng buồn</div>
+
+            <!-- Messages -->
+            <div class="message received">
+                <div class="message-bubble">
+                    <div class="message-sender">Hoang Phat</div>
+                    <div>?</div>
+                    <div style="color: #ff4757; font-size: 20px; margin-top: 4px;">❤️</div>
+                </div>
+            </div>
+
+            <div class="message received">
+                <div class="message-bubble">Stupid ass friend</div>
+            </div>
+
+            <div class="message received">
+                <div class="message-bubble">
+                    <div class="message-sender">Professor Shadow</div>
+                    <div>ban ai phải bạn mình đâu</div>
+                </div>
+            </div>
+
+            <div class="time-stamp">22:19 T4</div>
+
+            <div class="message received">
+                <div class="message-bubble">
+                    <div class="message-sender">Professor Shadow</div>
+                    <div>mời chơi về</div>
+                </div>
+            </div>
+
+            <div class="time-stamp">01:26</div>
+
+            <!-- Sent Message -->
+            <div class="message sent">
+                <div class="message-bubble">
+                    <div>@Professor Shadow</div>
+                    <div style="margin-top: 4px;">Chơi</div>
+                </div>
+            </div>
+
+            <div class="message sent">
+                <div class="message-bubble">Đis</div>
+            </div>
+        </div>
+
+        <div class="message-input-area">
+            <div class="message-input-container">
+                <div class="input-actions" style="margin-right: 8px;">
+                    <div class="input-btn">🎤</div>
+                </div>
+                <input type="text" class="message-input" placeholder="Aa">
+                <div class="input-actions">
+                    <div class="input-btn">📎</div>
+                    <div class="input-btn">😊</div>
+                    <div class="input-btn">📷</div>
+                    <div class="input-btn send-btn">👍</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageInput = document.querySelector('.message-input');
+        const sendBtn = document.querySelector('.send-btn');
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message) {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'message sent';
+                messageEl.innerHTML = `
+                    <div class="message-bubble">
+                        ${message}
+                    </div>
+                `;
+                const container = document.querySelector('.messages-container');
+                container.appendChild(messageEl);
+                messageInput.value = '';
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        // Change send button when typing
+        messageInput.addEventListener('input', function() {
+            if (this.value.trim()) {
+                sendBtn.textContent = '➤';
+                sendBtn.style.backgroundColor = '#1877f2';
+            } else {
+                sendBtn.textContent = '👍';
+                sendBtn.style.backgroundColor = '#1877f2';
+            }
+        });
+
+        sendBtn.addEventListener('click', function() {
+            if (messageInput.value.trim()) {
+                sendMessage();
+            }
+        });
+
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (this.value.trim()) {
+                    sendMessage();
+                }
+            }
+        });
+
+        // Sidebar tabs
+        const sidebarTabs = document.querySelectorAll('.sidebar-tab');
+        sidebarTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                sidebarTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Nav icons
+        const navIcons = document.querySelectorAll('.nav-icon');
+        navIcons.forEach(icon => {
+            icon.addEventListener('click', function() {
+                navIcons.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Auto-scroll messages
+        const messagesContainer = document.querySelector('.messages-container');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Mobile sidebar toggle
+        const mobileToggle = document.createElement('div');
+        mobileToggle.style.display = 'none';
+        mobileToggle.innerHTML = '☰';
+        mobileToggle.className = 'header-btn';
+        mobileToggle.style.fontSize = '18px';
+
+        if (window.innerWidth <= 768) {
+            document.querySelector('.header-left').prepend(mobileToggle);
+            mobileToggle.style.display = 'flex';
+            mobileToggle.addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('open');
+            });
+        }
+    });
+</script>
+</body>
+</html>
