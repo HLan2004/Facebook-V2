@@ -6,6 +6,7 @@
     <title>Messenger - Facebook Clone</title>
     <!-- Link CSS an toàn (context path tự động) -->
     <link rel="stylesheet" th:href="@{/css/messenger.css}">
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 </head>
 <body>
 <!-- Header -->
@@ -47,32 +48,37 @@
         </div>
 
         <div class="conversations-list">
-            <!-- Single Conversation for Demo -->
-            <div class="conversation-item active">
-                <div class="conversation-avatar">
-                    HP
-                    <div class="online-dot"></div>
-                </div>
-                <div class="conversation-content">
-                    <div class="conversation-name">Hoang Phat, Professor Shadow, Đức Duy</div>
-                    <div class="conversation-preview">
-                        Bạn: Đis di <span class="conversation-time">· 21 phút</span>
+            <div th:if="${conversations != null}" th:each="conv : ${conversations}"
+                 th:class="'conversation-item ' + (${conv.conversationId} == ${conversationId} ? 'active' : '')">
+                <a th:href="@{'/facebook/messenger/' + ${conv.conversationId}}" style="display:flex; text-decoration:none; color:inherit;">
+                    <div class="conversation-avatar">
+                        <span th:text="${conv.conversationName != null and conv.conversationName.length() >= 2 ? #strings.substring(conv.conversationName,0,2) : conv.conversationName}"></span>
+                        <div class="online-dot"></div>
                     </div>
-                </div>
+                    <div class="conversation-content">
+                        <div class="conversation-name" th:text="${conv.conversationName}"></div>
+                        <div class="conversation-preview">
+                            <span th:text="${conv.lastMessage != null ? conv.lastMessage : 'Chưa có tin nhắn'}"></span>
+                            <span class="conversation-time"
+                                  th:text="${conv.lastMessageTime != null ? '· ' + #temporals.format(conv.lastMessageTime, 'HH:mm dd/MM') : ''}"></span>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
 
     <!-- Chat Area -->
-    <div class="chat-area">
+    <div th:if="${conversationId != null}" class="chat-area">
         <div class="chat-header">
-            <div class="chat-header-left">
+            <div class="chat-header-left"
+                 th:with="currentConv=${conversations.?[conversationId == conversationId][0]}">
                 <div class="chat-avatar">
-                    HP
+                    <span th:text="${#strings.substring(currentConv.conversationName, 0, 2)}"></span>
                     <div class="online-dot"></div>
                 </div>
                 <div class="chat-info">
-                    <h3>Hoang Phat, Professor Shadow, Đức Duy</h3>
+                    <h3 th:text="${currentConv.conversationName}"></h3>
                     <div class="chat-status">Đang hoạt động</div>
                 </div>
             </div>
@@ -85,116 +91,126 @@
         </div>
 
         <div class="messages-container">
-            <!-- System Messages -->
-            <div class="system-message">Có ng buồn</div>
-
-            <!-- Messages -->
-            <div class="message received">
+            <div th:if="${messages != null}" th:each="msg : ${messages}"
+                 th:class="'message ' + (${msg.sender.id} == ${currentUserId} ? 'sent' : 'received')">
                 <div class="message-bubble">
-                    <div class="message-sender">Hoang Phat</div>
-                    <div>?</div>
-                    <div style="color: #ff4757; font-size: 20px; margin-top: 4px;">❤️</div>
+                    <div th:if="${msg.sender.id != currentUserId}" class="message-sender"
+                         th:text="${msg.sender.firstName + ' ' + msg.sender.lastName}"></div>
+                    <div th:text="${msg.content}"></div>
                 </div>
-            </div>
-
-            <div class="message received">
-                <div class="message-bubble">Stupid ass friend</div>
-            </div>
-
-            <div class="message received">
-                <div class="message-bubble">
-                    <div class="message-sender">Professor Shadow</div>
-                    <div>ban ai phải bạn mình đâu</div>
-                </div>
-            </div>
-
-            <div class="time-stamp">22:19 T4</div>
-
-            <div class="message received">
-                <div class="message-bubble">
-                    <div class="message-sender">Professor Shadow</div>
-                    <div>mời chơi về</div>
-                </div>
-            </div>
-
-            <div class="time-stamp">01:26</div>
-
-            <!-- Sent Message -->
-            <div class="message sent">
-                <div class="message-bubble">
-                    <div>@Professor Shadow</div>
-                    <div style="margin-top: 4px;">Chơi</div>
-                </div>
-            </div>
-
-            <div class="message sent">
-                <div class="message-bubble">Đis</div>
             </div>
         </div>
 
         <div class="message-input-area">
-            <div class="message-input-container">
+            <form th:action="@{/facebook/messenger/send}" method="post" class="message-input-container">
                 <div class="input-actions" style="margin-right: 8px;">
                     <div class="input-btn">🎤</div>
                 </div>
-                <input type="text" class="message-input" placeholder="Aa">
+                <input type="text" name="content" class="message-input" placeholder="Aa" required>
                 <div class="input-actions">
                     <div class="input-btn">📎</div>
                     <div class="input-btn">😊</div>
                     <div class="input-btn">📷</div>
-                    <div class="input-btn send-btn">👍</div>
+                    <button type="submit" class="input-btn send-btn">👍</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+
+    <!-- Thông báo nếu chưa chọn conversation -->
+    <div th:if="${conversationId == null}" class="chat-area">
+        <p style="padding:20px; color:#555;">Vui lòng chọn một cuộc trò chuyện để bắt đầu nhắn tin.</p>
+    </div>
 </div>
+
 
 <!-- Scripts -->
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const messageInput = document.querySelector('.message-input');
         const sendBtn = document.querySelector('.send-btn');
+        const messagesContainer = document.querySelector('.messages-container');
 
-        function sendMessage() {
-            const message = messageInput.value.trim();
-            if (message) {
-                const messageEl = document.createElement('div');
-                messageEl.className = 'message sent';
-                messageEl.innerHTML = `
-                    <div class="message-bubble">
-                        ${message}
-                    </div>
-                `;
-                const container = document.querySelector('.messages-container');
-                container.appendChild(messageEl);
-                messageInput.value = '';
-                container.scrollTop = container.scrollHeight;
-            }
+        // Dữ liệu Thymeleaf từ backend
+        const conversationId = /*[[${conversationId}]]*/ "0";
+        const currentUserId = /*[[${currentUserId}]]*/ "0";
+        const currentUsername = /*[[${currentUsername}]]*/ "Bạn";
+
+        // STOMP client
+        let stompClient = null;
+
+        function connect() {
+            stompClient = new StompJs.Client({
+                connectHeaders: {},
+                brokerURL: "ws://localhost:8080/ws",
+                debug: function(str) { console.log(str); },
+                reconnectDelay: 5000,
+                heartbeatIncoming: 4000,
+                heartbeatOutgoing: 4000,
+                onConnect: (frame) => {
+                    console.log("✅ Connected:", frame);
+                    stompClient.subscribe('/topic/conversation/' + conversationId, (message) => {
+                        const msg = JSON.parse(message.body);
+                        appendMessage(msg);
+                    });
+                },
+                onStompError: (frame) => {
+                    console.error('Broker reported error: ' + frame.headers['message']);
+                    console.error('Additional details: ' + frame.body);
+                }
+            });
+            stompClient.activate();
+
         }
 
-        // Change send button when typing
+        function sendMessage() {
+            const content = messageInput.value.trim();
+            if (!content || !stompClient) return;
+
+            // Chỉ gửi content
+            stompClient.publish({
+                destination: "/app/chat/" + conversationId,
+                body: JSON.stringify({ content: content })
+            });
+
+            messageInput.value = '';
+        }
+
+        function appendMessage(msg) {
+            // Kiểm tra tin nhắn của mình dựa vào currentUserId so với msg.senderId
+            const isMine = msg.senderId === currentUserId;
+
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message ' + (isMine ? 'sent' : 'received');
+            messageEl.innerHTML = `
+                <div class="message-bubble">
+                    ${!isMine ? `<div class="message-sender">${msg.senderName}</div>` : ''}
+                    <div>${msg.content}</div>
+                </div>
+            `;
+            messagesContainer.appendChild(messageEl);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+
+        // Thay đổi nút gửi khi gõ
         messageInput.addEventListener('input', function() {
             if (this.value.trim()) {
                 sendBtn.textContent = '➤';
-                sendBtn.style.backgroundColor = '#1877f2';
             } else {
                 sendBtn.textContent = '👍';
-                sendBtn.style.backgroundColor = '#1877f2';
             }
+            sendBtn.style.backgroundColor = '#1877f2';
         });
 
-        sendBtn.addEventListener('click', function() {
-            if (messageInput.value.trim()) {
-                sendMessage();
-            }
-        });
+        // Gửi khi bấm nút
+        sendBtn.addEventListener('click', sendMessage);
 
+        // Gửi khi nhấn Enter
         messageInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                if (this.value.trim()) {
-                    sendMessage();
-                }
+                sendMessage();
             }
         });
 
@@ -216,10 +232,6 @@
             });
         });
 
-        // Auto-scroll messages
-        const messagesContainer = document.querySelector('.messages-container');
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
         // Mobile sidebar toggle
         const mobileToggle = document.createElement('div');
         mobileToggle.style.display = 'none';
@@ -234,6 +246,9 @@
                 document.querySelector('.sidebar').classList.toggle('open');
             });
         }
+
+        // Kết nối WebSocket khi load xong
+        connect();
     });
 </script>
 </body>

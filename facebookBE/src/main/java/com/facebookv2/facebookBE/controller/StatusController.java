@@ -21,7 +21,7 @@ import java.util.List;
 public class StatusController {
 
     @Autowired
-    private StatusServiceImpl statusServiceImpl;
+    private StatusService statusService;
 
     @Autowired
     private UserService userService;
@@ -34,7 +34,7 @@ public class StatusController {
     public String home(Model model, Authentication authentication) {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
-        List<Status> statuses = statusServiceImpl.getAllStatuses();
+        List<Status> statuses = statusService.getAllStatuses();
         model.addAttribute("user", user);
         model.addAttribute("statuses", statuses);
         model.addAttribute("newStatus", new Status());
@@ -58,7 +58,7 @@ public class StatusController {
 
         status.setUser(user);
         status.setCreatedTime(LocalDateTime.now());
-        statusServiceImpl.saveStatus(status);
+        statusService.saveStatus(status);
 
         return "redirect:/facebook/status/home"; // Chuyển hướng về trang chủ
     }

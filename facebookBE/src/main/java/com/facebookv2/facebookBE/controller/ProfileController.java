@@ -4,7 +4,9 @@ import com.facebookv2.facebookBE.model.Status;
 import com.facebookv2.facebookBE.model.User;
 import com.facebookv2.facebookBE.repository.StatusRepository;
 import com.facebookv2.facebookBE.repository.UserRepository;
+import com.facebookv2.facebookBE.service.StatusService;
 import com.facebookv2.facebookBE.service.StorageService;
+import com.facebookv2.facebookBE.service.UserService;
 import com.facebookv2.facebookBE.service.impl.StatusServiceImpl;
 import com.facebookv2.facebookBE.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,25 +23,23 @@ import java.util.List;
 @RequestMapping("/facebook/profile")
 public class ProfileController {
 
+    @Autowired
+    private UserService userService;
 
-    private final UserServiceImpl userServiceImpl;
-    private final StatusServiceImpl statusServiceImpl;
-    private final StorageService storageService;
+    @Autowired
+    private StatusService statusService;
 
-    public ProfileController(UserRepository userRepository, UserServiceImpl userServiceImpl, StatusRepository statusRepository, StatusServiceImpl statusServiceImpl, StorageService storageService) {
-        this.userServiceImpl = userServiceImpl;
-        this.statusServiceImpl = statusServiceImpl;
-        this.storageService = storageService;
-    }
+    @Autowired
+    private StorageService storageService;
 
     @GetMapping
     public String profile(Model model, Authentication authentication) {
 
         String email = authentication.getName();
-        User user = userServiceImpl.getUserByEmail(email);
+        User user = userService.getUserByEmail(email);
 
 
-        List<Status> statuses = statusServiceImpl.getAllStatusesByUserIdOrderByCreatedTimeDesc(user.getId());
+        List<Status> statuses = statusService.getAllStatusesByUserIdOrderByCreatedTimeDesc(user.getId());
 
         model.addAttribute("user", user);
         model.addAttribute("statuses", statuses);
@@ -52,7 +52,7 @@ public class ProfileController {
                                @ModelAttribute Status status,
                                @RequestParam("pictureFile") MultipartFile pictureFile) { // Thêm tham số MultipartFile
         String email = authentication.getName();
-        User user = userServiceImpl.getUserByEmail(email);
+        User user = userService.getUserByEmail(email);
 
         // Gọi StorageService để lưu file và lấy lại tên file
         String generatedFileName = storageService.store(pictureFile);
@@ -64,7 +64,7 @@ public class ProfileController {
 
         status.setUser(user);
         status.setCreatedTime(LocalDateTime.now());
-        statusServiceImpl.saveStatus(status);
+        statusService.saveStatus(status);
 
         return "redirect:/facebook/profile"; // Chuyển hướng về trang chủ
     }
