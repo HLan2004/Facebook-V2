@@ -79,7 +79,7 @@
             background-color: #f0f2f5;
         }
 
-/*css chuông*/
+        /*css chuông*/
         .icon-badge {
             position: absolute;
             top: -6px;
@@ -124,12 +124,60 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
 
 
+
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        #left-sidebar {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            height: calc(100vh - 56px);
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+
+        #right-sidebar {
+            position: fixed;
+            top: 56px;
+            right: 0;
+            height: calc(100vh - 56px);
+            overflow-y: auto;
+        }
+
+
+        #main-content {
+
+            margin-left: 25%;
+            margin-right: 25%;
+        }
+
+
+        #left-sidebar, #right-sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: #d1d5db #f1f1f1;
+        }
+        #left-sidebar::-webkit-scrollbar, #right-sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        #left-sidebar::-webkit-scrollbar-track, #right-sidebar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        #left-sidebar::-webkit-scrollbar-thumb, #right-sidebar::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+        #left-sidebar::-webkit-scrollbar-thumb:hover, #right-sidebar::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa;
+        }
+
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
-<!--phần nav-->
 <nav class="flex items-center justify-between bg-white px-4 h-14 shadow-md w-full fixed top-0 z-50">
-    <!-- Phần bên trái -->
     <div class="flex items-center space-x-2">
         <a href="#">
             <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Logo" class="h-10 w-10">
@@ -141,35 +189,29 @@
         </div>
     </div>
 
-    <!-- Phần giữa -->
     <div class="flex-grow flex items-center justify-center h-full">
         <div class="flex items-center h-full">
-            <!-- Icon Ngôi nhà -->
             <a href="#" class="relative flex items-center justify-center w-[112px] h-full nav-icon-active">
                 <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
                     <path d="M9.464 1.286C10.294.803 11.092.5 12 .5c.908 0 1.707.303 2.537.786.795.462 1.7 1.142 2.815 1.977l2.232 1.675c1.391 1.042 2.359 1.766 2.888 2.826.53 1.059.53 2.268.528 4.006v4.3c0 1.355 0 2.471-.119 3.355-.124.928-.396 1.747-1.052 2.403-.657.657-1.476.928-2.404 1.053-.884.119-2 .119-3.354.119H7.93c-1.354 0-2.471 0-3.355-.119-.928-.125-1.747-.396-2.403-1.053-.656-.656-.928-1.475-1.053-2.403C1 18.541 1 17.425 1 16.07v-4.3c0-1.738-.002-2.947.528-4.006.53-1.06 1.497-1.784 2.888-2.826L6.65 3.263c1.114-.835 2.02-1.515 2.815-1.977zM10.5 13A1.5 1.5 0 0 0 9 14.5V21h6v-6.5a1.5 1.5 0 0 0-1.5-1.5h-3z"></path>
                 </svg>
             </a>
-            <!-- Icon Video -->
             <a href="#" class="flex items-center justify-center w-[112px] h-[48px] text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                 <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
                     <path d="M10.996 8.132A1 1 0 0 0 9.5 9v4a1 1 0 0 0 1.496.868l3.5-2a1 1 0 0 0 0-1.736l-3.5-2z"></path>
                     <path d="M14.573 2H9.427c-1.824 0-3.293 0-4.45.155-1.2.162-2.21.507-3.013 1.31C1.162 4.266.817 5.277.655 6.477.5 7.634.5 9.103.5 10.927v.146c0 1.824 0 3.293.155 4.45.162 1.2.507 2.21 1.31 3.012.802.803 1.813 1.148 3.013 1.31C6.134 20 7.603 20 9.427 20h5.146c1.824 0 3.293 0 4.45-.155 1.2-.162 2.21-.507 3.012-1.31.803-.802 1.148-1.813 1.31-3.013.155-1.156.155-2.625.155-4.449v-.146c0-1.824 0-3.293-.155-4.45-.162-1.2-.507-2.21-1.31-3.013-.802-.802-1.813-1.147-3.013-1.309C17.866 2 16.397 2 14.573 2zM3.38 4.879c.369-.37.887-.61 1.865-.741C6.251 4.002 7.586 4 9.5 4h5c1.914 0 3.249.002 4.256.138.978.131 1.496.372 1.865.74.37.37.61.888.742 1.866.135 1.007.137 2.342.137 4.256 0 1.914-.002 3.249-.137 4.256-.132.978-.373 1.496-.742 1.865-.369.37-.887.61-1.865.742-1.007.135-2.342.137-4.256.137h-5c-1.914 0-3.249-.002-4.256-.137-.978-.132-1.496-.373-1.865-.742-.37-.369-.61-.887-.741-1.865C2.502 14.249 2.5 12.914 2.5 11c0-1.914.002-3.249.138-4.256.131-.978.372-1.496.74-1.865zM8 21.5a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8z"></path>
                 </svg>
             </a>
-            <!-- Icon Marketplace -->
             <a href="#" class="flex items-center justify-center w-[112px] h-[48px] text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                 <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
                     <path d="M1.588 3.227A3.125 3.125 0 0 1 4.58 1h14.84c1.38 0 2.597.905 2.993 2.227l.816 2.719a6.47 6.47 0 0 1 .272 1.854A5.183 5.183 0 0 1 22 11.455v4.615c0 1.355 0 2.471-.119 3.355-.125.928-.396 1.747-1.053 2.403-.656.657-1.475.928-2.403 1.053-.884.12-2 .119-3.354.119H8.929c-1.354 0-2.47 0-3.354-.119-.928-.125-1.747-.396-2.403-1.053-.657-.656-.929-1.475-1.053-2.403-.12-.884-.119-2-.119-3.354V11.5l.001-.045A5.184 5.184 0 0 1 .5 7.8c0-.628.092-1.252.272-1.854l.816-2.719zM10 21h4v-3.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V21zm6-.002c.918-.005 1.608-.025 2.159-.099.706-.095 1.033-.262 1.255-.485.223-.222.39-.55.485-1.255.099-.735.101-1.716.101-3.159v-3.284a5.195 5.195 0 0 1-1.7.284 5.18 5.18 0 0 1-3.15-1.062A5.18 5.18 0 0 1 12 13a5.18 5.18 0 0 1-3.15-1.062A5.18 5.18 0 0 1 5.7 13a5.2 5.2 0 0 1-1.7-.284V16c0 1.442.002 2.424.1 3.159.096.706.263 1.033.486 1.255.222.223.55.39 1.255.485.551.074 1.24.094 2.159.1V17.5a2.5 2.5 0 0 1 2.5-2.5h3a2.5 2.5 0 0 1 2.5 2.5v3.498zM4.581 3c-.497 0-.935.326-1.078.802l-.815 2.72A4.45 4.45 0 0 0 2.5 7.8a3.2 3.2 0 0 0 5.6 2.117 1 1 0 0 1 1.5 0A3.19 3.19 0 0 0 12 11a3.19 3.19 0 0 0 2.4-1.083 1 1 0 0 1 1.5 0A3.2 3.2 0 0 0 21.5 7.8c0-.434-.063-.865-.188-1.28l-.816-2.72A1.125 1.125 0 0 0 19.42 3H4.58z"></path>
                 </svg>
             </a>
-            <!-- Icon Nhóm -->
             <a href="#" class="flex items-center justify-center w-[112px] h-[48px] text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                 <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
                     <path d="M.5 12c0 6.351 5.149 11.5 11.5 11.5S23.5 18.351 23.5 12 18.351.5 12 .5.5 5.649.5 12zm2 0c0-.682.072-1.348.209-1.99a2 2 0 0 1 0 3.98A9.539 9.539 0 0 1 2.5 12zm.84-3.912A9.502 9.502 0 0 1 12 2.5a9.502 9.502 0 0 1 8.66 5.588 4.001 4.001 0 0 0 0 7.824 9.514 9.514 0 0 1-1.755 2.613A5.002 5.002 0 0 0 14 14.5h-4a5.002 5.002 0 0 0-4.905 4.025 9.515 9.515 0 0 1-1.755-2.613 4.001 4.001 0 0 0 0-7.824zM12 5a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm-2 4a2 2 0 1 0 4 0 2 2 0 0 0-4 0zm11.291 1.01a9.538 9.538 0 0 1 0 3.98 2 2 0 0 1 0-3.98zM16.99 20.087A9.455 9.455 0 0 1 12 21.5c-1.83 0-3.54-.517-4.99-1.414a1.004 1.004 0 0 1-.01-.148V19.5a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v.438a1 1 0 0 1-.01.148z"></path>
                 </svg>
             </a>
-            <!-- Icon Trò chơi -->
             <a href="#" class="flex items-center justify-center w-[112px] h-[48px] text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                 <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
                     <path d="M8 8a1 1 0 0 1 1 1v2h2a1 1 0 1 1 0 2H9v2a1 1 0 1 1-2 0v-2H5a1 1 0 1 1 0-2h2V9a1 1 0 0 1 1-1zm8 2a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0zm-2 4a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0z"></path>
@@ -179,16 +221,13 @@
         </div>
     </div>
 
-    <!-- Phần bên phải -->
     <div class="flex items-center space-x-2">
-        <!-- Icon Menu  -->
         <a href="#" class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
             <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
                 <path d="M18.5 1A1.5 1.5 0 0 0 17 2.5v3A1.5 1.5 0 0 0 18.5 7h3A1.5 1.5 0 0 0 23 5.5v-3A1.5 1.5 0 0 0 21.5 1h-3zm0 8a1.5 1.5 0 0 0-1.5 1.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 21.5 9h-3zm-16 8A1.5 1.5 0 0 0 1 18.5v3A1.5 1.5 0 0 0 2.5 23h3A1.5 1.5 0 0 0 7 21.5v-3A1.5 1.5 0 0 0 5.5 17h-3zm8 0A1.5 1.5 0 0 0 9 18.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3a1.5 1.5 0 0 0-1.5-1.5h-3zm8 0a1.5 1.5 0 0 0-1.5 1.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3a1.5 1.5 0 0 0-1.5-1.5h-3zm-16-8A1.5 1.5 0 0 0 1 10.5v3A1.5 1.5 0 0 0 2.5 15h3A1.5 1.5 0 0 0 7 13.5v-3A1.5 1.5 0 0 0 5.5 9h-3zm0-8A1.5 1.5 0 0 0 1 2.5v3A1.5 1.5 0 0 0 2.5 7h3A1.5 1.5 0 0 0 7 5.5v-3A1.5 1.5 0 0 0 5.5 1h-3zm8 0A1.5 1.5 0 0 0 9 2.5v3A1.5 1.5 0 0 0 10.5 7h3A1.5 1.5 0 0 0 15 5.5v-3A1.5 1.5 0 0 0 13.5 1h-3zm0 8A1.5 1.5 0 0 0 9 10.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 13.5 9h-3z"></path>
             </svg>
         </a>
 
-        <!-- Icon Messenger  -->
         <a th:href="@{/facebook/user/messages}" class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
             <svg fill="currentColor" viewBox="0 0 12 12" class="w-5 h-5">
                 <path d="m106.868 921.248-1.892 2.925a.32.32 0 0 1-.443.094l-1.753-1.134a.2.2 0 0 0-.222.003l-1.976 1.363c-.288.199-.64-.143-.45-.437l1.892-2.925a.32.32 0 0 1 .443-.095l1.753 1.134a.2.2 0 0 0 .222-.003l1.976-1.363c.288-.198.64.144.45.438m-3.368-4.251c-3.323 0-5.83 2.432-5.83 5.658 0 1.642.652 3.128 1.834 4.186a.331.331 0 0 1 .111.234l.03 1.01a.583.583 0 0 0 .82.519l1.13-.5a.32.32 0 0 1 .22-.015c.541.148 1.108.223 1.685.223 3.323 0 5.83-2.432 5.83-5.657 0-3.226-2.507-5.658-5.83-5.658" transform="translate(-97.5 -916.655)"></path>
@@ -196,7 +235,6 @@
             <span class="icon-badge" th:if="${unreadMessages != null and unreadMessages > 0}" th:text="${unreadMessages}"></span>
         </a>
 
-        <!-- Icon Chuông thông báo  -->
         <a href="#" class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
             <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
                 <path d="M3 9.5a9 9 0 1 1 18 0v2.927c0 1.69.475 3.345 1.37 4.778a1.5 1.5 0 0 1-1.272 2.295h-4.625a4.5 4.5 0 0 1-8.946 0H2.902a1.5 1.5 0 0 1-1.272-2.295A9.01 9.01 0 0 0 3 12.43V9.5zm6.55 10a2.5 2.5 0 0 0 4.9 0h-4.9z"></path>
@@ -204,13 +242,10 @@
             <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">4</span>
         </a>
 
-        <!-- Profile và Menu dropdown  -->
         <div class="relative">
             <button id="profile-menu-button" class="focus:outline-none relative">
-                <!-- Ảnh đại diện -->
                 <img th:src="@{/images/default-avatar.svg}" src="https://placehold.co/40x40/E4E6EB/7F7F7F?text=User" alt="Profile" class="h-10 w-10 rounded-full object-cover">
 
-                <!-- Vòng tròn chứa mũi tên dropdown -->
                 <div class="absolute -bottom-0.5 -right-0.5">
                     <div class="bg-gray-200 rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
                         <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" class="text-gray-800">
@@ -222,7 +257,6 @@
                 </div>
             </button>
 
-            <!-- Menu thả xuống  -->
             <div id="profile-dropdown-menu" class="hidden absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-xl z-50 overflow-hidden">
                 <div class="p-2 custom-scrollbar" style="max-height: 90vh; overflow-y: auto;">
                     <div class="p-2 rounded-lg shadow-md mb-2 bg-white">
@@ -259,74 +293,63 @@
     </div>
 </nav>
 
-<!--Trái Trang-->
-<div class="container mx-auto flex mt-6 space-x-6">
-    <div class="w-1/4 p-2">
+<div class="container mx-auto mt-6">
+    <div id="left-sidebar" class="w-1/4 p-2">
         <ul class="space-y-1">
-            <!-- Profile Link -->
             <li>
                 <a th:href="@{/facebook/profile}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <img th:src="@{/images/default-avatar.svg}" src="/images/default-avatar.svg" alt="Profile" class="h-9 w-9 rounded-full object-cover">
                     <span class="font-semibold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</span>
                 </a>
             </li>
-            <!-- Friends -->
             <li>
                 <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -333px; background-size: auto; display: inline-block;"></i>
                     <span class="font-semibold">Bạn bè</span>
                 </a>
             </li>
-            <!-- Memories -->
             <li>
                 <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -481px; background-size: auto; display: inline-block;"></i>
                     <span class="font-semibold">Kỷ niệm</span>
                 </a>
             </li>
-            <!-- Saved -->
             <li>
                 <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -222px; background-size: auto; display: inline-block;"></i>
                     <span class="font-semibold">Đã lưu</span>
                 </a>
             </li>
-            <!-- Groups -->
             <li>
                 <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -74px; background-size: auto; display: inline-block;"></i>
                     <span class="font-semibold">Nhóm</span>
                 </a>
             </li>
-            <!-- Video -->
             <li>
                 <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -555px; background-size: auto; display: inline-block;"></i>
                     <span class="font-semibold">Video</span>
                 </a>
             </li>
-            <!-- Marketplace -->
             <li>
                 <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -444px; background-size: auto; display: inline-block;"></i>
                     <span class="font-semibold">Marketplace</span>
                 </a>
             </li>
-            <!-- Feeds -->
             <li>
                 <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <img class="w-9 h-9" src="https://static.xx.fbcdn.net/rsrc.php/v4/yb/r/eECk3ceTaHJ.png" alt="Feeds">
                     <span class="font-semibold">Bảng feed</span>
                 </a>
             </li>
-            <!-- Events -->
             <li>
                 <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -296px; background-size: auto; display: inline-block;"></i>
                     <span class="font-semibold">Sự kiện</span>
                 </a>
             </li>
-            <!-- Ads Manager -->
             <li>
                 <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yq/r/_iR-92BGwSA.png'); background-position: 0px -111px; background-size: auto; display: inline-block;"></i>
@@ -334,58 +357,49 @@
                 </a>
             </li>
 
-            <!-- Các mục ẩn -->
             <div id="more-items-list" class="hidden space-y-1">
-                <!-- Gaming -->
                 <li>
                     <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                         <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -111px; background-size: auto; display: inline-block;"></i>
                         <span class="font-semibold">Chơi game</span>
                     </a>
                 </li>
-                <!-- Orders -->
                 <li>
                     <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                         <img class="w-9 h-9" src="https://static.xx.fbcdn.net/rsrc.php/v4/yv/r/GJ4EaivDaSj.png" alt="Orders">
                         <span class="font-semibold">Đơn đặt hàng và thanh toán</span>
                     </a>
                 </li>
-                <!-- Messenger -->
                 <li>
                     <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                         <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yQ/r/dGd0_oderTd.png'); background-position: 0px 0px; background-size: auto; display: inline-block;"></i>
                         <span class="font-semibold">Messenger</span>
                     </a>
                 </li>
-                <!-- Messenger Kids -->
                 <li>
                     <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                         <img class="w-9 h-9" src="https://static.xx.fbcdn.net/rsrc.php/v4/yN/r/6Z9DShdc7zU.png" alt="Messenger Kids">
                         <span class="font-semibold">Messenger Kids</span>
                     </a>
                 </li>
-                <!-- Reels -->
                 <li>
                     <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                         <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -37px; background-size: auto; display: inline-block;"></i>
                         <span class="font-semibold">Reels</span>
                     </a>
                 </li>
-                <!-- Birthdays -->
                 <li>
                     <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                         <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yq/r/MKwrVp_7k1D.png'); background-position: 0px 0px; background-size: auto; display: inline-block;"></i>
                         <span class="font-semibold">Sinh nhật</span>
                     </a>
                 </li>
-                <!-- Pages -->
                 <li>
                     <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                         <i class="w-9 h-9" style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yA/r/FVAeV5GPLIk.png'); background-position: 0px -148px; background-size: auto; display: inline-block;"></i>
                         <span class="font-semibold">Trang</span>
                     </a>
                 </li>
-                <!-- Gaming Video -->
                 <li>
                     <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                         <img class="w-9 h-9" src="https://static.xx.fbcdn.net/rsrc.php/v4/yJ/r/fGWbDwbx9W4.png" alt="Gaming Video">
@@ -394,7 +408,6 @@
                 </li>
             </div>
 
-            <!-- Nút Xem thêm/Ẩn bớt -->
             <li id="toggle-more-button">
                 <div class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
                     <div class="w-9 h-9 bg-gray-300 rounded-full flex items-center justify-center">
@@ -409,7 +422,6 @@
             </li>
         </ul>
 
-        <!-- Footer Links -->
         <div class="mt-4 px-2 text-xs text-gray-500">
             <a href="#" class="hover:underline">Quyền riêng tư</a> ·
             <a href="#" class="hover:underline">Điều khoản</a> ·
@@ -420,436 +432,157 @@
         </div>
     </div>
 
-    <!-- Script để xử lý nút Xem thêm bên trái trang home -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const toggleButton = document.getElementById('toggle-more-button');
-            const moreItemsList = document.getElementById('more-items-list');
-            const toggleText = document.getElementById('toggle-text');
-            const toggleIcon = document.getElementById('toggle-icon');
-
-            if (toggleButton) {
-                toggleButton.addEventListener('click', function () {
-                    const isHidden = moreItemsList.classList.contains('hidden');
-                    if (isHidden) {
-                        moreItemsList.classList.remove('hidden');
-                        toggleText.textContent = 'Ẩn bớt';
-                        toggleIcon.style.transform = 'rotate(180deg)';
-                    } else {
-                        moreItemsList.classList.add('hidden');
-                        toggleText.textContent = 'Xem thêm';
-                        toggleIcon.style.transform = 'rotate(0deg)';
-                    }
-                });
-            }
-        });
-    </script>
-
-
-    <!-- Middle Panel -->
-    <div class="w-2/4 space-y-6">
-
-
-        <!--        đăng bài -->
-        <div class="bg-white rounded-xl shadow px-3 pt-3 pb-2 max-w-[582px] mx-auto">
-            <!-- Top part: Avatar and input -->
-            <div class="flex items-center space-x-3">
-                <a th:href="@{/facebook/profile}">
-                    <div class="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
-                        <img th:src="@{/images/default-avatar.svg}" src="/images/default-avatar.svg" alt="Avatar">
+    <div id="main-content" class="w-2/4">
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl shadow px-3 pt-3 pb-2 max-w-[582px] mx-auto">
+                <div class="flex items-center space-x-3">
+                    <a th:href="@{/facebook/profile}">
+                        <div class="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
+                            <img th:src="@{/images/default-avatar.svg}" src="/images/default-avatar.svg" alt="Avatar">
+                        </div>
+                    </a>
+                    <div class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-gray-500 hover:bg-gray-200 cursor-pointer"
+                         onclick="openCreatePostModal()">
+                        <span th:text="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'">Bạn đang nghĩ gì thế?</span>
                     </div>
-                </a>
-                <div class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-gray-500 hover:bg-gray-200 cursor-pointer"
-                     onclick="openCreatePostModal()">
-                    <span th:text="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'">Bạn đang nghĩ gì thế?</span>
+                </div>
+
+                <hr class="my-3">
+
+                <div class="flex justify-around text-sm">
+                    <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                        <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yr/r/c0dWho49-X3.png" alt="Live Video Icon" class="w-6 h-6">
+                        <span class="font-semibold text-gray-600">Video trực tiếp</span>
+                    </div>
+
+                    <div onclick="document.getElementById('pictureFileInput').click(); openCreatePostModal()"
+                         class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                        <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png" alt="Photo/Video Icon" class="w-6 h-6">
+                        <span class="font-semibold text-gray-600">Ảnh/video</span>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                        <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png" alt="Feeling/Activity Icon" class="w-6 h-6">
+                        <span class="font-semibold text-gray-600">Cảm xúc/hoạt động</span>
+                    </div>
                 </div>
             </div>
 
-            <hr class="my-3">
+            <div class="max-w-[582px] mx-auto">
+                <div class="flex space-x-2 overflow-x-auto pb-2">
+                    <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md">
+                        <img th:src="@{/images/default-avatar.svg}" src="/images/default-avatar.svg" class="w-full h-full object-cover" alt="Create a story">
 
-            <!-- Bottom part: Action buttons -->
-            <div class="flex justify-around text-sm">
-                <!-- Live Video -->
-                <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                    <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yr/r/c0dWho49-X3.png" alt="Live Video Icon" class="w-6 h-6">
-                    <span class="font-semibold text-gray-600">Video trực tiếp</span>
-                </div>
+                        <div class="absolute bottom-0 left-0 right-0 h-1/3 bg-white flex flex-col items-center justify-end p-2">
+                            <span class="font-semibold text-xs text-center">Tạo tin</span>
+                        </div>
 
-                <!-- Photo/Video -->
-                <div onclick="document.getElementById('pictureFileInput').click(); openCreatePostModal()"
-                     class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                    <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png" alt="Photo/Video Icon" class="w-6 h-6">
-                    <span class="font-semibold text-gray-600">Ảnh/video</span>
-                </div>
+                        <div class="absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center border-4 border-white">
+                            <i class="fas fa-plus text-white text-xl"></i>
+                        </div>
+                    </div>
 
-                <!-- Feeling/Activity -->
-                <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                    <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png" alt="Feeling/Activity Icon" class="w-6 h-6">
-                    <span class="font-semibold text-gray-600">Cảm xúc/hoạt động</span>
+                    <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md group">
+                        <img th:src="@{/images/model.jpg}" src="/images/model.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="User Story">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-3 left-3 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
+                            <img th:src="@{/images/girl.jpg}" src="/images/girl.jpg" class="w-full h-full object-cover" alt="User Avatar">
+                        </div>
+                        <span class="absolute bottom-2 left-2 text-white font-semibold text-xs">Anuska Sharma</span>
+                    </div>
+
+                    <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md group">
+                        <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="User Story">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-3 left-3 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
+                            <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" class="w-full h-full object-cover" alt="User Avatar">
+                        </div>
+                        <span class="absolute bottom-2 left-2 text-white font-semibold text-xs">Gaurav Gall</span>
+                    </div>
+
+                    <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md group">
+                        <img th:src="@{/images/mountains.jpg}" src="/images/mountains.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="User Story">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-3 left-3 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
+                            <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" class="w-full h-full object-cover" alt="User Avatar">
+                        </div>
+                        <span class="absolute bottom-2 left-2 text-white font-semibold text-xs">Priyank Saksena</span>
+                    </div>
+
+                    <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md group">
+                        <img th:src="@{/images/shoes.jpg}" src="/images/shoes.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="User Story">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-3 left-3 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
+                            <img th:src="@{/images/model.jpg}" src="/images/model.jpg" class="w-full h-full object-cover" alt="User Avatar">
+                        </div>
+                        <span class="absolute bottom-2 left-2 text-white font-semibold text-xs">Pragati Adhikari</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-
-<!--        story-->
-        <div class="max-w-[582px] mx-auto">
-            <div class="flex space-x-2 overflow-x-auto pb-2">
-                <!-- Create Story Card -->
-                <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md">
-                    <!-- Background Image -->
-                    <img th:src="@{/images/default-avatar.svg}" src="/images/default-avatar.svg" class="w-full h-full object-cover" alt="Create a story">
-
-                    <!-- Bottom Section -->
-                    <div class="absolute bottom-0 left-0 right-0 h-1/3 bg-white flex flex-col items-center justify-end p-2">
-                        <span class="font-semibold text-xs text-center">Tạo tin</span>
-                    </div>
-
-                    <!-- Plus Icon -->
-                    <div class="absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center border-4 border-white">
-                        <i class="fas fa-plus text-white text-xl"></i>
-                    </div>
-                </div>
-
-                <!-- Story Card 1 -->
-                <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md group">
-                    <img th:src="@{/images/model.jpg}" src="/images/model.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="User Story">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute top-3 left-3 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
-                        <img th:src="@{/images/girl.jpg}" src="/images/girl.jpg" class="w-full h-full object-cover" alt="User Avatar">
-                    </div>
-                    <span class="absolute bottom-2 left-2 text-white font-semibold text-xs">Anuska Sharma</span>
-                </div>
-
-                <!-- Story Card 2 -->
-                <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md group">
-                    <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="User Story">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute top-3 left-3 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
-                        <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" class="w-full h-full object-cover" alt="User Avatar">
-                    </div>
-                    <span class="absolute bottom-2 left-2 text-white font-semibold text-xs">Gaurav Gall</span>
-                </div>
-
-                <!-- Story Card 3 -->
-                <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md group">
-                    <img th:src="@{/images/mountains.jpg}" src="/images/mountains.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="User Story">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute top-3 left-3 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
-                        <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" class="w-full h-full object-cover" alt="User Avatar">
-                    </div>
-                    <span class="absolute bottom-2 left-2 text-white font-semibold text-xs">Priyank Saksena</span>
-                </div>
-
-                <!-- Story Card 4 -->
-                <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md group">
-                    <img th:src="@{/images/shoes.jpg}" src="/images/shoes.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="User Story">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute top-3 left-3 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
-                        <img th:src="@{/images/model.jpg}" src="/images/model.jpg" class="w-full h-full object-cover" alt="User Avatar">
-                    </div>
-                    <span class="absolute bottom-2 left-2 text-white font-semibold text-xs">Pragati Adhikari</span>
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <!--        Tạo Bài Đăng-->
-        <div id="createPostModal"
-             class="fixed inset-0 bg-white bg-opacity-80 hidden items-center justify-center z-50 p-4">
-            <div class="bg-white w-full max-w-lg rounded-lg shadow-xl border border-gray-300 flex flex-col"
-                 style="height: 500px;">
-                <div class="relative flex-shrink-0 flex justify-center items-center border-b p-3">
-                    <h2 class="text-xl font-bold">Tạo bài viết</h2>
-                    <button onclick="closeCreatePostModal()"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-gray-600 text-2xl">
-                        &times;
-                    </button>
-                </div>
-
-                <form th:action="@{/facebook/status/homepost}" method="post" enctype="multipart/form-data"
-                      class="p-4 flex flex-col flex-grow overflow-y-auto">
-                    <div class="flex-shrink-0 flex items-center space-x-3 mb-4">
+            <div th:each="status : ${statuses}" class="bg-white rounded-xl shadow mt-4 max-w-[582px] mx-auto">
+                <div class="flex items-center justify-between p-3">
+                    <div class="flex items-center space-x-3">
                         <div class="h-10 w-10 rounded-full overflow-hidden">
-                            <img th:src="@{/images/default-avatar.svg}" alt="Avatar">
+                            <img th:src="@{/images/default-avatar.svg}" alt="User Avatar">
                         </div>
                         <div>
-                            <p class="font-semibold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
-                            <button type="button" id="privacyButton" onclick="openPrivacyModal()"
-                                    class="bg-gray-200 rounded px-2 py-0.5 text-xs font-semibold text-gray-700 flex items-center gap-x-1 hover:bg-gray-300">
-                                <i class="fas fa-user-friends text-xs"></i>
-                                <span id="privacyButtonText">Bạn bè</span>
-                                <i class="fas fa-caret-down text-xs ml-1"></i>
-                            </button>
-                            <input type="hidden" id="privacyInput" name="privacy" value="friends">
+                            <p class="font-semibold text-sm" th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">
+                                User Name
+                            </p>
+                            <span class="text-xs text-gray-500"
+                                  th:text="${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')}">
+                        Just now
+                    </span>
                         </div>
                     </div>
-
-                    <div class="flex-grow relative">
-                <textarea id="postContentTextarea" name="content"
-                          th:placeholder="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'"
-                          class="w-full h-full border-none focus:outline-none resize-none text-2xl placeholder-gray-500 p-0 bg-transparent overflow-y-auto"></textarea>
-                        <i class="far fa-smile text-gray-400 text-2xl absolute bottom-6 right-0 cursor-pointer"></i>
-                    </div>
-
-                    <div id="imagePreviewContainer" class="flex-shrink-0 mt-3 hidden"></div>
-
-                    <div class="flex-shrink-0 flex items-center justify-between border border-gray-300 rounded-lg p-3 mt-3">
-                        <span class="font-semibold text-gray-600">Thêm vào bài viết của bạn</span>
-                        <div class="flex items-center space-x-2">
-                            <label for="pictureFileInput" class="cursor-pointer" title="Ảnh/video"><img
-                                    src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png" alt="Photo/Video"
-                                    class="w-6 h-6"></label>
-                            <input type="file" id="pictureFileInput" name="pictureFile" accept="image/*" class="hidden">
-                            <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yq/r/b37mHA1PjfK.png" alt="Tag People"
-                                 class="w-6 h-6 cursor-pointer" title="Gắn thẻ người khác">
-                            <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png"
-                                 alt="Feeling/Activity" class="w-6 h-6 cursor-pointer" title="Cảm xúc/hoạt động">
-                            <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y1/r/8zlaieBcZ72.png" alt="Check In"
-                                 class="w-6 h-6 cursor-pointer" title="Check in">
-                            <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yT/r/q7MiRkL7MLC.png" alt="GIF"
-                                 class="w-6 h-6 cursor-pointer" title="GIF">
-                            <i class="fas fa-ellipsis-h text-gray-500 cursor-pointer"></i>
+                    <div class="flex items-center space-x-2">
+                        <div class="text-gray-500 cursor-pointer hover:bg-gray-100 rounded-full p-2">
+                            <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+                                <g fill-rule="evenodd" transform="translate(-446 -350)">
+                                    <path d="M458 360a2 2 0 1 1-4 0 2 2 0 0 1 4 0m6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0m-12 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0"></path>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="text-gray-500 cursor-pointer hover:bg-gray-100 rounded-full p-2">
+                            <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+                                <path d="M15.543 3.043a1 1 0 1 1 1.414 1.414L11.414 10l5.543 5.542a1 1 0 0 1-1.414 1.415L10 11.414l-5.543 5.543a1 1 0 0 1-1.414-1.415L8.586 10 3.043 4.457a1 1 0 1 1 1.414-1.414L10 8.586l5.543-5.543z"></path>
+                            </svg>
                         </div>
                     </div>
-
-                    <button id="postSubmitButton" type="submit" disabled
-                            class="flex-shrink-0 w-full bg-gray-200 text-gray-400 font-bold py-2 px-4 rounded-lg mt-3 cursor-not-allowed">
-                        Đăng
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <div id="privacyModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
-            <div class="bg-white w-full max-w-lg rounded-lg shadow-xl border">
-                <div class="relative flex justify-center items-center border-b p-3">
-                    <button onclick="closePrivacyModal()"
-                            class="absolute left-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <h2 class="text-xl font-bold">Đối tượng của bài viết</h2>
                 </div>
-                <div class="p-4 space-y-2">
-                    <div class="font-semibold">Ai có thể xem bài viết của bạn?</div>
-                    <p class="text-sm text-gray-600">Bài viết của bạn sẽ hiển thị trên Bảng tin, trang cá nhân và kết
-                        quả tìm kiếm.</p>
 
-                    <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                        <div class="flex items-center gap-x-3">
-                            <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i
-                                    class="fas fa-globe-americas text-2xl"></i></div>
-                            <div>
-                                <div class="font-semibold">Công khai</div>
-                                <p class="text-sm text-gray-600">Bất kỳ ai ở trên hoặc ngoài Facebook</p>
-                            </div>
+                <div class="px-3 pb-2 text-sm text-gray-800" th:text="${status.content}">
+                    Post content here
+                </div>
+
+                <div th:if="${status.picture != null and !status.picture.isEmpty()}" class="mt-2">
+                    <img th:src="@{/images/{filename}(filename=${status.picture})}" alt="Post Image"
+                         class="w-full">
+                </div>
+
+                <div class="p-1">
+                    <hr class="my-1">
+                    <div class="flex justify-around text-gray-600 font-semibold text-sm">
+                        <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png'); background-position: 0px -830px; background-size: auto; width: 20px; height: 20px; background-repeat: no-repeat; display: inline-block;"></i>
+                            <span>Thích</span>
                         </div>
-                        <input type="radio" name="privacy_option" value="public"
-                               onchange="selectPrivacy('public', 'Công khai', 'fa-globe-americas')">
-                    </label>
-
-                    <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer bg-blue-100">
-                        <div class="flex items-center gap-x-3">
-                            <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i
-                                    class="fas fa-user-friends text-2xl"></i></div>
-                            <div>
-                                <div class="font-semibold">Bạn bè</div>
-                                <p class="text-sm text-gray-600">Bạn bè của bạn trên Facebook</p>
-                            </div>
+                        <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png'); background-position: 0px -788px; background-size: auto; width: 20px; height: 20px; background-repeat: no-repeat; display: inline-block;"></i>
+                            <span>Bình luận</span>
                         </div>
-                        <input type="radio" name="privacy_option" value="friends"
-                               onchange="selectPrivacy('friends', 'Bạn bè', 'fa-user-friends')" checked>
-                    </label>
-
-                    <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                        <div class="flex items-center gap-x-3">
-                            <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i
-                                    class="fas fa-lock text-2xl"></i></div>
-                            <div>
-                                <div class="font-semibold">Chỉ mình tôi</div>
-                            </div>
+                        <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png'); background-position: 0px -851px; background-size: auto; width: 20px; height: 20px; background-repeat: no-repeat; display: inline-block;"></i>
+                            <span>Chia sẻ</span>
                         </div>
-                        <input type="radio" name="privacy_option" value="private"
-                               onchange="selectPrivacy('private', 'Chỉ mình tôi', 'fa-lock')">
-                    </label>
-
-                </div>
-                <div class="p-4 flex justify-end gap-x-2 border-t">
-                    <button onclick="closePrivacyModal()"
-                            class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy
-                    </button>
-                    <button onclick="closePrivacyModal()"
-                            class="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Xong
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // --- Các hàm có sẵn ---
-            function openCreatePostModal() {
-            }
-
-            const postContentTextarea = document.getElementById('postContentTextarea');
-            /* ... các const khác ... */
-
-            const createPostModal = document.getElementById('createPostModal');
-            const privacyModal = document.getElementById('privacyModal');
-            const privacyButtonText = document.getElementById('privacyButtonText');
-            const privacyButton = document.getElementById('privacyButton');
-            const privacyInput = document.getElementById('privacyInput');
-
-            function openPrivacyModal() {
-                privacyModal.classList.remove('hidden');
-                privacyModal.classList.add('flex');
-            }
-
-            function closePrivacyModal() {
-                privacyModal.classList.add('hidden');
-                privacyModal.classList.remove('flex');
-            }
-
-            function selectPrivacy(value, text, iconClass) {
-
-                privacyInput.value = value;
-
-
-                privacyButtonText.textContent = text;
-
-
-                const icon = privacyButton.querySelector('i');
-                icon.className = `fas ${iconClass} text-xs`;
-
-
-                closePrivacyModal();
-            }
-
-
-            function openCreatePostModal() {
-                document.getElementById("createPostModal").classList.remove("hidden");
-                document.getElementById("createPostModal").classList.add("flex");
-            }
-            const pictureFileInput = document.getElementById('pictureFileInput');
-            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-            const postSubmitButton = document.getElementById('postSubmitButton');
-            function updatePostButtonState() {
-                const hasText = postContentTextarea.value.trim() !== '';
-                const hasImage = pictureFileInput.files.length > 0;
-                if (hasText || hasImage) {
-                    postSubmitButton.disabled = false;
-                    postSubmitButton.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
-                    postSubmitButton.classList.add('bg-blue-500', 'text-white', 'hover:bg-blue-600');
-                } else {
-                    postSubmitButton.disabled = true;
-                    postSubmitButton.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
-                    postSubmitButton.classList.remove('bg-blue-500', 'text-white', 'hover:bg-blue-600');
-                }
-            }
-
-            pictureFileInput.addEventListener('change', function (event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const previewHtml = `<div class="preview-wrapper"><img src="${e.target.result}" alt="Image Preview"><div class="preview-actions"><button type="button" class="action-btn"><i class="fas fa-edit"></i> Chỉnh sửa</button></div><button type="button" class="remove-image-btn" onclick="removeImagePreview()">&times;</button></div>`;
-                        imagePreviewContainer.innerHTML = previewHtml;
-                        imagePreviewContainer.classList.remove('hidden');
-                    };
-                    reader.readAsDataURL(file);
-                }
-                updatePostButtonState();
-            });
-
-            function removeImagePreview() {
-                imagePreviewContainer.innerHTML = '';
-                imagePreviewContainer.classList.add('hidden');
-                pictureFileInput.value = null;
-                updatePostButtonState();
-            }
-
-            postContentTextarea.addEventListener('input', updatePostButtonState);
-
-            function closeCreatePostModal() {
-                document.getElementById("createPostModal").classList.add("hidden");
-                document.getElementById("createPostModal").classList.remove("flex");
-                removeImagePreview();
-                postContentTextarea.value = '';
-            }
-        </script>
-
-<!--        Hiển thị bài đăng-->
-
-        <div th:each="status : ${statuses}" class="bg-white rounded-xl shadow mt-4 max-w-[582px] mx-auto">
-            <!-- Post Header -->
-            <div class="flex items-center justify-between p-3">
-                <div class="flex items-center space-x-3">
-                    <div class="h-10 w-10 rounded-full overflow-hidden">
-                        <img th:src="@{/images/default-avatar.svg}" alt="User Avatar">
-                    </div>
-                    <div>
-                        <p class="font-semibold text-sm" th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">
-                            User Name
-                        </p>
-                        <span class="text-xs text-gray-500"
-                              th:text="${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')}">
-                    Just now
-                </span>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <!-- Ellipsis Icon -->
-                    <div class="text-gray-500 cursor-pointer hover:bg-gray-100 rounded-full p-2">
-                        <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
-                            <g fill-rule="evenodd" transform="translate(-446 -350)">
-                                <path d="M458 360a2 2 0 1 1-4 0 2 2 0 0 1 4 0m6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0m-12 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0"></path>
-                            </g>
-                        </svg>
-                    </div>
-                    <!-- Close Icon -->
-                    <div class="text-gray-500 cursor-pointer hover:bg-gray-100 rounded-full p-2">
-                        <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
-                            <path d="M15.543 3.043a1 1 0 1 1 1.414 1.414L11.414 10l5.543 5.542a1 1 0 0 1-1.414 1.415L10 11.414l-5.543 5.543a1 1 0 0 1-1.414-1.415L8.586 10 3.043 4.457a1 1 0 1 1 1.414-1.414L10 8.586l5.543-5.543z"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Post Content -->
-            <div class="px-3 pb-2 text-sm text-gray-800" th:text="${status.content}">
-                Post content here
-            </div>
-
-            <!-- Post Image -->
-            <div th:if="${status.picture != null and !status.picture.isEmpty()}" class="mt-2">
-                <img th:src="@{/images/{filename}(filename=${status.picture})}" alt="Post Image"
-                     class="w-full">
-            </div>
-
-            <!-- Actions (Like, Comment, Share) -->
-            <div class="p-1">
-                <hr class="my-1">
-                <div class="flex justify-around text-gray-600 font-semibold text-sm">
-                    <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                        <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png'); background-position: 0px -830px; background-size: auto; width: 20px; height: 20px; background-repeat: no-repeat; display: inline-block;"></i>
-                        <span>Thích</span>
-                    </div>
-                    <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                        <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png'); background-position: 0px -788px; background-size: auto; width: 20px; height: 20px; background-repeat: no-repeat; display: inline-block;"></i>
-                        <span>Bình luận</span>
-                    </div>
-                    <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                        <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png'); background-position: 0px -851px; background-size: auto; width: 20px; height: 20px; background-repeat: no-repeat; display: inline-block;"></i>
-                        <span>Chia sẻ</span>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- Right Panel -->
-    <div class="w-1/4 space-y-6">
+    <div id="right-sidebar" class="w-1/4 space-y-6">
         <div class="bg-white rounded-lg shadow p-4">
             <h4 class="font-semibold mb-2">Your pages</h4>
             <a class="flex items-center space-x-3 mb-2" href="#">
@@ -912,26 +645,249 @@
         </div>
     </div>
 </div>
+
+<div id="createPostModal" class="fixed inset-0 bg-white bg-opacity-80 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white w-full max-w-lg rounded-lg shadow-xl border border-gray-300 flex flex-col" style="height: 500px;">
+        <div class="relative flex-shrink-0 flex justify-center items-center border-b p-3">
+            <h2 class="text-xl font-bold">Tạo bài viết</h2>
+            <button onclick="closeCreatePostModal()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-gray-600 text-2xl">
+                &times;
+            </button>
+        </div>
+
+        <form th:action="@{/facebook/status/homepost}" method="post" enctype="multipart/form-data" class="p-4 flex flex-col flex-grow overflow-y-auto">
+            <div class="flex-shrink-0 flex items-center space-x-3 mb-4">
+                <div class="h-10 w-10 rounded-full overflow-hidden">
+                    <img th:src="@{/images/default-avatar.svg}" alt="Avatar">
+                </div>
+                <div>
+                    <p class="font-semibold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
+                    <button type="button" id="privacyButton" onclick="openPrivacyModal()" class="bg-gray-200 rounded px-2 py-0.5 text-xs font-semibold text-gray-700 flex items-center gap-x-1 hover:bg-gray-300">
+                        <i class="fas fa-user-friends text-xs"></i>
+                        <span id="privacyButtonText">Bạn bè</span>
+                        <i class="fas fa-caret-down text-xs ml-1"></i>
+                    </button>
+                    <input type="hidden" id="privacyInput" name="privacy" value="friends">
+                </div>
+            </div>
+
+            <div class="flex-grow relative">
+                <textarea id="postContentTextarea" name="content" th:placeholder="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'" class="w-full h-full border-none focus:outline-none resize-none text-2xl placeholder-gray-500 p-0 bg-transparent overflow-y-auto"></textarea>
+                <i class="far fa-smile text-gray-400 text-2xl absolute bottom-6 right-0 cursor-pointer"></i>
+            </div>
+
+            <div id="imagePreviewContainer" class="flex-shrink-0 mt-3 hidden"></div>
+
+            <div class="flex-shrink-0 flex items-center justify-between border border-gray-300 rounded-lg p-3 mt-3">
+                <span class="font-semibold text-gray-600">Thêm vào bài viết của bạn</span>
+                <div class="flex items-center space-x-2">
+                    <label for="pictureFileInput" class="cursor-pointer" title="Ảnh/video"><img src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png" alt="Photo/Video" class="w-6 h-6"></label>
+                    <input type="file" id="pictureFileInput" name="pictureFile" accept="image/*" class="hidden">
+                    <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yq/r/b37mHA1PjfK.png" alt="Tag People" class="w-6 h-6 cursor-pointer" title="Gắn thẻ người khác">
+                    <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png" alt="Feeling/Activity" class="w-6 h-6 cursor-pointer" title="Cảm xúc/hoạt động">
+                    <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y1/r/8zlaieBcZ72.png" alt="Check In" class="w-6 h-6 cursor-pointer" title="Check in">
+                    <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yT/r/q7MiRkL7MLC.png" alt="GIF" class="w-6 h-6 cursor-pointer" title="GIF">
+                    <i class="fas fa-ellipsis-h text-gray-500 cursor-pointer"></i>
+                </div>
+            </div>
+
+            <button id="postSubmitButton" type="submit" disabled class="flex-shrink-0 w-full bg-gray-200 text-gray-400 font-bold py-2 px-4 rounded-lg mt-3 cursor-not-allowed">
+                Đăng
+            </button>
+        </form>
+    </div>
+</div>
+
+<div id="privacyModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white w-full max-w-lg rounded-lg shadow-xl border">
+        <div class="relative flex justify-center items-center border-b p-3">
+            <button onclick="closePrivacyModal()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="text-xl font-bold">Đối tượng của bài viết</h2>
+        </div>
+        <div class="p-4 space-y-2">
+            <div class="font-semibold">Ai có thể xem bài viết của bạn?</div>
+            <p class="text-sm text-gray-600">Bài viết của bạn sẽ hiển thị trên Bảng tin, trang cá nhân và kết quả tìm kiếm.</p>
+
+            <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                <div class="flex items-center gap-x-3">
+                    <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i class="fas fa-globe-americas text-2xl"></i></div>
+                    <div>
+                        <div class="font-semibold">Công khai</div>
+                        <p class="text-sm text-gray-600">Bất kỳ ai ở trên hoặc ngoài Facebook</p>
+                    </div>
+                </div>
+                <input type="radio" name="privacy_option" value="public" onchange="selectPrivacy('public', 'Công khai', 'fa-globe-americas')">
+            </label>
+
+            <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer bg-blue-100">
+                <div class="flex items-center gap-x-3">
+                    <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i class="fas fa-user-friends text-2xl"></i></div>
+                    <div>
+                        <div class="font-semibold">Bạn bè</div>
+                        <p class="text-sm text-gray-600">Bạn bè của bạn trên Facebook</p>
+                    </div>
+                </div>
+                <input type="radio" name="privacy_option" value="friends" onchange="selectPrivacy('friends', 'Bạn bè', 'fa-user-friends')" checked>
+            </label>
+
+            <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                <div class="flex items-center gap-x-3">
+                    <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i class="fas fa-lock text-2xl"></i></div>
+                    <div>
+                        <div class="font-semibold">Chỉ mình tôi</div>
+                    </div>
+                </div>
+                <input type="radio" name="privacy_option" value="private" onchange="selectPrivacy('private', 'Chỉ mình tôi', 'fa-lock')">
+            </label>
+
+        </div>
+        <div class="p-4 flex justify-end gap-x-2 border-t">
+            <button onclick="closePrivacyModal()" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy
+            </button>
+            <button onclick="closePrivacyModal()" class="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Xong
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Script mới cho menu dropdown của nav
+
+
     const profileMenuButton = document.getElementById('profile-menu-button');
     const profileDropdownMenu = document.getElementById('profile-dropdown-menu');
+    const postContentTextarea = document.getElementById('postContentTextarea');
+    const createPostModal = document.getElementById('createPostModal');
+    const privacyModal = document.getElementById('privacyModal');
+    const privacyButtonText = document.getElementById('privacyButtonText');
+    const privacyButton = document.getElementById('privacyButton');
+    const privacyInput = document.getElementById('privacyInput');
+    const pictureFileInput = document.getElementById('pictureFileInput');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const postSubmitButton = document.getElementById('postSubmitButton');
+
+
+    function openCreatePostModal() {
+        if (createPostModal) {
+            createPostModal.classList.remove("hidden");
+            createPostModal.classList.add("flex");
+            document.body.classList.add('modal-open'); // <-- THÊM DÒNG NÀY ĐỂ KHÓA CUỘN
+        }
+    }
+
+
+    function closeCreatePostModal() {
+        if (createPostModal) {
+            createPostModal.classList.add("hidden");
+            createPostModal.classList.remove("flex");
+            removeImagePreview();
+            postContentTextarea.value = '';
+            document.body.classList.remove('modal-open'); // <-- THÊM DÒNG NÀY ĐỂ MỞ CUỘN
+        }
+    }
+
+
+    function openPrivacyModal() {
+        if (privacyModal) {
+            privacyModal.classList.remove('hidden');
+            privacyModal.classList.add('flex');
+        }
+    }
+
+
+    function closePrivacyModal() {
+        if (privacyModal) {
+            privacyModal.classList.add('hidden');
+            privacyModal.classList.remove('flex');
+        }
+    }
+
+
+    function selectPrivacy(value, text, iconClass) {
+        privacyInput.value = value;
+        privacyButtonText.textContent = text;
+        const icon = privacyButton.querySelector('i');
+        icon.className = `fas ${iconClass} text-xs`;
+        closePrivacyModal();
+    }
+
+
+    function updatePostButtonState() {
+        const hasText = postContentTextarea.value.trim() !== '';
+        const hasImage = pictureFileInput.files.length > 0;
+        if (hasText || hasImage) {
+            postSubmitButton.disabled = false;
+            postSubmitButton.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+            postSubmitButton.classList.add('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+        } else {
+            postSubmitButton.disabled = true;
+            postSubmitButton.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+            postSubmitButton.classList.remove('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+        }
+    }
+
+
+    function removeImagePreview() {
+        imagePreviewContainer.innerHTML = '';
+        imagePreviewContainer.classList.add('hidden');
+        pictureFileInput.value = null; // Quan trọng: reset input file
+        updatePostButtonState();
+    }
 
     if (profileMenuButton && profileDropdownMenu) {
-        // Sự kiện click để mở/đóng menu
         profileMenuButton.addEventListener('click', (e) => {
-            e.stopPropagation(); // Ngăn click lan ra ngoài
+            e.stopPropagation();
             profileDropdownMenu.classList.toggle('hidden');
         });
     }
-
-    // Sự kiện click ra ngoài để đóng menu
     window.addEventListener('click', (e) => {
         if (profileDropdownMenu &&
             !profileDropdownMenu.classList.contains('hidden') &&
             !profileDropdownMenu.contains(e.target) &&
             !profileMenuButton.contains(e.target)) {
             profileDropdownMenu.classList.add('hidden');
+        }
+    });
+
+
+    pictureFileInput.addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const previewHtml = `<div class="preview-wrapper"><img src="${e.target.result}" alt="Image Preview"><div class="preview-actions"><button type="button" class="action-btn"><i class="fas fa-edit"></i> Chỉnh sửa</button></div><button type="button" class="remove-image-btn" onclick="removeImagePreview()">&times;</button></div>`;
+                imagePreviewContainer.innerHTML = previewHtml;
+                imagePreviewContainer.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+        updatePostButtonState();
+    });
+
+
+    postContentTextarea.addEventListener('input', updatePostButtonState);
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleButton = document.getElementById('toggle-more-button');
+        const moreItemsList = document.getElementById('more-items-list');
+        const toggleText = document.getElementById('toggle-text');
+        const toggleIcon = document.getElementById('toggle-icon');
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function () {
+                const isHidden = moreItemsList.classList.contains('hidden');
+                if (isHidden) {
+                    moreItemsList.classList.remove('hidden');
+                    toggleText.textContent = 'Ẩn bớt';
+                    toggleIcon.style.transform = 'rotate(180deg)';
+                } else {
+                    moreItemsList.classList.add('hidden');
+                    toggleText.textContent = 'Xem thêm';
+                    toggleIcon.style.transform = 'rotate(0deg)';
+                }
+            });
         }
     });
 </script>
