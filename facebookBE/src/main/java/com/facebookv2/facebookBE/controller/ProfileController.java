@@ -68,5 +68,13 @@ public class ProfileController {
 
         return "redirect:/facebook/profile"; // Chuyển hướng về trang chủ
     }
+    @GetMapping("/{id}")
+    public String viewProfile(@PathVariable Long id, Model model) {
+        User user = userService.findById(id);
+        List<Status> statuses = statusService.getAllStatusesByUserIdOrderByCreatedTimeDesc(user.getId());
+        model.addAttribute("user", user);
+        model.addAttribute("statuses", statuses);
+        return "user/profile";
+    }
 }
 

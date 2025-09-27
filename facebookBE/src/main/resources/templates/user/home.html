@@ -105,8 +105,12 @@
 <nav class="flex items-center justify-between bg-white px-6 py-3 shadow">
     <div class="flex items-center space-x-4">
         <img th:src="@{/images/logo.png}" src="/images/logo.png" alt="Logo" class="h-10 w-10 rounded-full">
-        <input type="text" placeholder="Search Mediabook.."
-               class="border rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <form th:action="@{/facebook/user/search}">
+            <input type="text" id="search" placeholder="Search name" name="keyword"
+                   class="border rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <button type="submit">Tìm kiếm</button>
+        </form>
+
     </div>
     <div class="flex space-x-6">
         <a href="#" class="text-blue-600">

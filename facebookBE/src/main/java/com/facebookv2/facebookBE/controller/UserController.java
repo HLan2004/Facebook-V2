@@ -33,7 +33,7 @@ public class UserController {
 
 
     @GetMapping("/home")
-    public String home(Model model, Authentication authentication) {
+    public String home( Model model, Authentication authentication) {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
         List<Status> statuses = statusService.getAllStatuses();
@@ -53,8 +53,12 @@ public class UserController {
 
         return "user/messenger";
     }
-
-
+    @GetMapping("/search")
+    public String search(@RequestParam("keyword") String keyword, Model model) {
+        List<User> users = userService.searchByName(keyword);
+        model.addAttribute("users", users);
+        return "user/search";
+    }
 }
 
 
