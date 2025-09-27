@@ -9,9 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
-    // Lấy toàn bộ tin nhắn của 1 conversation (theo thứ tự thời gian tăng dần)
     List<ChatMessage> findByConversationIdOrderByTimestampAsc(Long conversationId);
-
 
     ChatMessage findTopByConversationOrderByTimestampDesc(Conversation conversation);
 
