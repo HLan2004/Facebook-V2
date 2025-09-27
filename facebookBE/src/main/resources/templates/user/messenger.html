@@ -148,7 +148,7 @@
                 heartbeatIncoming: 4000,
                 heartbeatOutgoing: 4000,
                 onConnect: (frame) => {
-                    console.log("✅ Connected:", frame);
+                    console.log("✅ Connected to broker, session:", frame.headers['session']);
                     stompClient.subscribe('/topic/conversation/' + conversationId, (message) => {
                         const msg = JSON.parse(message.body);
                         appendMessage(msg);
@@ -177,20 +177,22 @@
         }
 
         function appendMessage(msg) {
-            // Kiểm tra tin nhắn của mình dựa vào currentUserId so với msg.senderId
-            const isMine = msg.senderId === currentUserId;
+            // ép kiểu để so sánh chính xác
+            const isMine = parseInt(msg.senderId) === parseInt(currentUserId);
 
             const messageEl = document.createElement('div');
             messageEl.className = 'message ' + (isMine ? 'sent' : 'received');
             messageEl.innerHTML = `
-                <div class="message-bubble">
-                    ${!isMine ? `<div class="message-sender">${msg.senderName}</div>` : ''}
-                    <div>${msg.content}</div>
-                </div>
-            `;
+        <div class="message-bubble">
+            ${!isMine ? `<div class="message-sender">${msg.senderFullName}</div>` : ''}
+            <div>${msg.content}</div>
+            <small class="message-time">${msg.timestamp}</small>
+        </div>
+    `;
             messagesContainer.appendChild(messageEl);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+
 
 
         // Thay đổi nút gửi khi gõ
