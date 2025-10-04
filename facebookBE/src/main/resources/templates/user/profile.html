@@ -326,8 +326,9 @@
         <i class="fa-solid fa-ellipsis-h text-gray-500 cursor-pointer"></i>
       </div>
       <p class="mb-2 text-gray-800" th:text="${status.content}">Post content here</p>
-      <div th:if="${status.picture != null and !status.picture.isEmpty()}">
-        <img th:src="@{/images/{filename}(filename=${status.picture})}" alt="Post Image" class="mt-2 rounded-lg w-full">
+<!--      sửa ảnh-->
+      <div th:if="${status.picture != null and !status.picture.isEmpty()}" class="mt-2">
+        <img th:src="@{/uploads/{filename}(filename=${status.picture})}" alt="Post Image" class="w-full">
       </div>
       <div class="flex justify-between text-gray-500 text-sm mt-3 border-t pt-2">
         <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">

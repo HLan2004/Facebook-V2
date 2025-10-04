@@ -563,9 +563,10 @@
                     Post content here
                 </div>
 
+
+<!--                sửa ảnh -->
                 <div th:if="${status.picture != null and !status.picture.isEmpty()}" class="mt-2">
-                    <img th:src="@{/images/{filename}(filename=${status.picture})}" alt="Post Image"
-                         class="w-full">
+                    <img th:src="@{/uploads/{filename}(filename=${status.picture})}" alt="Post Image" class="w-full">
                 </div>
 
                 <div class="p-1">
