@@ -33,12 +33,6 @@ public class Friendship {
     private User friend;
 
     // Enum định nghĩa các trạng thái kết bạn
-    public enum FriendshipStatus {
-        PENDING,
-        ACCEPTED,
-        DECLINED
-    }
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FriendshipStatus status = FriendshipStatus.PENDING; // default
