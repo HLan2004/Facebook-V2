@@ -8,6 +8,8 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     /*nav */
     .nav-icon-active {
@@ -100,8 +102,11 @@
     </a>
     <div class="relative hidden lg:block">
       <i class="fas fa-search absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500"></i>
-      <input type="text" placeholder="Tìm kiếm trên Facebook"
-             class="bg-gray-100 rounded-full pl-10 pr-4 py-2 h-10 w-60 focus:outline-none">
+      <form th:action="@{/facebook/user/search}">
+        <input type="text" placeholder="Tìm kiếm trên Facebook" name="keyword"
+               class="bg-gray-100 rounded-full pl-10 pr-4 py-2 h-10 w-60 focus:outline-none">
+      </form>
+
     </div>
   </div>
 
@@ -241,6 +246,68 @@
   <div class="ml-52 mt-4 pb-4">
     <h1 class="text-2xl font-bold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</h1>
     <p class="text-gray-500 text-sm">1000 bạn bè • 50 bạn chung</p>
+
+    <!-- Nút Kết bạn -->
+    <form th:if="${user.id != currentUser.id}" th:action="@{/facebook/friendship/add}" method="post">
+      <input type="hidden" th:value="${user.id}">
+      <div th:switch="${statusMap[user.id]}">
+        <!-- Trường hợp đang PENDING -->
+        <span th:case="${T(com.facebookv2.facebookBE.model.FriendshipStatus).PENDING}">
+    <!-- Nếu mình là người gửi -->
+    <div th:if="${directionMap[user.id] == 'SENT'}">
+      <form th:action="@{/facebook/friendship/remove}" method="post">
+        <input type="hidden" name="friendId" th:value="${user.id}">
+        <button type="submit"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg">
+          Hủy lời mời
+        </button>
+      </form>
+    </div>
+
+          <!-- Nếu người khác gửi -->
+    <div th:if="${directionMap[user.id] == 'RECEIVED'}" class="flex gap-2">
+      <form th:action="@{/facebook/friendship/accept}" method="post">
+        <input type="hidden" name="friendId" th:value="${user.id}">
+        <button type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
+          Chấp nhận
+        </button>
+      </form>
+
+      <form th:action="@{/facebook/friendship/decline}" method="post">
+        <input type="hidden" name="friendId" th:value="${user.id}">
+        <button type="submit"
+                class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg">
+          Từ chối
+        </button>
+      </form>
+    </div>
+  </span>
+
+        <!-- Trường hợp đã là bạn -->
+        <span th:case="${T(com.facebookv2.facebookBE.model.FriendshipStatus).ACCEPTED}">
+    <form th:action="@{/facebook/friendship/remove}" method="post">
+      <input type="hidden" name="friendId" th:value="${user.id}">
+      <button type="submit"
+              class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg">
+        Hủy kết bạn
+      </button>
+    </form>
+  </span>
+
+        <!-- Mặc định: chưa kết bạn -->
+        <span th:case="*">
+    <form th:action="@{/facebook/friendship/add}" method="post">
+      <input type="hidden" name="friendId" th:value="${user.id}">
+      <button type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
+        Kết bạn
+      </button>
+    </form>
+  </span>
+      </div>
+
+    </form>
   </div>
 </div>
 

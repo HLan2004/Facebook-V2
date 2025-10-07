@@ -4,6 +4,7 @@ import com.facebookv2.facebookBE.model.Status;
 import com.facebookv2.facebookBE.model.User;
 import com.facebookv2.facebookBE.repository.StatusRepository;
 import com.facebookv2.facebookBE.repository.UserRepository;
+import com.facebookv2.facebookBE.service.FriendshipService;
 import com.facebookv2.facebookBE.service.StatusService;
 import com.facebookv2.facebookBE.service.StorageService;
 import com.facebookv2.facebookBE.service.UserService;
@@ -31,6 +32,8 @@ public class ProfileController {
 
     @Autowired
     private StorageService storageService;
+    @Autowired
+    private FriendshipService friendshipService;
 
     @GetMapping
     public String profile(Model model, Authentication authentication) {
@@ -41,6 +44,7 @@ public class ProfileController {
 
         List<Status> statuses = statusService.getAllStatusesByUserIdOrderByCreatedTimeDesc(user.getId());
 
+        model.addAttribute("currentUser", user);
         model.addAttribute("user", user);
         model.addAttribute("statuses", statuses);
 
@@ -69,9 +73,13 @@ public class ProfileController {
         return "redirect:/facebook/profile"; // Chuyển hướng về trang chủ
     }
     @GetMapping("/{id}")
-    public String viewProfile(@PathVariable Long id, Model model) {
+    public String viewProfile(@PathVariable Long id, Model model, Authentication authentication) {
         User user = userService.findById(id);
         List<Status> statuses = statusService.getAllStatusesByUserIdOrderByCreatedTimeDesc(user.getId());
+        String email = authentication.getName();
+        User currentUser = userService.getUserByEmail(email);
+        friendshipService.checkFriendship1to1(currentUser, user, model);
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("user", user);
         model.addAttribute("statuses", statuses);
         return "user/profile";
