@@ -38,7 +38,7 @@ public class ChatController {
                      @Payload ChatMessageDTO incoming,
                      Authentication authentication) {
 
-        // Xác định user thật từ Authentication
+
         String email = authentication.getName();
         User sender = userService.getUserByEmail(email);
         if (sender == null) return;
@@ -54,11 +54,11 @@ public class ChatController {
 
         ChatMessage saved = chatMessageService.save(message);
 
-        // Response đầy đủ để client render
+
         ChatMessageResponse response = new ChatMessageResponse(
                 saved.getId(),
                 saved.getContent(),
-                sender.getId(),          // để client biết ai gửi
+                sender.getId(),
                 sender.getFirstName() + " " + sender.getLastName(),
                 saved.getTimestamp().toString()
         );
