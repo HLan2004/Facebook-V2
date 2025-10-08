@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/facebook/auth/signIn")
                         .loginProcessingUrl("/process-signIn")
+                        .failureUrl("/facebook/auth/signIn?error=true")
                         .successHandler(customSuccessHandle)
                         .permitAll()
                 )

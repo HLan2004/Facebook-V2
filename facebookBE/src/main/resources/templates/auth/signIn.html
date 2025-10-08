@@ -66,6 +66,18 @@
             <!-- Right - Login Form -->
             <div class="max-w-md mx-auto lg:mx-0">
                 <div class="bg-white rounded-lg facebook-shadow p-6">
+
+                    <!-- Flash messages -->
+                    <div th:if="${param.error}" class="mb-4 text-red-600 font-medium text-center">
+                        <span th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message} ?: 'Invalid email or password'"></span>
+                    </div>
+                    <div th:if="${param.logout}" class="mb-4 text-green-600 font-medium text-center">
+                        You have been logged out successfully.
+                    </div>
+                    <div th:if="${success}" class="mb-4 text-green-600 font-medium text-center" th:text="${success}"></div>
+                    <div th:if="${error}" class="mb-4 text-red-600 font-medium text-center" th:text="${error}"></div>
+
+                    <!-- Login Form -->
                     <form th:action="@{/process-signIn}" method="post" class="space-y-4">
                         <input
                                 type="email"
@@ -174,5 +186,6 @@
         </div>
     </div>
 </footer>
+</body>
 </body>
 </html>
