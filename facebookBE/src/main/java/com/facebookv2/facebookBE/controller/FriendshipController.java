@@ -41,16 +41,18 @@ public class FriendshipController {
     }
 
     @PostMapping("/accept")
-    public void accept(@RequestParam Long friendId, Authentication authentication){
+    public String accept(@RequestParam Long friendId, Authentication authentication){
         // chuyển status từ pending sang accepted
         User currentUser = userRepository.findByEmail(authentication.getName());
         friendshipService.acceptFriendRequest(currentUser.getId(), friendId);
+        return "redirect:/facebook/user/home";
     }
 
     @PostMapping("/decline")
-    public void decline(@RequestParam Long friendId, Authentication authentication){
+    public String decline(@RequestParam Long friendId, Authentication authentication){
         // chuyển status từ pending sang declined
         User currentUser = userRepository.findByEmail(authentication.getName());
         friendshipService.declineFriendRequest(currentUser.getId(), friendId);
+        return "redirect:/facebook/user/home";
     }
 }

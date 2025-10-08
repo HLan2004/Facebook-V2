@@ -43,6 +43,8 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public void checkFriendship(User currentUser, List<User> users, Model model) {
         Map<Long, FriendshipStatus> statusMap = new HashMap<>();
+        Map<Long, String> directionMap = new HashMap<>(); // "SENT" hoặc "RECEIVED"
+
         for (User u : users) {
             // nếu là bản thân mình thì sẽ bỏ qua
             if (u.getId().equals(currentUser.getId())) continue;
@@ -52,11 +54,18 @@ public class FriendshipServiceImpl implements FriendshipService {
             if (friendshipOptional.isPresent()) {
                 Friendship friendship = friendshipOptional.get();
                 statusMap.put(u.getId(), friendship.getStatus());
+
+                //  Kiểm tra ai là người gửi
+                if (friendship.getUser().getId().equals(currentUser.getId())) {
+                    directionMap.put(u.getId(), "SENT"); // mình là người gửi
+                } else {
+                    directionMap.put(u.getId(), "RECEIVED"); // người kia là người gửi
+                }
             } else {
                 statusMap.put(u.getId(), null);
             }
         }
-
+        model.addAttribute("directionMap", directionMap);
         model.addAttribute("statusMap", statusMap);
     }
 
@@ -81,7 +90,7 @@ public class FriendshipServiceImpl implements FriendshipService {
                 Friendship friendship = friendshipOpt.get();
                 statusMap.put(targetUserId, friendship.getStatus());
 
-                // ✅ Kiểm tra ai là người gửi
+                //  Kiểm tra ai là người gửi
                 if (friendship.getUser().getId().equals(currentUser.getId())) {
                     directionMap.put(targetUserId, "SENT"); // mình là người gửi
                 } else {

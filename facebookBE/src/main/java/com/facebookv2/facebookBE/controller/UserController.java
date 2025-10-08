@@ -69,7 +69,7 @@ public class UserController {
         List<User> users = userService.searchByName(keyword);
         friendshipService.checkFriendship(currentUser, users, model);
         model.addAttribute("users", users);
-        model.addAttribute("user", currentUser);
+        model.addAttribute("currentUser", currentUser);
         return "user/search";
     }
 

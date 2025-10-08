@@ -248,8 +248,7 @@
     <p class="text-gray-500 text-sm">1000 bạn bè • 50 bạn chung</p>
 
     <!-- Nút Kết bạn -->
-    <form th:if="${user.id != currentUser.id}" th:action="@{/facebook/friendship/add}" method="post">
-      <input type="hidden" th:value="${user.id}">
+    <div th:if="${user.id != currentUser.id}">
       <div th:switch="${statusMap[user.id]}">
         <!-- Trường hợp đang PENDING -->
         <span th:case="${T(com.facebookv2.facebookBE.model.FriendshipStatus).PENDING}">
@@ -307,7 +306,7 @@
   </span>
       </div>
 
-    </form>
+    </div>
   </div>
 </div>
 
