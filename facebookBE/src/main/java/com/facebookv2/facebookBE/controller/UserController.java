@@ -65,16 +65,20 @@ public class UserController {
     }
     @GetMapping("/search")
     public String search(@RequestParam("keyword") String keyword, Model model, Authentication authentication) {
-        friendshipService.checkFriendship(keyword, authentication.getName(), model);
+        User currentUser = userService.getUserByEmail(authentication.getName());
+        List<User> users = userService.searchByName(keyword);
+        friendshipService.checkFriendship(currentUser, users, model);
+        model.addAttribute("users", users);
+        model.addAttribute("currentUser", currentUser);
         return "user/search";
     }
 
-    @PostMapping("/add")
-    public String add(@RequestParam("friendId") Long friendId, Authentication authentication, Model model) {
-        String email = authentication.getName();
-        friendshipService.addFriendship(email, friendId);
-        return "redirect:/facebook/user/home";
-    }
+//    @PostMapping("/add")
+//    public String add(@RequestParam("friendId") Long friendId, Authentication authentication, Model model) {
+//        String email = authentication.getName();
+//        friendshipService.addFriendship(email, friendId);
+//        return "redirect:/facebook/user/home";
+//    }
 }
 
 

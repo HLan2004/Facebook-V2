@@ -27,6 +27,14 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }
+
+        if (!user.isEnabled()) {
+            // Nếu user chưa verify email, không cho đăng nhập
+            throw new org.springframework.security.authentication.DisabledException(
+                    "Account not verified yet. Please check your email."
+            );
+        }
+
         return UserPrincipal.build(user);
     }
 
