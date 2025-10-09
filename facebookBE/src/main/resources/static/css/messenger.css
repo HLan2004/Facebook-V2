@@ -166,7 +166,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-    width: 320px;
+    width: 360px;
     background-color: #ffffff;
     border-right: 1px solid #e4e6ea;
     display: flex;
@@ -639,4 +639,34 @@ body {
     font-size: 12px;
     margin: 16px 0;
     font-weight: 500;
+}
+
+#no-conversation {
+    flex: 1; /* chiếm toàn bộ chat-area */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+}
+
+
+#no-conversation div {
+    max-width: 400px;        /* giới hạn chiều rộng để text không quá dài */
+}
+
+#no-conversation h3 {
+    font-size: 1.25rem;      /* dùng rem thay vì px để dễ scale */
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+#no-conversation p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+#no-conversation .emoji {
+    font-size: 3rem;         /* emoji scale theo rem */
+    margin-bottom: 1rem;
 }
