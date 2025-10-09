@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -29,27 +30,30 @@ public class MessengerController {
     @Autowired
     private ChatMessageService chatMessageService;
 
-    @GetMapping("/{conversationId}")
-    public String conversation(@PathVariable Long conversationId,
-                               Model model,
-                               Authentication authentication) {
+    // Trang Messenger chính — chỉ load layout
+    @GetMapping
+    public String messengerPage(Model model, Authentication authentication) {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
 
-        // thông tin user hiện tại
         model.addAttribute("currentUserId", user.getId());
         model.addAttribute("currentUsername", user.getFirstName() + " " + user.getLastName());
-
-        // danh sách conversation (vẫn hiển thị bên sidebar)
-        List<ConversationSummaryDTO> conversations = conversationService.getConversationSummaries(user);
-        model.addAttribute("conversations", conversations);
-
-        // load messages cho conversation này
-        List<ChatMessage> messages = chatMessageService.findByConversationId(conversationId);
-        model.addAttribute("messages", messages);
-
-        model.addAttribute("conversationId", conversationId);
-
         return "user/messenger";
+    }
+
+    // API lấy danh sách cuộc trò chuyện
+    @GetMapping("/api/conversations")
+    @ResponseBody
+    public List<ConversationSummaryDTO> getConversations(Authentication authentication) {
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email);
+        return conversationService.getConversationSummaries(user);
+    }
+
+    // API lấy tin nhắn 1 conversation
+    @GetMapping("/api/{conversationId}")
+    @ResponseBody
+    public List<ChatMessage> getMessages(@PathVariable Long conversationId) {
+        return chatMessageService.findByConversationId(conversationId);
     }
 }

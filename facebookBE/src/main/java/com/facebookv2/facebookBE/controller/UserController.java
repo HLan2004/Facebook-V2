@@ -53,16 +53,6 @@ public class UserController {
         return "user/home";
     }
 
-    @GetMapping("/messages")
-    public String messages(Model model, Authentication authentication) {
-        String email = authentication.getName();
-        User user = userService.getUserByEmail(email);
-
-        List<ConversationSummaryDTO> conversations = conversationService.getConversationSummaries(user);
-        model.addAttribute("conversations", conversations);
-
-        return "user/messenger";
-    }
     @GetMapping("/search")
     public String search(@RequestParam("keyword") String keyword, Model model, Authentication authentication) {
         User currentUser = userService.getUserByEmail(authentication.getName());

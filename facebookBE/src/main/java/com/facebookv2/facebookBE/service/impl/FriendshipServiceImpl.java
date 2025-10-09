@@ -1,14 +1,15 @@
 package com.facebookv2.facebookBE.service.impl;
 
+import com.facebookv2.facebookBE.model.Conversation;
 import com.facebookv2.facebookBE.model.Friendship;
 import com.facebookv2.facebookBE.model.FriendshipStatus;
 import com.facebookv2.facebookBE.model.User;
+import com.facebookv2.facebookBE.repository.ConversationRepository;
 import com.facebookv2.facebookBE.repository.FriendshipRepository;
 import com.facebookv2.facebookBE.repository.UserRepository;
+import com.facebookv2.facebookBE.service.ConversationService;
 import com.facebookv2.facebookBE.service.FriendshipService;
-import com.facebookv2.facebookBE.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,11 +22,13 @@ import java.util.Optional;
 @Service
 public class FriendshipServiceImpl implements FriendshipService {
     @Autowired
-    private UserService userService;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private FriendshipRepository friendshipRepository;
+    @Autowired
+    private ConversationRepository conversationRepository;
+    @Autowired
+    private ConversationService conversationService;
 
     @Override
     public void addFriendship(@ModelAttribute String currentEmail, Long friendId) {
@@ -115,7 +118,27 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Override
     public void acceptFriendRequest(Long currentUserId, Long friendId) {
+        // 1️⃣ Cập nhật trạng thái Friendship
         friendshipRepository.acceptFriendRequest(currentUserId, friendId);
+
+        // 2️⃣ Tạo conversation nếu chưa tồn tại
+        User currentUser = userRepository.findUserById(currentUserId);
+        User friend = userRepository.findUserById(friendId);
+
+        // kiểm tra xem đã có conversation chung chưa
+        boolean exists = conversationRepository.findByParticipantsContaining(currentUser)
+                .stream()
+                .anyMatch(conv -> conv.getParticipants().contains(friend) && !conv.isGroup());
+
+        if (!exists) {
+            Conversation newConv = new Conversation();
+            newConv.setGroup(false);
+            newConv.setName(null); // null vì chat riêng
+            newConv.getParticipants().add(currentUser);
+            newConv.getParticipants().add(friend);
+
+            conversationService.save(newConv);
+        }
     }
 
     @Override

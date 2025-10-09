@@ -58,7 +58,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/facebook/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/facebook/user/**").hasRole("USER")
+                        .requestMatchers("/facebook/**").hasRole("USER")
                         .requestMatchers("/", "/facebook/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )

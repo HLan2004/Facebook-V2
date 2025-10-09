@@ -203,39 +203,15 @@
         </div>
 
         <div class="conversations-list">
-            <div th:if="${conversations != null}" th:each="conv : ${conversations}"
-                 th:class="'conversation-item ' + (${conv.conversationId} == ${conversationId} ? 'active' : '')">
-                <a th:href="@{'/facebook/messenger/' + ${conv.conversationId}}" style="display:flex; text-decoration:none; color:inherit;">
-                    <div class="conversation-avatar">
-                        <span th:text="${conv.conversationName != null and conv.conversationName.length() >= 2 ? #strings.substring(conv.conversationName,0,2) : conv.conversationName}"></span>
-                        <div class="online-dot"></div>
-                    </div>
-                    <div class="conversation-content">
-                        <div class="conversation-name" th:text="${conv.conversationName}"></div>
-                        <div class="conversation-preview">
-                            <span th:text="${conv.lastMessage != null ? conv.lastMessage : 'Chưa có tin nhắn'}"></span>
-                            <span class="conversation-time"
-                                  th:text="${conv.lastMessageTime != null ? '· ' + #temporals.format(conv.lastMessageTime, 'HH:mm dd/MM') : ''}"></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            <!-- Conversations sẽ được load động qua JavaScript -->
         </div>
     </div>
 
     <!-- Chat Area -->
-    <div th:if="${conversationId != null}" class="chat-area">
+    <div class="chat-area" id="chat-area" style="display: none;">
         <div class="chat-header">
-            <div class="chat-header-left"
-                 th:with="currentConv=${conversations.?[conversationId == conversationId][0]}">
-                <div class="chat-avatar">
-                    <span th:text="${#strings.substring(currentConv.conversationName, 0, 2)}"></span>
-                    <div class="online-dot"></div>
-                </div>
-                <div class="chat-info">
-                    <h3 th:text="${currentConv.conversationName}"></h3>
-                    <div class="chat-status">Đang hoạt động</div>
-                </div>
+            <div class="chat-header-left" id="chat-header-content">
+                <!-- Header content sẽ được load động -->
             </div>
 
             <div class="chat-actions">
@@ -245,19 +221,12 @@
             </div>
         </div>
 
-        <div class="messages-container">
-            <div th:if="${messages != null}" th:each="msg : ${messages}"
-                 th:class="'message ' + (${msg.sender.id} == ${currentUserId} ? 'sent' : 'received')">
-                <div class="message-bubble">
-                    <div th:if="${msg.sender.id != currentUserId}" class="message-sender"
-                         th:text="${msg.sender.firstName + ' ' + msg.sender.lastName}"></div>
-                    <div th:text="${msg.content}"></div>
-                </div>
-            </div>
+        <div class="messages-container" id="messages-container">
+            <!-- Messages sẽ được load động qua JavaScript -->
         </div>
 
         <div class="message-input-area">
-            <form th:action="@{/facebook/messenger/send}" method="post" class="message-input-container">
+            <div class="message-input-container">
                 <div class="input-actions" style="margin-right: 8px;">
                     <div class="input-btn">🎤</div>
                 </div>
@@ -266,35 +235,272 @@
                     <div class="input-btn">📎</div>
                     <div class="input-btn">😊</div>
                     <div class="input-btn">📷</div>
-                    <button type="submit" class="input-btn send-btn">👍</button>
+                    <button type="button" class="input-btn send-btn">👍</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
     <!-- Thông báo nếu chưa chọn conversation -->
-    <div th:if="${conversationId == null}" class="chat-area">
-        <p style="padding:20px; color:#555;">Vui lòng chọn một cuộc trò chuyện để bắt đầu nhắn tin.</p>
+    <div class="no-conversation-selected" id="no-conversation">
+        <div style="text-align: center; padding: 40px; color: #65676b;">
+            <div style="font-size: 48px; margin-bottom: 16px;">💬</div>
+            <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Chọn một cuộc trò chuyện</h3>
+            <p>Vui lòng chọn một cuộc trò chuyện để bắt đầu nhắn tin.</p>
+        </div>
     </div>
 </div>
-
 
 <!-- Scripts -->
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const messageInput = document.querySelector('.message-input');
         const sendBtn = document.querySelector('.send-btn');
-        const messagesContainer = document.querySelector('.messages-container');
+        const messagesContainer = document.getElementById('messages-container');
+        const chatArea = document.getElementById('chat-area');
+        const noConversationDiv = document.getElementById('no-conversation');
 
         // Dữ liệu Thymeleaf từ backend
-        const conversationId = /*[[${conversationId}]]*/ "0";
+        let conversationId = /*[[${conversationId}]]*/ null;
         const currentUserId = /*[[${currentUserId}]]*/ "0";
         const currentUsername = /*[[${currentUsername}]]*/ "Bạn";
 
-        // STOMP client
+        // STOMP client và subscription management
         let stompClient = null;
+        let currentSubscription = null;
+        let messageInputListener = null;
+        let sendButtonListener = null;
+        let isConnecting = false;
+
+        // Initialize page state
+        initializePageState();
+
+        // Load danh sách cuộc trò chuyện khi trang được tải
+        loadConversations();
+
+        function initializePageState() {
+            if (conversationId && conversationId !== "null" && conversationId !== null) {
+                showChatArea();
+            } else {
+                showNoConversationMessage();
+            }
+        }
+
+        function showChatArea() {
+            if (chatArea) chatArea.style.display = 'flex';
+            if (noConversationDiv) noConversationDiv.style.display = 'none';
+        }
+
+        function showNoConversationMessage() {
+            if (chatArea) chatArea.style.display = 'none';
+            if (noConversationDiv) noConversationDiv.style.display = 'flex';
+        }
+
+        // Function để cleanup subscription cũ
+        function cleanupCurrentSubscription() {
+            if (currentSubscription) {
+                try {
+                    currentSubscription.unsubscribe();
+                } catch (e) {
+                    console.log('Unsubscribe error:', e);
+                }
+                currentSubscription = null;
+            }
+        }
+
+        // Function để cleanup event listeners cũ
+        function cleanupEventListeners() {
+            if (messageInput && messageInputListener) {
+                messageInput.removeEventListener('keypress', messageInputListener);
+                messageInput.removeEventListener('input', messageInputListener);
+            }
+            if (sendBtn && sendButtonListener) {
+                sendBtn.removeEventListener('click', sendButtonListener);
+            }
+            messageInputListener = null;
+            sendButtonListener = null;
+        }
+
+        // Function để load danh sách conversations
+        function loadConversations() {
+            fetch('/facebook/messenger/api/conversations')
+                .then(response => response.json())
+                .then(conversations => {
+                    displayConversations(conversations);
+                    // Nếu có conversationId từ server, load messages
+                    if (conversationId && conversationId !== "null" && conversationId !== null) {
+                        loadMessages(conversationId);
+                        // Tìm conversation data để update header
+                        const currentConv = conversations.find(conv => conv.conversationId.toString() === conversationId.toString());
+                        if (currentConv) {
+                            updateChatHeader(currentConv);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading conversations:', error);
+                });
+        }
+
+        // Function để hiển thị danh sách conversations
+        function displayConversations(conversations) {
+            const conversationsList = document.querySelector('.conversations-list');
+            if (!conversationsList) return;
+
+            conversationsList.innerHTML = '';
+
+            conversations.forEach(conv => {
+                const conversationItem = document.createElement('div');
+                conversationItem.className = 'conversation-item';
+                if (conversationId && conv.conversationId.toString() === conversationId.toString()) {
+                    conversationItem.classList.add('active');
+                }
+                conversationItem.dataset.conversationId = conv.conversationId;
+
+                conversationItem.innerHTML = `
+                    <div style="display:flex; text-decoration:none; color:inherit; cursor:pointer; width: 100%;">
+                        <div class="conversation-avatar">
+                            <span>${conv.conversationName && conv.conversationName.length >= 2 ? conv.conversationName.substring(0, 2) : conv.conversationName}</span>
+                            <div class="online-dot"></div>
+                        </div>
+                        <div class="conversation-content">
+                            <div class="conversation-name">${conv.conversationName}</div>
+                            <div class="conversation-preview">
+                                <span>${conv.lastMessage || 'Chưa có tin nhắn'}</span>
+                                <span class="conversation-time">
+                                    ${conv.lastMessageTime ? '· ' + formatTime(conv.lastMessageTime) : ''}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Thêm event listener để load tin nhắn khi click
+                conversationItem.addEventListener('click', function() {
+                    selectConversation(conv.conversationId, conversationItem, conv);
+                });
+
+                conversationsList.appendChild(conversationItem);
+            });
+        }
+
+        // Function để chọn conversation và load tin nhắn
+        function selectConversation(newConversationId, conversationElement, conversationData) {
+            // Tránh reload cùng conversation
+            if (conversationId && conversationId.toString() === newConversationId.toString()) {
+                return;
+            }
+
+            // Remove active class from previous conversation
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to selected conversation
+            conversationElement.classList.add('active');
+
+            // Cleanup trước khi chuyển conversation
+            cleanupCurrentSubscription();
+            cleanupEventListeners();
+
+            conversationId = newConversationId;
+
+            // Show chat area
+            showChatArea();
+
+            // Update chat header
+            updateChatHeader(conversationData);
+
+            // Load messages
+            loadMessages(conversationId);
+
+            // Setup WebSocket subscription và event listeners
+            setupConversationConnection();
+
+            // Update URL without page reload
+            window.history.pushState({}, '', '/facebook/messenger/' + conversationId);
+        }
+
+        // Function để cập nhật chat header
+        function updateChatHeader(conversationData) {
+            const chatHeaderContent = document.getElementById('chat-header-content');
+            if (!chatHeaderContent || !conversationData) return;
+
+            chatHeaderContent.innerHTML = `
+                <div class="chat-avatar">
+                    <span>${conversationData.conversationName && conversationData.conversationName.length >= 2 ? conversationData.conversationName.substring(0, 2) : conversationData.conversationName}</span>
+                    <div class="online-dot"></div>
+                </div>
+                <div class="chat-info">
+                    <h3>${conversationData.conversationName}</h3>
+                    <div class="chat-status">Đang hoạt động</div>
+                </div>
+            `;
+        }
+
+        // Function để load tin nhắn của một conversation
+        function loadMessages(convId) {
+            if (!convId) return;
+
+            fetch(`/facebook/messenger/api/${convId}`)
+                .then(response => response.json())
+                .then(messages => {
+                    displayMessages(messages);
+                })
+                .catch(error => {
+                    console.error('Error loading messages:', error);
+                });
+        }
+
+        // Function để hiển thị tin nhắn
+        function displayMessages(messages) {
+            if (!messagesContainer) return;
+
+            messagesContainer.innerHTML = '';
+
+            messages.forEach(message => {
+                const messageEl = document.createElement('div');
+                const isMine = parseInt(message.sender.id) === parseInt(currentUserId);
+                messageEl.className = 'message ' + (isMine ? 'sent' : 'received');
+                messageEl.innerHTML = `
+                    <div class="message-bubble">
+                        ${!isMine ? `<div class="message-sender">${message.sender.firstName} ${message.sender.lastName}</div>` : ''}
+                        <div>${message.content}</div>
+                        <small class="message-time">${formatTime(message.timestamp)}</small>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageEl);
+            });
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Function để format thời gian
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+
+            // Nếu cùng ngày, chỉ hiển thị giờ
+            if (date.toDateString() === now.toDateString()) {
+                return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            // Nếu khác ngày, hiển thị ngày tháng
+            return date.toLocaleDateString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
 
         function connect() {
+            if (isConnecting || (stompClient && stompClient.connected)) {
+                return;
+            }
+
+            isConnecting = true;
+
             stompClient = new StompJs.Client({
                 connectHeaders: {},
                 brokerURL: "ws://localhost:8080/ws",
@@ -304,72 +510,146 @@
                 heartbeatOutgoing: 4000,
                 onConnect: (frame) => {
                     console.log("✅ Connected to broker, session:", frame.headers['session']);
-                    stompClient.subscribe('/topic/conversation/' + conversationId, (message) => {
-                        const msg = JSON.parse(message.body);
-                        appendMessage(msg);
-                    });
+                    isConnecting = false;
+
+                    // Setup subscription nếu có conversationId
+                    if (conversationId && conversationId !== "null" && conversationId !== null) {
+                        subscribeToConversation(conversationId);
+                    }
+
+                    // Setup event listeners
+                    setupEventListeners();
                 },
                 onStompError: (frame) => {
                     console.error('Broker reported error: ' + frame.headers['message']);
                     console.error('Additional details: ' + frame.body);
+                    isConnecting = false;
+                },
+                onDisconnect: () => {
+                    console.log("Disconnected from broker");
+                    isConnecting = false;
                 }
             });
-            stompClient.activate();
 
+            stompClient.activate();
+        }
+
+        function subscribeToConversation(convId) {
+            if (!stompClient || !stompClient.connected) {
+                return;
+            }
+
+            // Cleanup subscription cũ
+            cleanupCurrentSubscription();
+
+            // Tạo subscription mới
+            currentSubscription = stompClient.subscribe('/topic/conversation/' + convId, (message) => {
+                const msg = JSON.parse(message.body);
+                appendMessage(msg);
+            });
+        }
+
+        function setupConversationConnection() {
+            if (stompClient && stompClient.connected) {
+                subscribeToConversation(conversationId);
+                setupEventListeners();
+            } else {
+                connect();
+            }
+        }
+
+        function setupEventListeners() {
+            // Cleanup listeners cũ
+            cleanupEventListeners();
+
+            if (messageInput) {
+                // Input event listener
+                messageInputListener = function(event) {
+                    if (event.type === 'input') {
+                        if (sendBtn) {
+                            if (this.value.trim()) {
+                                sendBtn.textContent = '➤';
+                            } else {
+                                sendBtn.textContent = '👍';
+                            }
+                            sendBtn.style.backgroundColor = '#1877f2';
+                        }
+                    } else if (event.type === 'keypress' && event.key === 'Enter' && !event.shiftKey) {
+                        event.preventDefault();
+                        sendMessage();
+                    }
+                };
+
+                // Gắn listeners
+                messageInput.addEventListener('input', messageInputListener);
+                messageInput.addEventListener('keypress', messageInputListener);
+            }
+
+            if (sendBtn) {
+                sendButtonListener = function() {
+                    sendMessage();
+                };
+                sendBtn.addEventListener('click', sendButtonListener);
+            }
         }
 
         function sendMessage() {
             const content = messageInput.value.trim();
-            if (!content || !stompClient) return;
+            if (!content || !stompClient || !stompClient.connected || !conversationId || conversationId === "null" || conversationId === null) {
+                return;
+            }
 
-            // Chỉ gửi content
+            // Disable để tránh spam
+            if (sendBtn) sendBtn.disabled = true;
+            if (messageInput) messageInput.disabled = true;
+
+            // Gửi tin nhắn
             stompClient.publish({
                 destination: "/app/chat/" + conversationId,
                 body: JSON.stringify({ content: content })
             });
 
+            // Clear input và enable lại
             messageInput.value = '';
+
+            setTimeout(() => {
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                    sendBtn.textContent = '👍';
+                }
+                if (messageInput) {
+                    messageInput.disabled = false;
+                    messageInput.focus();
+                }
+            }, 100);
         }
 
         function appendMessage(msg) {
+            if (!messagesContainer) return;
+
+            // Kiểm tra tin nhắn đã tồn tại để tránh duplicate
+            const existingMessages = messagesContainer.querySelectorAll('.message');
+            const lastMessage = existingMessages[existingMessages.length - 1];
+            if (lastMessage && lastMessage.dataset.messageId === msg.id?.toString()) {
+                return;
+            }
+
             // ép kiểu để so sánh chính xác
             const isMine = parseInt(msg.senderId) === parseInt(currentUserId);
 
             const messageEl = document.createElement('div');
             messageEl.className = 'message ' + (isMine ? 'sent' : 'received');
+            messageEl.dataset.messageId = msg.id || Date.now().toString();
             messageEl.innerHTML = `
-        <div class="message-bubble">
-            ${!isMine ? `<div class="message-sender">${msg.senderFullName}</div>` : ''}
-            <div>${msg.content}</div>
-            <small class="message-time">${msg.timestamp}</small>
-        </div>
-    `;
+                <div class="message-bubble">
+                    ${!isMine ? `<div class="message-sender">${msg.senderFullName}</div>` : ''}
+                    <div>${msg.content}</div>
+                    <small class="message-time">${msg.timestamp}</small>
+                </div>
+            `;
             messagesContainer.appendChild(messageEl);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
-
-
-
-        // Thay đổi nút gửi khi gõ
-        messageInput.addEventListener('input', function() {
-            if (this.value.trim()) {
-                sendBtn.textContent = '➤';
-            } else {
-                sendBtn.textContent = '👍';
-            }
-            sendBtn.style.backgroundColor = '#1877f2';
-        });
-
-        // Gửi khi bấm nút
-        sendBtn.addEventListener('click', sendMessage);
-
-        // Gửi khi nhấn Enter
-        messageInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
 
         // Sidebar tabs
         const sidebarTabs = document.querySelectorAll('.sidebar-tab');
@@ -397,30 +677,42 @@
         mobileToggle.style.fontSize = '18px';
 
         if (window.innerWidth <= 768) {
-            document.querySelector('.header-left').prepend(mobileToggle);
-            mobileToggle.style.display = 'flex';
-            mobileToggle.addEventListener('click', function() {
-                document.querySelector('.sidebar').classList.toggle('open');
-            });
+            const headerLeft = document.querySelector('.header-left');
+            if (headerLeft) {
+                headerLeft.prepend(mobileToggle);
+                mobileToggle.style.display = 'flex';
+                mobileToggle.addEventListener('click', function() {
+                    const sidebar = document.querySelector('.sidebar');
+                    if (sidebar) {
+                        sidebar.classList.toggle('open');
+                    }
+                });
+            }
         }
+
+        // Cleanup khi page unload
+        window.addEventListener('beforeunload', function() {
+            cleanupCurrentSubscription();
+            cleanupEventListeners();
+            if (stompClient && stompClient.connected) {
+                stompClient.disconnect();
+            }
+        });
 
         // Kết nối WebSocket khi load xong
         connect();
     });
 </script>
 <script>
-
     const profileMenuButton = document.getElementById('profile-menu-button');
     const profileDropdownMenu = document.getElementById('profile-dropdown-menu');
 
     if (profileMenuButton && profileDropdownMenu) {
-
         profileMenuButton.addEventListener('click', (e) => {
             e.stopPropagation();
             profileDropdownMenu.classList.toggle('hidden');
         });
     }
-
 
     window.addEventListener('click', (e) => {
         if (profileDropdownMenu &&
