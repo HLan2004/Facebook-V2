@@ -37,9 +37,21 @@ public class ConversationServiceImpl implements ConversationService {
         for (Conversation conversation : conversations) {
             ChatMessage lastMessage = chatMessageRepo.findTopByConversationOrderByTimestampDesc(conversation);
 
+            String displayName;
+            if (conversation.isGroup()) {
+                displayName = conversation.getName();
+            } else {
+                // Lấy user còn lại trong conversation
+                displayName = conversation.getParticipants().stream()
+                        .filter(u -> !u.getId().equals(user.getId()))
+                        .findFirst()
+                        .map(u -> u.getFirstName() + " " + u.getLastName())
+                        .orElse("Unknown");
+            }
+
             summaries.add(new ConversationSummaryDTO(
                     conversation.getId(),
-                    conversation.isGroup() ? conversation.getName() : "Private Chat",
+                    displayName,
                     lastMessage != null ? lastMessage.getContent() : "",
                     lastMessage != null ? lastMessage.getTimestamp() : null
             ));
