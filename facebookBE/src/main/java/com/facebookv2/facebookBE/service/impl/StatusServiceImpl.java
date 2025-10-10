@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StatusServiceImpl implements StatusService {
@@ -28,5 +29,10 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public List<Status> getAllStatusesByUserIdOrderByCreatedTimeDesc(Long userId) {
         return statusRepository.getAllStatusesByUserIdOrderByCreatedTimeDesc(userId);
+    }
+
+    @Override
+    public Optional<Status> findById(Long id) {
+        return statusRepository.findById(id);
     }
 }
