@@ -49,6 +49,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form
                         .loginPage("/facebook/auth/signIn")
                         .loginProcessingUrl("/process-signIn")
