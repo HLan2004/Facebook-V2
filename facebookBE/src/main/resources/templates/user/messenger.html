@@ -6,7 +6,7 @@
     <title>Messenger - Facebook Clone</title>
     <link rel="stylesheet" th:href="@{/css/messenger.css}">
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
+    <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <style>
@@ -156,7 +156,7 @@
                         <a href="/facebook/profile" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
                             <img th:src="@{/images/default-avatar.svg}" src="https://placehold.co/60x60/E4E6EB/7F7F7F?text=User" alt="Profile" class="h-14 w-14 rounded-full object-cover">
                             <div>
-<!--                                <p class="font-semibold text-gray-800" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>-->
+                                <!--                                <p class="font-semibold text-gray-800" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>-->
                                 <p class="font-semibold text-gray-800" th:text="${currentUsername}">User Name</p>
                             </div>
                         </a>
@@ -478,22 +478,36 @@
 
         // Function để format thời gian
         function formatTime(timestamp) {
-            const date = new Date(timestamp);
-            const now = new Date();
-
-            // Nếu cùng ngày, chỉ hiển thị giờ
-            if (date.toDateString() === now.toDateString()) {
-                return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            // Nếu timestamp là chuỗi dài kiểu 2025-10-10T23:16:09.311706900
+            // chỉ lấy phần ISO hợp lệ (lấy tối đa 23:16:09.311Z)
+            let t = timestamp;
+            if (typeof timestamp === 'string' && timestamp.includes('.')) {
+                // cắt microseconds quá dài, thêm Z để parse chuẩn UTC
+                t = timestamp.split('.')[0] + 'Z';
             }
 
-            // Nếu khác ngày, hiển thị ngày tháng
-            return date.toLocaleDateString('vi-VN', {
-                day: '2-digit',
-                month: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            const date = new Date(t);
+            const now = new Date();
+
+            const diffTime = now - date;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            const optionsTime = { hour: '2-digit', minute: '2-digit' };
+
+            if (date.toDateString() === now.toDateString()) {
+                return date.toLocaleTimeString('vi-VN', optionsTime);
+            }
+            if (diffDays === 1) {
+                return `Hôm qua ${date.toLocaleTimeString('vi-VN', optionsTime)}`;
+            }
+            if (diffDays < 7) {
+                const weekdays = ['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+                return `${weekdays[date.getDay()]} ${date.toLocaleTimeString('vi-VN', optionsTime)}`;
+            }
+            return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
+
+
 
         function connect() {
             if (isConnecting || (stompClient && stompClient.connected)) {
@@ -635,8 +649,15 @@
                 return;
             }
 
-            // ép kiểu để so sánh chính xác
             const isMine = parseInt(msg.senderId) === parseInt(currentUserId);
+
+            // Chuẩn hóa timestamp trước khi hiển thị
+            let timestamp = msg.timestamp;
+            if (typeof timestamp === 'string' && timestamp.includes('.')) {
+                timestamp = timestamp.split('.')[0] + 'Z';
+            }
+
+            const formattedTime = formatTime(timestamp);
 
             const messageEl = document.createElement('div');
             messageEl.className = 'message ' + (isMine ? 'sent' : 'received');
@@ -645,12 +666,13 @@
                 <div class="message-bubble">
                     ${!isMine ? `<div class="message-sender">${msg.senderFullName}</div>` : ''}
                     <div>${msg.content}</div>
-                    <small class="message-time">${msg.timestamp}</small>
+                    <small class="message-time">${formattedTime}</small>
                 </div>
             `;
             messagesContainer.appendChild(messageEl);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+
 
         // Sidebar tabs
         const sidebarTabs = document.querySelectorAll('.sidebar-tab');
