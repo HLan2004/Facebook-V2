@@ -22,5 +22,7 @@ public interface FriendshipService {
 
     void declineFriendRequest(Long currentUserId, Long friendId);
 
-    List<FriendDTO> getAcceptedFriends(Long currentUserId);
+    List<FriendDTO> getAccepted(Long currentUserId);
+
+    List<User> getAcceptedFriends(Long userId);
 }

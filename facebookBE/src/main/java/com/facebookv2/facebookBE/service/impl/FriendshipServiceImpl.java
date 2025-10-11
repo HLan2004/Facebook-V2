@@ -168,5 +168,14 @@ public class FriendshipServiceImpl implements FriendshipService {
                 .collect(Collectors.toList()); // 5. Thu thập kết quả vào một List
     }
 
+    @Override
+    public List<User> getAcceptedFriends(Long userId) {
+        List<User> friends1 = friendshipRepository.findAcceptedFriendsAsUser(userId);
+        List<User> friends2 = friendshipRepository.findAcceptedFriendsAsFriend(userId);
+
+        friends1.addAll(friends2);
+        return friends1;
+    }
+
 
 }
