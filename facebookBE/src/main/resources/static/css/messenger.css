@@ -836,3 +836,225 @@ body {
 .modal-footer .create-btn:hover {
     background-color: #166fe5;
 }
+
+.group-info-modal .modal-container {
+    width: 420px;
+    max-width: 95%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1c1e21;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 4px;
+    transition: background 0.2s;
+}
+
+.modal-close-btn:hover {
+    background: #f0f2f5;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.modal-divider {
+    margin: 12px 0;
+    border: none;
+    border-top: 1px solid #eee;
+}
+
+/* Danh sách thành viên */
+#group-members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border: 1px solid #e4e6ea;
+    border-radius: 10px;
+    background-color: #fff;
+    transition: background 0.2s;
+}
+
+.member-item:hover {
+    background-color: #f0f2f5;
+}
+
+.member-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.member-left img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.member-name {
+    font-size: 15px;
+    color: #050505;
+    font-weight: 500;
+}
+
+.member-badge {
+    font-size: 12px;
+    color: #65676b;
+    background: #f0f2f5;
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+
+.kick-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.kick-btn:hover {
+    background-color: #ffecec;
+    transform: scale(1.1);
+}
+
+.kick-btn svg {
+    stroke: #ff4d4f;
+    width: 18px;
+    height: 18px;
+}
+
+/* Thêm thành viên */
+#add-member-section h4 {
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: #1c1e21;
+}
+
+#add-member-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+}
+
+#add-member-input:focus {
+    border-color: #1877f2;
+    box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.15);
+}
+
+#add-member-suggestions {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-top: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+}
+
+.suggest-add-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.suggest-add-item:hover {
+    background-color: #f0f2f5;
+}
+
+.suggest-add-item img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+/* Nút rời nhóm */
+#leave-group-btn {
+    width: 100%;
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+#leave-group-btn:hover {
+    background: #e04343;
+}
+
+/* Footer */
+.modal-footer {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.modal-footer .cancel-btn {
+    background-color: #f0f2f5;
+    color: #1c1e21;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.modal-footer .cancel-btn:hover {
+    background-color: #e4e6ea;
+}
