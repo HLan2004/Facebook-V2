@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1081,7 +1079,7 @@
 <!-- Phần JS để Thymeleaf xử lý -->
 <script th:inline="javascript">
     //  Biến lưu trạng thái LIKE của từng bài
-    const likeStates = /*[[${likedMap}]]*/ {};
+    const likeStates = JSON.parse('[[${likedMap}]]'.replace(/=/g, ":"));
 
     // ✅ Xử lý nút THÍCH
     function toggleLike(statusId) {
@@ -1089,16 +1087,10 @@
         const url = isLiked ? '/facebook/car/reaction/remove' : '/facebook/car/reaction/add';
         const method = 'POST';
 
-        // Lấy CSRF token từ meta
-        const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        const headerName = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
         fetch(url, {
             method: method,
             headers: {
-                'Content-Type': 'application/json',
-                [headerName]: token // thêm CSRF token
-            },
+                'Content-Type': 'application/json'},
             body: JSON.stringify({ statusId: statusId })
         })
             .then(response => {
@@ -1160,15 +1152,9 @@
             const content = input.value.trim();
             if (!content) return;
 
-            // ✅ Lấy CSRF token từ meta
-            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-            const headerName = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
             fetch('/facebook/car/comment/add', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-                        [headerName]: token // ✅ thêm CSRF token vào header
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
                 body: 'statusId=' + encodeURIComponent(statusId) +
                     '&content=' + encodeURIComponent(content)
             })

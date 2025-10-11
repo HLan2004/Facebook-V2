@@ -59,9 +59,10 @@ public class UserController {
         for (Status status : statuses) {
             boolean liked = commentAndReactionService.existsByUserAndStatus(user, status);
             likedMap.put(status.getId(), liked);
-            Long likeCount = commentAndReactionService.countReactionByStatus(status);
+            Long likeCount = Optional.ofNullable(commentAndReactionService.countReactionByStatus(status)).orElse(0L);
+            System.out.println("likeCount: " + likeCount + "status: " + status.getId());
             likeCountMap.put(status.getId(), likeCount);
-            Long commentCount = commentAndReactionService.countCommentByStatus(status);
+            Long commentCount = Optional.ofNullable(commentAndReactionService.countCommentByStatus(status)).orElse(0L);
             commentCountMap.put(status.getId(), commentCount);
         }
         model.addAttribute("user", user);

@@ -60,6 +60,6 @@ public class StatusController {
         status.setCreatedTime(LocalDateTime.now());
         statusService.saveStatus(status);
 
-        return "redirect:/facebook/status/home"; // Chuyển hướng về trang chủ
+        return "redirect:/facebook/user/home"; // Chuyển hướng về trang chủ
     }
 }
