@@ -9,6 +9,8 @@ import com.facebookv2.facebookBE.repository.ReactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CommentAndReactionService {
     @Autowired
@@ -45,6 +47,10 @@ public class CommentAndReactionService {
 
     public Long countCommentByStatus( Status status) {
         return commentRepository.countCommentByStatus(status);
+    }
+
+    public List<Comment> getCommentsByStatus(Long statusId){
+        return commentRepository.findByStatusIdOrderByCreatedAtAsc(statusId);
     }
 }
 

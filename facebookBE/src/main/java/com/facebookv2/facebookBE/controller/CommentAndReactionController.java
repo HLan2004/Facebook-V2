@@ -1,5 +1,6 @@
 package com.facebookv2.facebookBE.controller;
 
+import com.facebookv2.facebookBE.model.Comment;
 import com.facebookv2.facebookBE.model.Reaction;
 import com.facebookv2.facebookBE.model.Status;
 import com.facebookv2.facebookBE.model.User;
@@ -15,9 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/facebook/car")
@@ -93,6 +92,25 @@ public class CommentAndReactionController {
         }
         return result;
     }
+
+    @GetMapping("/comment/list")
+    @ResponseBody
+    public List<Map<String, Object>> getComments(@RequestParam Long statusId) {
+        List<Comment> comments = commentAndReactionService.getCommentsByStatus(statusId);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Comment c : comments) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("content", c.getContent());
+            map.put("createdAt", c.getCreatedAt());
+            map.put("userName", c.getUser().getFirstName() + " " + c.getUser().getLastName());
+            result.add(map);
+        }
+        return result;
+    }
+
+
+
 
 
 }
