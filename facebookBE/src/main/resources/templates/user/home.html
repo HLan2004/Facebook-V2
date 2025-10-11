@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>MediaBook</title>
     <style>
-
+        /* CSS CƠ BẢN (GIỮ NGUYÊN) */
         .preview-wrapper {
             position: relative;
             border: 1px solid #ccd0d5;
@@ -28,7 +28,6 @@
             object-fit: cover;
             border-radius: 8px;
         }
-
 
         .preview-actions {
             position: absolute;
@@ -56,7 +55,6 @@
             background-color: #f0f2f5;
         }
 
-        /* Nút xóa ảnh preview (dấu X) */
         .remove-image-btn {
             position: absolute;
             top: 16px;
@@ -80,7 +78,6 @@
             background-color: #f0f2f5;
         }
 
-        /* Badge nhỏ cho icon messenger */
         .icon-badge {
             position: absolute;
             top: -6px;
@@ -99,11 +96,12 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.15);
         }
         .icon-wrapper { position: relative; display: inline-flex; align-items:center; }
+
         body {
             padding-top: 56px;
-            background-color: #F0F2F5;
+            background-color: #f2f4f7; /* <-- ĐỔI MÀU NỀN CHÍNH Ở ĐÂY */
+            overflow: hidden; /* QUAN TRỌNG: Ngăn body tự cuộn */
         }
-
 
         .nav-icon-active {
             color: #0866FF;
@@ -118,84 +116,58 @@
             background-color: #0866FF;
         }
 
-
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
-
-
-
-
         body.modal-open {
             overflow: hidden;
         }
 
-        #left-sidebar {
-            position: fixed;
-            top: 56px;
-            left: 0;
-            height: calc(100vh - 56px);
+        /* === CSS LAYOUT CHO 3 CỘT === */
+        #left-sidebar, #main-content, #right-sidebar {
             overflow-y: auto;
-            padding-bottom: 20px;
-            overscroll-behavior: contain;
+            height: 100%;
+            background-color: #f2f4f7; /* <-- ĐỔI MÀU NỀN CHO CẢ 3 CỘT Ở ĐÂY */
         }
 
-
-        #right-sidebar {
-            position: fixed;
-            top: 56px;
-            right: 0;
-            height: calc(100vh - 56px);
-            overflow-y: auto;
-            overscroll-behavior: contain;
-        }
-
-
-        #main-content {
-
-            margin-left: 25%;
-            margin-right: 25%;
-        }
-
-
-        #left-sidebar, #right-sidebar {
+        /* CSS cho thanh cuộn (Áp dụng cho cả 3 cột) */
+        #left-sidebar, #main-content, #right-sidebar {
             scrollbar-width: thin;
             scrollbar-color: #d1d5db #f1f1f1;
         }
-        #left-sidebar::-webkit-scrollbar, #right-sidebar::-webkit-scrollbar {
+        #left-sidebar::-webkit-scrollbar, #main-content::-webkit-scrollbar, #right-sidebar::-webkit-scrollbar {
             width: 8px;
         }
-        #left-sidebar::-webkit-scrollbar-track, #right-sidebar::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        #left-sidebar::-webkit-scrollbar-track, #main-content::-webkit-scrollbar-track, #right-sidebar::-webkit-scrollbar-track {
+            background: transparent;
         }
-        #left-sidebar::-webkit-scrollbar-thumb, #right-sidebar::-webkit-scrollbar-thumb {
+        #left-sidebar::-webkit-scrollbar-thumb, #main-content::-webkit-scrollbar-thumb, #right-sidebar::-webkit-scrollbar-thumb {
             background: #d1d5db;
             border-radius: 4px;
         }
-        #left-sidebar::-webkit-scrollbar-thumb:hover, #right-sidebar::-webkit-scrollbar-thumb:hover {
+        #left-sidebar::-webkit-scrollbar-thumb:hover, #main-content::-webkit-scrollbar-thumb:hover, #right-sidebar::-webkit-scrollbar-thumb:hover {
             background: #a1a1aa;
         }
-
+        #main-content {
+            padding-bottom: 4rem; /* 64px */
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
-<nav class="flex items-center justify-between bg-white px-4 h-14 shadow-md w-full fixed top-0 z-50">
-    <div class="flex items-center space-x-2">
-        <a href="#">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Logo" class="h-10 w-10">
-        </a>
-        <div class="relative hidden lg:block">
-            <i class="fas fa-search absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500"></i>
-            <form th:action="@{/facebook/user/search}">
-                <input type="text" placeholder="Tìm kiếm trên Facebook" name="keyword"
-                       class="bg-gray-100 rounded-full pl-10 pr-4 py-2 h-10 w-60 focus:outline-none">
-            </form>
-
+<body class="bg-gray-100 font-sans" th:data-current-user-id="${user.id}">
+<nav class="flex items-center bg-white px-4 h-14 shadow-md w-full fixed top-0 z-50">
+    <div class="w-1/4">
+        <div class="flex items-center space-x-2">
+            <a href="#">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Logo" class="h-10 w-10">
+            </a>
+            <div class="relative hidden lg:block">
+                <i class="fas fa-search absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500"></i>
+                <form th:action="@{/facebook/user/search}">
+                    <input type="text" placeholder="Tìm kiếm trên Facebook" name="keyword"
+                           class="bg-gray-100 rounded-full pl-10 pr-4 py-2 h-10 w-60 focus:outline-none">
+                </form>
+            </div>
         </div>
     </div>
 
-    <div class="flex-grow flex items-center justify-center h-full">
+    <div class="w-2/4 flex justify-center h-full">
         <div class="flex items-center h-full">
             <a href="#" class="relative flex items-center justify-center w-[112px] h-full nav-icon-active">
                 <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
@@ -227,84 +199,90 @@
         </div>
     </div>
 
-    <div class="flex items-center space-x-2">
-        <a href="#" class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
-            <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
-                <path d="M18.5 1A1.5 1.5 0 0 0 17 2.5v3A1.5 1.5 0 0 0 18.5 7h3A1.5 1.5 0 0 0 23 5.5v-3A1.5 1.5 0 0 0 21.5 1h-3zm0 8a1.5 1.5 0 0 0-1.5 1.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 21.5 9h-3zm-16 8A1.5 1.5 0 0 0 1 18.5v3A1.5 1.5 0 0 0 2.5 23h3A1.5 1.5 0 0 0 7 21.5v-3A1.5 1.5 0 0 0 5.5 17h-3zm8 0A1.5 1.5 0 0 0 9 18.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3a1.5 1.5 0 0 0-1.5-1.5h-3zm8 0a1.5 1.5 0 0 0-1.5 1.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3a1.5 1.5 0 0 0-1.5-1.5h-3zm-16-8A1.5 1.5 0 0 0 1 10.5v3A1.5 1.5 0 0 0 2.5 15h3A1.5 1.5 0 0 0 7 13.5v-3A1.5 1.5 0 0 0 5.5 9h-3zm0-8A1.5 1.5 0 0 0 1 2.5v3A1.5 1.5 0 0 0 2.5 7h3A1.5 1.5 0 0 0 7 5.5v-3A1.5 1.5 0 0 0 5.5 1h-3zm8 0A1.5 1.5 0 0 0 9 2.5v3A1.5 1.5 0 0 0 10.5 7h3A1.5 1.5 0 0 0 15 5.5v-3A1.5 1.5 0 0 0 13.5 1h-3zm0 8A1.5 1.5 0 0 0 9 10.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 13.5 9h-3z"></path>
-            </svg>
-        </a>
+    <div class="w-1/4 flex justify-end">
+        <div class="flex items-center space-x-2">
+            <a href="#" class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
+                <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                    <path d="M18.5 1A1.5 1.5 0 0 0 17 2.5v3A1.5 1.5 0 0 0 18.5 7h3A1.5 1.5 0 0 0 23 5.5v-3A1.5 1.5 0 0 0 21.5 1h-3zm0 8a1.5 1.5 0 0 0-1.5 1.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 21.5 9h-3zm-16 8A1.5 1.5 0 0 0 1 18.5v3A1.5 1.5 0 0 0 2.5 23h3A1.5 1.5 0 0 0 7 21.5v-3A1.5 1.5 0 0 0 5.5 17h-3zm8 0A1.5 1.5 0 0 0 9 18.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3a1.5 1.5 0 0 0-1.5-1.5h-3zm8 0a1.5 1.5 0 0 0-1.5 1.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3a1.5 1.5 0 0 0-1.5-1.5h-3zm-16-8A1.5 1.5 0 0 0 1 10.5v3A1.5 1.5 0 0 0 2.5 15h3A1.5 1.5 0 0 0 7 13.5v-3A1.5 1.5 0 0 0 5.5 9h-3zm0-8A1.5 1.5 0 0 0 1 2.5v3A1.5 1.5 0 0 0 2.5 7h3A1.5 1.5 0 0 0 7 5.5v-3A1.5 1.5 0 0 0 5.5 1h-3zm8 0A1.5 1.5 0 0 0 9 2.5v3A1.5 1.5 0 0 0 10.5 7h3A1.5 1.5 0 0 0 15 5.5v-3A1.5 1.5 0 0 0 13.5 1h-3zm0 8A1.5 1.5 0 0 0 9 10.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 13.5 9h-3z"></path>
+                </svg>
+            </a>
 
-        <a th:href="@{/facebook/messenger}" class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
-            <svg fill="currentColor" viewBox="0 0 12 12" class="w-5 h-5">
-                <path d="m106.868 921.248-1.892 2.925a.32.32 0 0 1-.443.094l-1.753-1.134a.2.2 0 0 0-.222.003l-1.976 1.363c-.288.199-.64-.143-.45-.437l1.892-2.925a.32.32 0 0 1 .443-.095l1.753 1.134a.2.2 0 0 0 .222-.003l1.976-1.363c.288-.198.64.144.45.438m-3.368-4.251c-3.323 0-5.83 2.432-5.83 5.658 0 1.642.652 3.128 1.834 4.186a.331.331 0 0 1 .111.234l.03 1.01a.583.583 0 0 0 .82.519l1.13-.5a.32.32 0 0 1 .22-.015c.541.148 1.108.223 1.685.223 3.323 0 5.83-2.432 5.83-5.657 0-3.226-2.507-5.658-5.83-5.658" transform="translate(-97.5 -916.655)"></path>
-            </svg>
-            <span class="icon-badge" th:if="${unreadMessages != null and unreadMessages > 0}" th:text="${unreadMessages}"></span>
-        </a>
+            <a th:href="@{/facebook/messenger}" class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
+                <svg fill="currentColor" viewBox="0 0 12 12" class="w-5 h-5">
+                    <path d="m106.868 921.248-1.892 2.925a.32.32 0 0 1-.443.094l-1.753-1.134a.2.2 0 0 0-.222.003l-1.976 1.363c-.288.199-.64-.143-.45-.437l1.892-2.925a.32.32 0 0 1 .443-.095l1.753 1.134a.2.2 0 0 0 .222-.003l1.976-1.363c.288-.198.64.144.45.438m-3.368-4.251c-3.323 0-5.83 2.432-5.83 5.658 0 1.642.652 3.128 1.834 4.186a.331.331 0 0 1 .111.234l.03 1.01a.583.583 0 0 0 .82.519l1.13-.5a.32.32 0 0 1 .22-.015c.541.148 1.108.223 1.685.223 3.323 0 5.83-2.432 5.83-5.657 0-3.226-2.507-5.658-5.83-5.658" transform="translate(-97.5 -916.655)"></path>
+                </svg>
+                <span class="icon-badge" th:if="${unreadMessages != null and unreadMessages > 0}" th:text="${unreadMessages}"></span>
+            </a>
 
-        <a href="#" class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
-            <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
-                <path d="M3 9.5a9 9 0 1 1 18 0v2.927c0 1.69.475 3.345 1.37 4.778a1.5 1.5 0 0 1-1.272 2.295h-4.625a4.5 4.5 0 0 1-8.946 0H2.902a1.5 1.5 0 0 1-1.272-2.295A9.01 9.01 0 0 0 3 12.43V9.5zm6.55 10a2.5 2.5 0 0 0 4.9 0h-4.9z"></path>
-            </svg>
-            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">4</span>
-        </a>
+            <a href="#" class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
+                <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                    <path d="M3 9.5a9 9 0 1 1 18 0v2.927c0 1.69.475 3.345 1.37 4.778a1.5 1.5 0 0 1-1.272 2.295h-4.625a4.5 4.5 0 0 1-8.946 0H2.902a1.5 1.5 0 0 1-1.272-2.295A9.01 9.01 0 0 0 3 12.43V9.5zm6.55 10a2.5 2.5 0 0 0 4.9 0h-4.9z"></path>
+                </svg>
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">4</span>
+            </a>
 
-        <div class="relative">
-            <button id="profile-menu-button" class="focus:outline-none relative">
-                <img th:src="@{/images/default-avatar.svg}" src="https://placehold.co/40x40/E4E6EB/7F7F7F?text=User" alt="Profile" class="h-10 w-10 rounded-full object-cover">
+            <div class="relative">
+                <button id="profile-menu-button" class="focus:outline-none relative">
+                    <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                         alt="Profile" class="h-10 w-10 rounded-full object-cover">
 
-                <div class="absolute -bottom-0.5 -right-0.5">
-                    <div class="bg-gray-200 rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
-                        <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" class="text-gray-800">
-                            <g fill-rule="evenodd" transform="translate(-448 -544)">
-                                <path fill-rule="nonzero" d="M452.707 549.293a1 1 0 0 0-1.414 1.414l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L456 552.586l-3.293-3.293z"></path>
-                            </g>
-                        </svg>
+                    <div class="absolute -bottom-0.5 -right-0.5">
+                        <div class="bg-gray-200 rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+                            <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" class="text-gray-800">
+                                <g fill-rule="evenodd" transform="translate(-448 -544)">
+                                    <path fill-rule="nonzero" d="M452.707 549.293a1 1 0 0 0-1.414 1.414l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L456 552.586l-3.293-3.293z"></path>
+                                </g>
+                            </svg>
+                        </div>
                     </div>
-                </div>
-            </button>
+                </button>
 
-            <div id="profile-dropdown-menu" class="hidden absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-xl z-50 overflow-hidden">
-                <div class="p-2 custom-scrollbar" style="max-height: 90vh; overflow-y: auto;">
-                    <div class="p-2 rounded-lg shadow-md mb-2 bg-white">
-                        <a href="/facebook/profile" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
-                            <img th:src="@{/images/default-avatar.svg}" src="https://placehold.co/60x60/E4E6EB/7F7F7F?text=User" alt="Profile" class="h-14 w-14 rounded-full object-cover">
-                            <div>
-                                <p class="font-semibold text-gray-800" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
-                            </div>
-                        </a>
-                        <hr class="my-2">
-                        <button class="w-full text-center py-2 text-blue-600 font-semibold bg-blue-50 rounded-lg hover:bg-blue-100">Xem tất cả trang cá nhân</button>
+
+                <div id="profile-dropdown-menu" class="hidden absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-xl z-50 overflow-hidden">
+                    <div class="p-2 custom-scrollbar" style="max-height: 90vh; overflow-y: auto;">
+                        <div class="p-2 rounded-lg shadow-md mb-2 bg-white">
+                            <a href="/facebook/profile" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+                                <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                                     alt="Profile" class="h-14 w-14 rounded-full object-cover">
+                                <div>
+                                    <p class="font-semibold text-gray-800" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
+                                </div>
+                            </a>
+                            <hr class="my-2">
+                            <button class="w-full text-center py-2 text-blue-600 font-semibold bg-blue-50 rounded-lg hover:bg-blue-100">Xem tất cả trang cá nhân</button>
+                        </div>
+                        <ul class="text-gray-700">
+                            <li>
+                                <a href="/settings" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
+                                    <div class="flex items-center space-x-3"><i class="fas fa-cog text-xl bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center"></i><span class="font-semibold">Cài đặt & quyền riêng tư</span></div><i class="fas fa-chevron-right text-gray-500"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
+                                    <div class="flex items-center space-x-3"><i class="fas fa-question-circle text-xl bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center"></i><span class="font-semibold">Trợ giúp & hỗ trợ</span></div><i class="fas fa-chevron-right text-gray-500"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <form th:action="@{/logout}" method="post" class="block w-full">
+                                    <button type="submit" class="w-full flex items-center p-2 rounded-lg hover:bg-gray-100 text-left"><div class="flex items-center space-x-3"><i class="fas fa-sign-out-alt text-xl bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center"></i><span class="font-semibold">Đăng xuất</span></div></button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
-                    <ul class="text-gray-700">
-                        <li>
-                            <a href="/settings" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
-                                <div class="flex items-center space-x-3"><i class="fas fa-cog text-xl bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center"></i><span class="font-semibold">Cài đặt & quyền riêng tư</span></div><i class="fas fa-chevron-right text-gray-500"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
-                                <div class="flex items-center space-x-3"><i class="fas fa-question-circle text-xl bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center"></i><span class="font-semibold">Trợ giúp & hỗ trợ</span></div><i class="fas fa-chevron-right text-gray-500"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <form th:action="@{/logout}" method="post" class="block w-full">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                                <button type="submit" class="w-full flex items-center p-2 rounded-lg hover:bg-gray-100 text-left"><div class="flex items-center space-x-3"><i class="fas fa-sign-out-alt text-xl bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center"></i><span class="font-semibold">Đăng xuất</span></div></button>
-                            </form>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </nav>
 
-<div class="container mx-auto mt-6">
+<div class="w-full">
+    <div class="flex w-full mt-6" style="height: calc(100vh - 56px);">
     <div id="left-sidebar" class="w-1/4 p-2">
         <ul class="space-y-1">
             <li>
                 <a th:href="@{/facebook/profile}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
-                    <img th:src="@{/images/default-avatar.svg}" src="/images/default-avatar.svg" alt="Profile" class="h-9 w-9 rounded-full object-cover">
+                    <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                         alt="Profile" class="h-9 w-9 rounded-full object-cover">
                     <span class="font-semibold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</span>
                 </a>
             </li>
@@ -438,13 +416,14 @@
         </div>
     </div>
 
-    <div id="main-content" class="w-2/4">
+        <div id="main-content" class="w-2/4 max-h-screen overflow-y-auto">
         <div class="space-y-6">
             <div class="bg-white rounded-xl shadow px-3 pt-3 pb-2 max-w-[582px] mx-auto">
                 <div class="flex items-center space-x-3">
                     <a th:href="@{/facebook/profile}">
                         <div class="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
-                            <img th:src="@{/images/default-avatar.svg}" src="/images/default-avatar.svg" alt="Avatar">
+                            <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                                 alt="Avatar">
                         </div>
                     </a>
                     <div class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-gray-500 hover:bg-gray-200 cursor-pointer"
@@ -474,10 +453,12 @@
                 </div>
             </div>
 
+
             <div class="max-w-[582px] mx-auto">
                 <div class="flex space-x-2 overflow-x-auto pb-2">
                     <div class="flex-shrink-0 w-28 h-48 rounded-lg overflow-hidden relative cursor-pointer shadow-md">
-                        <img th:src="@{/images/default-avatar.svg}" src="/images/default-avatar.svg" class="w-full h-full object-cover" alt="Create a story">
+                        <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                             class="w-full h-full object-cover" alt="Create a story">
 
                         <div class="absolute bottom-0 left-0 right-0 h-1/3 bg-white flex flex-col items-center justify-end p-2">
                             <span class="font-semibold text-xs text-center">Tạo tin</span>
@@ -530,8 +511,10 @@
                 <div class="flex items-center justify-between p-3">
                     <div class="flex items-center space-x-3">
                         <div class="h-10 w-10 rounded-full overflow-hidden">
-                            <img th:src="@{/images/default-avatar.svg}" alt="User Avatar">
+                            <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                                 alt="User Avatar">
                         </div>
+
                         <div>
                             <p class="font-semibold text-sm" th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">
                                 User Name
@@ -562,8 +545,6 @@
                     Post content here
                 </div>
 
-
-<!--                sửa ảnh -->
                 <div th:if="${status.picture != null and !status.picture.isEmpty()}" class="mt-2">
                     <img th:src="@{/uploads/{filename}(filename=${status.picture})}" alt="Post Image" class="w-full">
                 </div>
@@ -589,66 +570,67 @@
         </div>
     </div>
 
-    <div id="right-sidebar" class="w-1/4 space-y-6">
-        <div class="bg-white rounded-lg shadow p-4">
-            <h4 class="font-semibold mb-2">Your pages</h4>
-            <a class="flex items-center space-x-3 mb-2" href="#">
-                <div class="h-8 w-8 rounded-full overflow-hidden">
-                    <img th:src="@{/images/logo.png}" src="/images/logo.png" alt="">
+        <div id="right-sidebar" class="w-1/4 relative flex flex-col py-2">
+            <div class="px-4 py-2 flex-shrink-0">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800">Người liên hệ</h2>
+                    <div class="flex items-center space-x-1">
+                        <button class="h-8 w-8 rounded-full hover:bg-gray-200 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </button>
+                        <button class="h-8 w-8 rounded-full hover:bg-gray-200 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+                        </button>
+                    </div>
                 </div>
-                <p class="font-medium">Cody</p>
-            </a>
-            <a class="flex items-center space-x-3" href="#">
-                <div class="h-8 w-8 rounded-full overflow-hidden">
-                    <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" alt="">
-                </div>
-                <p class="font-medium">Cody Tutorials</p>
-            </a>
-        </div>
-        <div class="bg-white rounded-lg shadow p-4">
-            <h4 class="font-semibold mb-2">Friends</h4>
-            <a class="flex items-center space-x-3 mb-2" href="#">
-                <div class="h-8 w-8 rounded-full overflow-hidden">
-                    <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" alt="">
-                </div>
-                <p class="font-medium">Henry Mosely</p>
-            </a>
-            <a class="flex items-center space-x-3 mb-2" href="#">
-                <div class="h-8 w-8 rounded-full overflow-hidden">
-                    <img th:src="@{/images/shoes.jpg}" src="/images/shoes.jpg" alt="">
-                </div>
-                <p class="font-medium">George</p>
-            </a>
-            <a class="flex items-center space-x-3 mb-2" href="#">
-                <div class="h-8 w-8 rounded-full overflow-hidden">
-                    <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" alt="">
-                </div>
-                <p class="font-medium">Aakash Malhotra</p>
-            </a>
-            <a class="flex items-center space-x-3 mb-2" href="#">
-                <div class="h-8 w-8 rounded-full overflow-hidden">
-                    <img th:src="@{/images/model.jpg}" src="/images/model.jpg" alt="">
-                </div>
-                <p class="font-medium">Ragini Khanna</p>
-            </a>
-            <a class="flex items-center space-x-3 mb-2" href="#">
-                <div class="h-8 w-8 rounded-full overflow-hidden">
-                    <img th:src="@{/images/boy.jpg}" src="/images/boy.jpg" alt="">
-                </div>
-                <p class="font-medium">Justin Bieber</p>
-            </a>
-            <a class="flex items-center space-x-3 mb-2" href="#">
-                <div class="h-8 w-8 rounded-full overflow-hidden">
-                    <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" alt="">
-                </div>
-                <p class="font-medium">Ramesh GC</p>
-            </a>
-            <a class="flex items-center space-x-3" href="#">
-                <div class="h-8 w-8 rounded-full overflow-hidden">
-                    <img th:src="@{/images/model.jpg}" src="/images/model.jpg" alt="">
-                </div>
-                <p class="font-medium">Sajita Gurung</p>
-            </a>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-2">
+                <ul>
+                    <li>
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                            <div class="relative h-9 w-9 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
+                                <img class="h-full w-full rounded-full border-2 border-white" src="https://i.imgur.com/u1w1Ggr.png" alt="Meta AI">
+                            </div>
+                            <p class="font-medium text-sm flex items-center space-x-1">
+                                <span>Meta AI</span>
+                                <svg class="w-3.5 h-3.5 text-blue-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" /></svg>
+                            </p>
+                        </a>
+                    </li>
+                </ul>
+
+                <h4 class="font-semibold text-gray-600 text-md px-2 mt-4 mb-1">Lối tắt của bạn</h4>
+                <ul>
+                    <li>
+                        <a class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors" href="#">
+                            <div class="h-9 w-9 rounded-lg overflow-hidden">
+                                <img th:src="@{/images/logo.png}" src="/images/logo.png" alt="Cody">
+                            </div>
+                            <p class="font-medium text-sm">Cody</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors" href="#">
+                            <div class="h-9 w-9 rounded-lg overflow-hidden">
+                                <img th:src="@{/images/dp.jpg}" src="/images/dp.jpg" alt="Cody Tutorials">
+                            </div>
+                            <p class="font-medium text-sm">Cody Tutorials</p>
+                        </a>
+                    </li>
+                </ul>
+
+                <hr class="my-3 mx-2">
+
+                <ul id="friend-list-container">
+                </ul>
+            </div>
+
+            <div class="absolute bottom-4 right-4">
+                <button class="bg-white p-3 rounded-full shadow-lg border border-gray-200 hover:bg-gray-100 transition-colors">
+                    <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z"></path></svg>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -665,7 +647,8 @@
         <form th:action="@{/facebook/status/homepost}" method="post" enctype="multipart/form-data" class="p-4 flex flex-col flex-grow overflow-y-auto">
             <div class="flex-shrink-0 flex items-center space-x-3 mb-4">
                 <div class="h-10 w-10 rounded-full overflow-hidden">
-                    <img th:src="@{/images/default-avatar.svg}" alt="Avatar">
+                    <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                         alt="Avatar">
                 </div>
                 <div>
                     <p class="font-semibold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
@@ -704,7 +687,6 @@
         </form>
     </div>
 </div>
-
 <div id="privacyModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
     <div class="bg-white w-full max-w-lg rounded-lg shadow-xl border">
         <div class="relative flex justify-center items-center border-b p-3">
@@ -760,8 +742,6 @@
 </div>
 
 <script>
-
-
     const profileMenuButton = document.getElementById('profile-menu-button');
     const profileDropdownMenu = document.getElementById('profile-dropdown-menu');
     const postContentTextarea = document.getElementById('postContentTextarea');
@@ -779,7 +759,7 @@
         if (createPostModal) {
             createPostModal.classList.remove("hidden");
             createPostModal.classList.add("flex");
-            document.body.classList.add('modal-open'); // <-- THÊM DÒNG NÀY ĐỂ KHÓA CUỘN
+            document.body.classList.add('modal-open');
         }
     }
 
@@ -790,7 +770,7 @@
             createPostModal.classList.remove("flex");
             removeImagePreview();
             postContentTextarea.value = '';
-            document.body.classList.remove('modal-open'); // <-- THÊM DÒNG NÀY ĐỂ MỞ CUỘN
+            document.body.classList.remove('modal-open');
         }
     }
 
@@ -897,6 +877,75 @@
             });
         }
     });
+
+
+
+
+
+
+
+    // Dán đoạn code này vào bên trong thẻ <script> ở cuối file home.html
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ... (giữ lại code cũ của bạn ở trên) ...
+
+        // === BẮT ĐẦU CODE MỚI ĐỂ TẢI DANH SÁCH BẠN BÈ ===
+
+        // 1. Lấy ID người dùng hiện tại từ thuộc tính data của thẻ body
+        const currentUserId = document.body.dataset.currentUserId;
+        if (!currentUserId) {
+            console.error("Không tìm thấy ID người dùng hiện tại.");
+            return;
+        }
+
+        // 2. Lấy container để chứa danh sách bạn bè
+        const friendListContainer = document.getElementById('friend-list-container');
+
+        // 3. Gọi API để lấy danh sách bạn bè
+        fetch(`/facebook/user/api/list/${currentUserId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Chuyển đổi response thành JSON
+            })
+            .then(friends => {
+                // 4. Xóa nội dung cũ (nếu có)
+                friendListContainer.innerHTML = '';
+
+                // 5. Lặp qua từng người bạn và tạo HTML tương ứng
+                friends.forEach(friend => {
+                    // Tạo thẻ <li>
+                    const listItem = document.createElement('li');
+
+                    // Xác định đường dẫn avatar, nếu không có thì dùng ảnh mặc định
+                    const avatarUrl = (friend.avatar == null || friend.avatar === 'default.png')
+                        ? '/images/default.jpg'
+                        : `/uploads/${friend.avatar}`;
+
+                    // Tạo nội dung HTML cho một người bạn
+                    listItem.innerHTML = `
+                    <a href="/facebook/profile/${friend.id}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div class="relative h-9 w-9">
+                            <img class="h-full w-full rounded-full object-cover" src="${avatarUrl}" alt="Avatar của ${friend.fullName}">
+                            </div>
+                        <p class="font-medium text-sm">${friend.fullName}</p>
+                    </a>
+                `;
+
+                    // 6. Thêm thẻ <li> vừa tạo vào container
+                    friendListContainer.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Lỗi khi tải danh sách bạn bè:', error);
+                friendListContainer.innerHTML = '<li><p class="p-2 text-sm text-gray-500">Không thể tải danh sách bạn bè.</p></li>';
+            });
+
+        // === KẾT THÚC CODE MỚI ===
+    });
+
 </script>
 </body>
 </html>

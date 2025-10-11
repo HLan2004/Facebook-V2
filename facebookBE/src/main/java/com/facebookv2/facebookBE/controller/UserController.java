@@ -5,11 +5,13 @@ import com.facebookv2.facebookBE.model.Friendship;
 import com.facebookv2.facebookBE.model.Status;
 import com.facebookv2.facebookBE.model.User;
 import com.facebookv2.facebookBE.model.dto.ConversationSummaryDTO;
+import com.facebookv2.facebookBE.model.dto.FriendDTO;
 import com.facebookv2.facebookBE.model.dto.UserDTO;
 import com.facebookv2.facebookBE.repository.FriendshipRepository;
 import com.facebookv2.facebookBE.service.*;
 import com.facebookv2.facebookBE.service.impl.StatusServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,6 +71,12 @@ public class UserController {
 //        friendshipService.addFriendship(email, friendId);
 //        return "redirect:/facebook/user/home";
 //    }
+@GetMapping("/api/list/{userId}")
+@ResponseBody
+public ResponseEntity<List<FriendDTO>> getFriendList(@PathVariable Long userId) {
+    List<FriendDTO> friends = friendshipService.getAcceptedFriends(userId);
+    return ResponseEntity.ok(friends);
+}
 }
 
 
