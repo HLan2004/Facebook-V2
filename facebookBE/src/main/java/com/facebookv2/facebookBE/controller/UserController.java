@@ -74,7 +74,7 @@ public class UserController {
 @GetMapping("/api/list/{userId}")
 @ResponseBody
 public ResponseEntity<List<FriendDTO>> getFriendList(@PathVariable Long userId) {
-    List<FriendDTO> friends = friendshipService.getAcceptedFriends(userId);
+    List<FriendDTO> friends = friendshipService.getAccepted(userId);
     return ResponseEntity.ok(friends);
 }
 }
