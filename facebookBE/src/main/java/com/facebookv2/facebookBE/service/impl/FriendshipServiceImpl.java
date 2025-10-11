@@ -146,5 +146,14 @@ public class FriendshipServiceImpl implements FriendshipService {
         friendshipRepository.declineFriendRequest(currentUserId, friendId);
     }
 
+    @Override
+    public List<User> getAcceptedFriends(Long userId) {
+        List<User> friends1 = friendshipRepository.findAcceptedFriendsAsUser(userId);
+        List<User> friends2 = friendshipRepository.findAcceptedFriendsAsFriend(userId);
+
+        friends1.addAll(friends2);
+        return friends1;
+    }
+
 
 }

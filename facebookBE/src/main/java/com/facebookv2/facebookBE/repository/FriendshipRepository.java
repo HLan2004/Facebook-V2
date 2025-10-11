@@ -1,12 +1,14 @@
 package com.facebookv2.facebookBE.repository;
 
 import com.facebookv2.facebookBE.model.Friendship;
+import com.facebookv2.facebookBE.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
@@ -49,5 +51,14 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
         AND f.status = com.facebookv2.facebookBE.model.FriendshipStatus.PENDING
 """)
     void declineFriendRequest(@Param("userId") Long userId, @Param("friendId") Long friendId);
+
+    // Thêm method này vào FriendshipRepository
+
+    @Query("SELECT f.friend FROM Friendship f WHERE f.user.id = :userId AND f.status = com.facebookv2.facebookBE.model.FriendshipStatus.ACCEPTED")
+    List<User> findAcceptedFriendsAsUser(@Param("userId") Long userId);
+
+    @Query("SELECT f.user FROM Friendship f WHERE f.friend.id = :userId AND f.status = com.facebookv2.facebookBE.model.FriendshipStatus.ACCEPTED")
+    List<User> findAcceptedFriendsAsFriend(@Param("userId") Long userId);
+
 
 }
