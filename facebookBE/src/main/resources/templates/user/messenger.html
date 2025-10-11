@@ -6,7 +6,7 @@
     <title>Messenger - Facebook Clone</title>
     <link rel="stylesheet" th:href="@{/css/messenger.css}">
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
-    <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <style>
@@ -63,8 +63,11 @@
         </a>
         <div class="relative hidden lg:block">
             <i class="fas fa-search absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500"></i>
-            <input type="text" placeholder="Tìm kiếm trên Facebook"
-                   class="bg-gray-100 rounded-full pl-10 pr-4 py-2 h-10 w-60 focus:outline-none">
+            <form th:action="@{/facebook/user/search}">
+                <input type="text" placeholder="Tìm kiếm trên Facebook" name="keyword"
+                       class="bg-gray-100 rounded-full pl-10 pr-4 py-2 h-10 w-60 focus:outline-none">
+            </form>
+
         </div>
     </div>
 
@@ -191,7 +194,10 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <h2 class="sidebar-title">Đoạn chat</h2>
+            <div class="sidebar-header-top" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <h2 class="sidebar-title">Đoạn chat</h2>
+                <button class="create-group-btn" title="Tạo nhóm mới">＋</button>
+            </div>
             <input type="text" class="search-conversations" placeholder="Tìm kiếm trên Messenger">
 
             <div class="sidebar-tabs">
@@ -251,6 +257,29 @@
 
 </div>
 
+<!-- Modal Create Group -->
+<div class="modal-overlay" id="create-group-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>Tạo nhóm mới</h3>
+            <button class="modal-close-btn" id="close-create-group-modal">×</button>
+        </div>
+        <div class="modal-body">
+            <label for="group-name">Tên nhóm</label>
+            <input type="text" id="group-name" placeholder="Nhập tên nhóm">
+
+            <label>Chọn bạn bè</label>
+            <div class="friends-list" id="friends-list">
+                <!-- Danh sách friends sẽ load bằng JS -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-btn" id="cancel-create-group">Hủy</button>
+            <button class="create-btn" id="confirm-create-group">Tạo nhóm</button>
+        </div>
+    </div>
+</div>
+
 <!-- Scripts -->
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
@@ -259,6 +288,12 @@
         const messagesContainer = document.getElementById('messages-container');
         const chatArea = document.getElementById('chat-area');
         const noConversationDiv = document.getElementById('no-conversation');
+        const createGroupBtn = document.querySelector('.create-group-btn');
+        const modalOverlay = document.getElementById('create-group-modal');
+        const closeModalBtn = document.getElementById('close-create-group-modal');
+        const cancelBtn = document.getElementById('cancel-create-group');
+        const confirmBtn = document.getElementById('confirm-create-group');
+        const friendsListContainer = document.getElementById('friends-list');
 
         // Dữ liệu Thymeleaf từ backend
         let conversationId = /*[[${conversationId}]]*/ null;
@@ -720,6 +755,100 @@
                 stompClient.disconnect();
             }
         });
+
+        createGroupBtn.addEventListener('click', () => {
+            modalOverlay.style.display = 'flex';
+            loadFriends(); // load danh sách bạn bè khi mở modal
+        });
+
+        // Close modal
+        [closeModalBtn, cancelBtn].forEach(btn => {
+            btn.addEventListener('click', () => {
+                modalOverlay.style.display = 'none';
+            });
+        });
+
+        // Close modal khi click ngoài
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.style.display = 'none';
+            }
+        });
+
+        // Tạo nhóm (gửi dữ liệu)
+        confirmBtn.addEventListener('click', () => {
+            const groupName = document.getElementById('group-name').value.trim();
+            const selectedFriends = Array.from(document.querySelectorAll('#friends-list input[type="checkbox"]:checked'))
+                .map(input => input.value);
+
+            if (!groupName) {
+                alert('Vui lòng nhập tên nhóm');
+                return;
+            }
+
+            if (selectedFriends.length === 0) {
+                alert('Vui lòng chọn ít nhất một bạn bè');
+                return;
+            }
+
+            // Gửi dữ liệu lên server
+            fetch('/facebook/messenger/api/conversations/group', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    groupName: groupName,
+                    participantIds: selectedFriends
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.conversationId) {
+                        // Đóng modal
+                        modalOverlay.style.display = 'none';
+                        document.getElementById('group-name').value = '';
+
+                        // Reset checkbox
+                        document.querySelectorAll('#friends-list input[type="checkbox"]').forEach(input => input.checked = false);
+
+                        // Load lại danh sách conversation để hiển thị nhóm mới
+                        loadConversations();
+                    } else {
+                        console.error('Tạo nhóm thất bại!', data);
+                    }
+                })
+                .catch(err => {
+                    console.error('Có lỗi xảy ra khi tạo nhóm', err);
+                });
+        });
+
+
+        async function loadFriends() {
+            friendsListContainer.innerHTML = '<p>Đang tải...</p>'; // show loading tạm
+            try {
+                const response = await fetch('/facebook/messenger/api/friends'); // endpoint lấy danh sách friend
+                const friends = await response.json();
+
+                if (friends.length === 0) {
+                    friendsListContainer.innerHTML = '<p>Không có bạn bè nào</p>';
+                    return;
+                }
+
+                friendsListContainer.innerHTML = '';
+                friends.forEach(friend => {
+                    const label = document.createElement('label');
+                    label.innerHTML = `
+                        <input type="checkbox" value="${friend.id}">
+                        <img src="${friend.avatar}" alt="${friend.name}" style="width:24px; height:24px; border-radius:50%; margin-right:5px;">
+                        ${friend.name}
+                    `;
+                    friendsListContainer.appendChild(label);
+                });
+
+            } catch (error) {
+                console.error(error);
+                friendsListContainer.innerHTML = '<p>Lỗi tải bạn bè</p>';
+            }
+        }
 
         // Kết nối WebSocket khi load xong
         connect();

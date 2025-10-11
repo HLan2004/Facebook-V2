@@ -10,4 +10,6 @@ public interface UserService extends UserDetailsService {
     User getUserByEmail(String email);
     User findById(Long senderId);
     List<User> searchByName(String name);
+
+    void updateUserImages(String email, String avatarFileName, String coverFileName);
 }

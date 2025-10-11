@@ -58,4 +58,26 @@ public class UserServiceImpl implements UserService {
     public List<User> searchByName(String keyword) {
         return userRepository.searchByName(keyword);
     }
+
+    @Override
+    public void updateUserImages(String email, String avatarFileName, String coverFileName) {
+        // Tìm user trong database bằng email
+        User user = userRepository.findByEmail(email);
+
+        if (user != null) {
+            // Chỉ cập nhật nếu có tên file mới được truyền vào
+            if (avatarFileName != null) {
+                user.setAvatar(avatarFileName);
+            }
+            if (coverFileName != null) {
+                user.setBackGround(coverFileName);
+            }
+
+            // Lưu lại user mà KHÔNG mã hóa lại mật khẩu
+            userRepository.save(user);
+        } else {
+            // Ném ra exception nếu không tìm thấy user
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+    }
 }

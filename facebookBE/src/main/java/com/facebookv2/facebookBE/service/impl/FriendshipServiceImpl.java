@@ -4,6 +4,7 @@ import com.facebookv2.facebookBE.model.Conversation;
 import com.facebookv2.facebookBE.model.Friendship;
 import com.facebookv2.facebookBE.model.FriendshipStatus;
 import com.facebookv2.facebookBE.model.User;
+import com.facebookv2.facebookBE.model.dto.FriendDTO;
 import com.facebookv2.facebookBE.repository.ConversationRepository;
 import com.facebookv2.facebookBE.repository.FriendshipRepository;
 import com.facebookv2.facebookBE.repository.UserRepository;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FriendshipServiceImpl implements FriendshipService {
@@ -144,6 +146,35 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public void declineFriendRequest(Long currentUserId, Long friendId) {
         friendshipRepository.declineFriendRequest(currentUserId, friendId);
+    }
+    @Override
+    public List<FriendDTO> getAccepted(Long currentUserId) {
+        // 1. Lấy tất cả mối quan hệ bạn bè đã ACCEPTED từ repository
+        //    (Điều này yêu cầu bạn phải thêm query `findUserFriendships` vào FriendshipRepository như hướng dẫn trước)
+        List<Friendship> friendships = friendshipRepository.findUserFriendships(currentUserId, FriendshipStatus.ACCEPTED);
+
+        // 2. Dùng stream để xử lý và chuyển đổi dữ liệu
+        return friendships.stream()
+                .map(friendship -> {
+                    // 3. Với mỗi mối quan hệ, tìm ra ai là "người bạn" (không phải là người dùng hiện tại)
+                    User friendUser = friendship.getUser().getId().equals(currentUserId)
+                            ? friendship.getFriend()
+                            : friendship.getUser();
+
+                    // 4. Tạo một FriendDTO với thông tin cần thiết (ID, FullName, Avatar)
+                    String fullName = friendUser.getFirstName() + " " + friendUser.getLastName();
+                    return new FriendDTO(friendUser.getId(), fullName, friendUser.getAvatar());
+                })
+                .collect(Collectors.toList()); // 5. Thu thập kết quả vào một List
+    }
+
+    @Override
+    public List<User> getAcceptedFriends(Long userId) {
+        List<User> friends1 = friendshipRepository.findAcceptedFriendsAsUser(userId);
+        List<User> friends2 = friendshipRepository.findAcceptedFriendsAsFriend(userId);
+
+        friends1.addAll(friends2);
+        return friends1;
     }
 
 

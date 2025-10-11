@@ -3,6 +3,7 @@ package com.facebookv2.facebookBE.service;
 import com.facebookv2.facebookBE.model.Friendship;
 import com.facebookv2.facebookBE.model.FriendshipStatus;
 import com.facebookv2.facebookBE.model.User;
+import com.facebookv2.facebookBE.model.dto.FriendDTO;
 import org.springframework.ui.Model;
 
 import java.util.List;
@@ -20,4 +21,8 @@ public interface FriendshipService {
     void acceptFriendRequest(Long currentUserId, Long friendId);
 
     void declineFriendRequest(Long currentUserId, Long friendId);
+
+    List<FriendDTO> getAccepted(Long currentUserId);
+
+    List<User> getAcceptedFriends(Long userId);
 }
