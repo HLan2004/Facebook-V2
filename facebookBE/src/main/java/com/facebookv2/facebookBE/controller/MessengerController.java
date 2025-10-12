@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -142,6 +143,139 @@ public class MessengerController {
         } catch (Exception e) {
             e.printStackTrace(); // in ra lỗi để biết nguyên nhân
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @DeleteMapping("/api/conversations/{conversationId}/kick/{userId}")
+    @ResponseBody
+    public ResponseEntity<?> kickMember(@PathVariable Long conversationId,
+                                        @PathVariable Long userId,
+                                        Authentication authentication) {
+        try {
+            String email = authentication.getName();
+            User currentUser = userService.getUserByEmail(email);
+
+            Conversation conversation = conversationService.findById(conversationId);
+            if (conversation == null || !conversation.isGroup()) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Không tìm thấy nhóm"));
+            }
+
+            User member = userService.findById(userId);
+            if (member == null) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Không tìm thấy người dùng"));
+            }
+
+            // 🔒 Không cho tự kick chính mình
+            if (currentUser.getId().equals(member.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("success", false, "message", "Không thể tự xóa chính mình khỏi nhóm"));
+            }
+
+            // ❗ Xóa thành viên khỏi nhóm
+            boolean removed = conversationService.removeParticipant(conversationId, member);
+
+            if (removed) {
+                return ResponseEntity.ok(Map.of("success", true, "message", "Đã xóa thành viên khỏi nhóm"));
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("success", false, "message", "Người này không thuộc nhóm"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Lỗi khi xóa thành viên"));
+        }
+    }
+
+
+    @GetMapping("/api/conversations/{conversationId}/members")
+    @ResponseBody
+    public ResponseEntity<?> getGroupMembers(@PathVariable Long conversationId) {
+        try {
+            Conversation conversation = conversationService.findById(conversationId);
+            if (conversation == null || !conversation.isGroup()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("success", false, "message", "Không tìm thấy nhóm"));
+            }
+
+            List<UserSummaryDTO> members = conversation.getParticipants().stream()
+                    .map(u -> new UserSummaryDTO(
+                            u.getId(),
+                            u.getFirstName() + " " + u.getLastName(),
+                            u.getAvatar() != null ? u.getAvatar() : "/images/default-avatar.png"
+                    ))
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(members);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Lỗi khi lấy danh sách thành viên"));
+        }
+    }
+
+    @PostMapping("/api/conversations/{conversationId}/add/{userId}")
+    @ResponseBody
+    public ResponseEntity<?> addMember(@PathVariable Long conversationId,
+                                       @PathVariable Long userId,
+                                       Authentication authentication) {
+        try {
+            Conversation conversation = conversationService.findById(conversationId);
+            if (conversation == null || !conversation.isGroup()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "message", "Không tìm thấy nhóm"));
+            }
+
+            User newMember = userService.findById(userId);
+            if (newMember == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("success", false, "message", "Không tìm thấy người dùng"));
+            }
+
+            // Kiểm tra nếu đã có trong nhóm
+            if (conversation.getParticipants().contains(newMember)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("success", false, "message", "Người này đã có trong nhóm"));
+            }
+
+            // Thêm người dùng
+            conversation.getParticipants().add(newMember);
+            conversationService.save(conversation);
+
+            return ResponseEntity.ok(Map.of("success", true, "message", "Đã thêm thành viên mới"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Lỗi khi thêm thành viên"));
+        }
+    }
+
+    @DeleteMapping("/api/conversations/{conversationId}/leave")
+    @ResponseBody
+    public ResponseEntity<?> leaveConversation(@PathVariable Long conversationId,
+                                               Authentication authentication) {
+        try {
+            String email = authentication.getName();
+            User currentUser = userService.getUserByEmail(email);
+
+            Conversation conversation = conversationService.findById(conversationId);
+            if (conversation == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("success", false, "message", "Không tìm thấy cuộc trò chuyện"));
+            }
+
+            boolean removed = conversationService.removeParticipant(conversationId, currentUser);
+            if (removed) {
+                return ResponseEntity.ok(Map.of("success", true, "message", "Bạn đã rời nhóm"));
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("success", false, "message", "Không thể rời nhóm"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Lỗi khi rời nhóm"));
         }
     }
 
