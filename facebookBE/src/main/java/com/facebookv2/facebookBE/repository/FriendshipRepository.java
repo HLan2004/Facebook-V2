@@ -41,20 +41,6 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
     void acceptFriendRequest(@Param("userId") Long userId,
                              @Param("friendId") Long friendId);
 
-    @Modifying
-    @Transactional
-    @Query("""
-    UPDATE Friendship f
-    SET f.status = com.facebookv2.facebookBE.model.FriendshipStatus.DECLINED
-    WHERE 
-        ((f.user.id = :userId AND f.friend.id = :friendId)
-        OR (f.user.id = :friendId AND f.friend.id = :userId))
-        AND f.status = com.facebookv2.facebookBE.model.FriendshipStatus.PENDING
-""")
-    void declineFriendRequest(@Param("userId") Long userId, @Param("friendId") Long friendId);
-
-    // Thêm method này vào FriendshipRepository
-
     @Query("SELECT f.friend FROM Friendship f WHERE f.user.id = :userId AND f.status = com.facebookv2.facebookBE.model.FriendshipStatus.ACCEPTED")
     List<User> findAcceptedFriendsAsUser(@Param("userId") Long userId);
 

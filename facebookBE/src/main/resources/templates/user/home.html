@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" th:href="@{/images/logo.png}" href="/images/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" th:href="@{/images/fbIcon.png}" href="/images/fbIcon.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
           integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -12,9 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>MediaBook</title>
+    <title>Facebook Clone - nhà</title>
     <style>
-        /* CSS CƠ BẢN (GIỮ NGUYÊN) */
         .preview-wrapper {
             position: relative;
             border: 1px solid #ccd0d5;
@@ -195,23 +194,24 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 50;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 90%;
             max-width: 600px;
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-height: 90vh; /* Giới hạn chiều cao tối đa 90% viewport */
+            overflow-y: auto; /* Cho phép scroll dọc */
             display: none;
-            flex-direction: column;
-            padding: 1rem;
         }
 
         .comment-modal.active {
-            display: flex;
+            display: block;
         }
 
-        /*#main-content {*/
-        /*    padding-bottom: 4rem; !* 64px *!*/
-        /*}*/
+        #main-content {
+            padding-bottom: 4rem; /* 64px */
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans" th:data-current-user-id="${user.id}">
@@ -628,7 +628,7 @@
                  class="bg-white rounded-xl shadow mt-4 max-w-[582px] mx-auto"
                  th:attr="data-status-id=${status.id},
               data-user-name=${status.user.firstName + ' ' + status.user.lastName},
-              data-user-avatar=@{/images/default-avatar.svg},
+              data-user-avatar=${status.user.avatar != null and status.user.avatar != '' ? status.user.avatar : 'default-avatar.svg'},
               data-status-time=${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')},
               data-status-content=${status.content ?: ''},
               data-status-picture=${status.picture ?: ''}"
@@ -1218,10 +1218,15 @@
         // hiện nội dung modal
         if (statusCard) {
             const userName = statusCard.getAttribute('data-user-name') || '';
-            const userAvatar = statusCard.getAttribute('data-user-avatar') || '/images/default-avatar.svg';
+            const userAvatarFile = statusCard.getAttribute('data-user-avatar') || '/images/default-avatar.svg';
             const statusTime = statusCard.getAttribute('data-status-time') || '';
             const statusContent = statusCard.getAttribute('data-status-content') || '';
             const statusPicture = statusCard.getAttribute('data-status-picture') || '';
+
+            // avatar path
+            const userAvatar = (userAvatarFile && userAvatarFile !== 'default-avatar.svg')
+                ? '/uploads/' + userAvatarFile
+                : '/images/default-avatar.svg';
 
             // Kiểm tra từng element trước khi set
             const modalUserName = document.getElementById('modalUserName');
@@ -1233,7 +1238,12 @@
 
             if (modalUserName) modalUserName.textContent = userName;
             if (modalUserFullName) modalUserFullName.textContent = userName;
-            if (modalUserAvatar) modalUserAvatar.src = userAvatar;
+            if (modalUserAvatar) {
+                modalUserAvatar.src = userAvatar;
+                modalUserAvatar.onerror = function() {
+                    this.src = '/images/default-avatar.svg';
+                };
+            }
             if (modalStatusTime) modalStatusTime.textContent = statusTime;
             if (modalStatusContent) modalStatusContent.textContent = statusContent;
 
@@ -1250,9 +1260,12 @@
 
         const overlay = document.getElementById('overlay');
         const commentModal = document.getElementById('commentModal');
+        const overlayBg = document.getElementById('overlay-bg');
+
 
         // ẩn hiện modal
         if (overlay) overlay.classList.add('active');
+        if (overlayBg) overlayBg.classList.add('active');
         if (commentModal) commentModal.classList.add('active');
         document.body.classList.add('modal-open');
 
@@ -1305,9 +1318,17 @@
                     // Format thời gian
                     const formattedTime = formatDateTime(c.createdAt);
 
+                    // Xử lý avatar - nếu null hoặc rỗng thì dùng default
+                    const avatarUrl = (c.avatar && c.avatar.trim() !== '')
+                        ? '/uploads/' + c.avatar
+                        : '/images/default-avatar.svg';
+
                     div.innerHTML = `
-                    <img src="/images/default-avatar.svg" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0">
-                    <div>
+                    <img src="${avatarUrl}"
+                     alt="Avatar"
+                     class="h-8 w-8 rounded-full flex-shrink-0 object-cover"
+                     onerror="this.src='/images/default-avatar.svg'">
+                     <div>
                         <p class="text-sm font-semibold">${c.userName}</p>
                         <p class="text-sm">${c.content}</p>
                         <p class="text-xs text-gray-400">${formattedTime}</p>
@@ -1402,7 +1423,6 @@
     //     }
     // }
 
-    // Gửi bình luận bằng nút "Gửi"
     // Gửi bình luận bằng nút "Gửi"
     function submitCommentButton() {
         const input = document.getElementById('commentInput');

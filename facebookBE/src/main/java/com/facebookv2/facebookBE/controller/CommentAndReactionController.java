@@ -104,6 +104,7 @@ public class CommentAndReactionController {
             map.put("content", c.getContent());
             map.put("createdAt", c.getCreatedAt());
             map.put("userName", c.getUser().getFirstName() + " " + c.getUser().getLastName());
+            map.put("avatar", c.getUser().getAvatar());
             result.add(map);
         }
         return result;
