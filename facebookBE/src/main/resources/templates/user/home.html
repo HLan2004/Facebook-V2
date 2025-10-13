@@ -94,7 +94,12 @@
             background-color: #ff3b30;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
         }
-        .icon-wrapper { position: relative; display: inline-flex; align-items:center; }
+
+        .icon-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
 
         body {
             padding-top: 56px;
@@ -367,7 +372,6 @@
         </div>
     </div>
 </nav>
-
 <div class="w-full">
     <div class="flex w-full mt-6" style="height: calc(100vh - 56px);">
         <div id="left-sidebar" class="w-1/4 p-2">
@@ -653,32 +657,32 @@
                     </div>
                 </div>
 
-            <div th:each="status : ${statuses}"
-                 class="bg-white rounded-xl shadow mt-4 max-w-[582px] mx-auto"
-                 th:attr="data-status-id=${status.id},
+                <div th:each="status : ${statuses}"
+                     class="bg-white rounded-xl shadow mt-4 max-w-[582px] mx-auto"
+                     th:attr="data-status-id=${status.id},
               data-user-name=${status.user.firstName + ' ' + status.user.lastName},
               data-user-avatar=${status.user.avatar != null and status.user.avatar != '' ? status.user.avatar : 'default-avatar.svg'},
               data-status-time=${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')},
               data-status-content=${status.content ?: ''},
               data-status-picture=${status.picture ?: ''}"
-            >
+                >
 
-                <div class="flex items-center justify-between p-3">
-                    <div class="flex items-center space-x-3">
-                        <img th:src="${(status.user.avatar == null or status.user.avatar == 'default.png')
+                    <div class="flex items-center justify-between p-3">
+                        <div class="flex items-center space-x-3">
+                            <img th:src="${(status.user.avatar == null or status.user.avatar == 'default.png')
     ? '/images/default.jpg'
     : '/uploads/' + status.user.avatar}"
-                             alt="User Avatar"
-                             class="h-10 w-10 rounded-full object-cover">
+                                 alt="User Avatar"
+                                 class="h-10 w-10 rounded-full object-cover">
 
 
-                        <div>
-                            <p class="font-semibold text-sm"
-                               th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">
-                                User Name
-                            </p>
-                            <span class="text-xs text-gray-500"
-                                  th:text="${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')}">
+                            <div>
+                                <p class="font-semibold text-sm"
+                                   th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">
+                                    User Name
+                                </p>
+                                <span class="text-xs text-gray-500"
+                                      th:text="${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')}">
                         Just now
                     </span>
                             </div>
@@ -708,130 +712,135 @@
                              class="w-full">
                     </div>
 
-                <!-- ✅ Hiển thị số lượt thích và bình luận -->
-                <div class="flex items-center text-sm text-gray-600 mt-2 space-x-4 px-3">
+                    <!-- ✅ Hiển thị số lượt thích và bình luận -->
+                    <div class="flex items-center text-sm text-gray-600 mt-2 space-x-4 px-3">
                     <span class="flex items-center">
-                        <svg class="w-[18px] h-[18px] mr-1" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-[18px] h-[18px] mr-1" viewBox="0 0 16 16" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
                             <circle cx="8" cy="8" r="8" fill="#0866FF"/>
-                            <path d="M9 3.5c.3-.5.8-.7 1.2-.4.3.2.5.7.3 1.2l-.6 1.8h2.2c.8 0 1.3.5 1.3 1.3 0 .15 0 .3-.1.6l-1.3 3.7c-.15.5-.6.8-1.1.8H6.5c-.3 0-.6-.3-.6-.6V8c0-.15 0-.3.1-.5l2.5-3.6zM5 8.2v5c0 .3-.3.6-.6.6h-1.2c-.3 0-.6-.3-.6-.6v-5c0-.3.3-.6.6-.6h1.2c.3 0 .6.3.6.6z" fill="white"/>
+                            <path d="M9 3.5c.3-.5.8-.7 1.2-.4.3.2.5.7.3 1.2l-.6 1.8h2.2c.8 0 1.3.5 1.3 1.3 0 .15 0 .3-.1.6l-1.3 3.7c-.15.5-.6.8-1.1.8H6.5c-.3 0-.6-.3-.6-.6V8c0-.15 0-.3.1-.5l2.5-3.6zM5 8.2v5c0 .3-.3.6-.6.6h-1.2c-.3 0-.6-.3-.6-.6v-5c0-.3.3-.6.6-.6h1.2c.3 0 .6.3.6.6z"
+                                  fill="white"/>
                         </svg>
                         <span th:id="'like-count-' + ${status.id}"
                               th:text="${likeCountMap[status.id]}">
                         </span>
                     </span>
-                                    <span class="flex items-center">
-                        <svg class="w-[18px] h-[18px] mr-1" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <span class="flex items-center">
+                        <svg class="w-[18px] h-[18px] mr-1" viewBox="0 0 16 16" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
                             <circle cx="8" cy="8" r="8" fill="#65676B"/>
-                            <path d="M8 3c-3 0-5.4 2-5.4 4.5 0 1.4.7 2.7 1.9 3.6.15.12.24.24.24.48l-.12.96c0 .24.12.36.36.24l1.2-.48c.12 0 .24-.12.36 0 .6.24 1.3.36 2 .36 3 0 5.4-2 5.4-4.5S11 3 8 3z" fill="white"/>
+                            <path d="M8 3c-3 0-5.4 2-5.4 4.5 0 1.4.7 2.7 1.9 3.6.15.12.24.24.24.48l-.12.96c0 .24.12.36.36.24l1.2-.48c.12 0 .24-.12.36 0 .6.24 1.3.36 2 .36 3 0 5.4-2 5.4-4.5S11 3 8 3z"
+                                  fill="white"/>
                         </svg>
                         <span th:id="'comment-count-' + ${status.id}"
                               th:text="${commentCountMap[status.id]}">
                         </span>
                     </span>
-                </div>
+                    </div>
 
 
-                <div class="flex justify-around border-t border-gray-200 mt-2 pt-1 text-gray-600 text-sm select-none">
+                    <div class="flex justify-around border-t border-gray-200 mt-2 pt-1 text-gray-600 text-sm select-none">
 
 
-
-                    <!-- Nút THÍCH -->
-                    <div th:id="'like-btn-' + ${status.id}"
-                         class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-                        th:onclick="|toggleLike(${status.id})|">
-                        <i class="like-icon"
-                           style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png');
+                        <!-- Nút THÍCH -->
+                        <div th:id="'like-btn-' + ${status.id}"
+                             class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+                             th:onclick="|toggleLike(${status.id})|">
+                            <i class="like-icon"
+                               style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png');
                           background-position: 0px -830px;
                           background-size: auto;
                           width: 20px;
                           height: 20px;
                           background-repeat: no-repeat;
                           display: inline-block;"></i>
-                        <span th:id="'like-text-' + ${status.id}"
-                              th:text="${likedMap[status.id]} ? 'Đã thích' : 'Thích'"></span>
-                    </div>
+                            <span th:id="'like-text-' + ${status.id}"
+                                  th:text="${likedMap[status.id]} ? 'Đã thích' : 'Thích'"></span>
+                        </div>
 
-                    <!-- Nút BÌNH LUẬN -->
-                    <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-                         th:onclick="|openCommentModal(${status.id})|">
-                        <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png');
+                        <!-- Nút BÌNH LUẬN -->
+                        <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+                             th:onclick="|openCommentModal(${status.id})|">
+                            <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png');
                           background-position: 0px -788px;
                           background-size: auto;
                           width: 20px;
                           height: 20px;
                           background-repeat: no-repeat;
                           display: inline-block;">
-                        </i>
-                        <span>Bình luận</span>
-                    </div>
+                            </i>
+                            <span>Bình luận</span>
+                        </div>
 
-                    <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-                        th:onclick="|shareStatus(${status.id})|">
-                        <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png');
+                        <div class="flex items-center justify-center space-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+                             th:onclick="|shareStatus(${status.id})|">
+                            <i style="background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/y8/r/zo2Fa0Sh5iO.png');
                           background-position: 0px -851px;
                           background-size: auto;
                           width: 20px;
                           height: 20px;
                           background-repeat: no-repeat;
                           display: inline-block;">
-                        </i>
-                        <span>Chia sẻ</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Nền mờ -->
-            <div id="overlay-bg" class="overlay-bg"></div>
-
-            <!-- Modal bình luận -->
-            <div id="commentModal" class="comment-modal">
-                <!-- Header -->
-                <div class="flex justify-between items-center border-b pb-2">
-                    <h2 class="text-lg font-semibold">Bình luận</h2>
-                    <button onclick="closeCommentModal()" class="text-gray-500 hover:text-black text-xl font-bold">×</button>
-                </div>
-
-                <!-- Hiển thị nội dung status -->
-                <div class="comment-modal-status mt-3 p-3 bg-gray-50 rounded-lg">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="h-10 w-10 rounded-full overflow-hidden">
-                            <img id="modalUserAvatar" src="" alt="User Avatar">
-                        </div>
-                        <div>
-                            <p class="font-semibold text-sm" id="modalUserFullName"></p>
-                            <span class="text-xs text-gray-500" id="modalStatusTime"></span>
+                            </i>
+                            <span>Chia sẻ</span>
                         </div>
                     </div>
+                </div>
+                <!-- Nền mờ -->
+                <div id="overlay-bg" class="overlay-bg"></div>
 
-                    <div class="text-sm text-gray-800 mb-3" id="modalStatusContent"></div>
+                <!-- Modal bình luận -->
+                <div id="commentModal" class="comment-modal">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <h2 class="text-lg font-semibold">Bình luận</h2>
+                        <button onclick="closeCommentModal()" class="text-gray-500 hover:text-black text-xl font-bold">
+                            ×
+                        </button>
+                    </div>
 
-                    <div id="modalStatusImage" class="mb-3" style="display: none;">
-                        <img src="" alt="Post Image" class="w-full rounded-lg">
+                    <!-- Hiển thị nội dung status -->
+                    <div class="comment-modal-status mt-3 p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="h-10 w-10 rounded-full overflow-hidden">
+                                <img id="modalUserAvatar" src="" alt="User Avatar">
+                            </div>
+                            <div>
+                                <p class="font-semibold text-sm" id="modalUserFullName"></p>
+                                <span class="text-xs text-gray-500" id="modalStatusTime"></span>
+                            </div>
+                        </div>
+
+                        <div class="text-sm text-gray-800 mb-3" id="modalStatusContent"></div>
+
+                        <div id="modalStatusImage" class="mb-3" style="display: none;">
+                            <img src="" alt="Post Image" class="w-full rounded-lg">
+                        </div>
+                    </div>
+
+
+                    <!-- Nội dung comment -->
+                    <div id="commentContent" class="mt-3 space-y-3 overflow-y-auto max-h-[300px]">
+                        <p class="text-gray-500 text-sm italic">Chưa có bình luận nào...</p>
+                    </div>
+
+                    <!-- Ô nhập bình luận -->
+                    <div class="mt-4 flex space-x-2 border-t pt-3">
+                        <input id="commentInput" type="text"
+                               placeholder="Viết bình luận..."
+                               class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+                               onkeyup="submitComment(event)">
+                        <button onclick="submitCommentButton()"
+                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                            Gửi
+                        </button>
                     </div>
                 </div>
 
-
-                <!-- Nội dung comment -->
-                <div id="commentContent" class="mt-3 space-y-3 overflow-y-auto max-h-[300px]">
-                    <p class="text-gray-500 text-sm italic">Chưa có bình luận nào...</p>
-                </div>
-
-                <!-- Ô nhập bình luận -->
-                <div class="mt-4 flex space-x-2 border-t pt-3">
-                    <input id="commentInput" type="text"
-                           placeholder="Viết bình luận..."
-                           class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
-                           onkeyup="submitComment(event)">
-                    <button onclick="submitCommentButton()"
-                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                        Gửi
-                    </button>
-                </div>
             </div>
-
         </div>
-    </div>
 
-        <div id="right-sidebar" class="w-1/4 relative flex flex-col py-2">
+        <div id="right-sidebar" class="ml-auto w-[340px] relative flex flex-col py-2">
             <div class="px-4 py-2 flex-shrink-0">
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-bold text-gray-800">Người liên hệ</h2>
@@ -1035,7 +1044,8 @@
 
         </div>
         <div class="p-4 flex justify-end gap-x-2 border-t">
-            <button onclick="closePrivacyModal()" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy
+            <button onclick="closePrivacyModal()"
+                    class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy
             </button>
             <button onclick="closePrivacyModal()"
                     class="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Xong
@@ -1181,12 +1191,7 @@
     });
 
 
-
-
     document.addEventListener('DOMContentLoaded', function () {
-
-
-
 
 
         // 1. Lấy ID người dùng hiện tại từ thuộc tính data của thẻ body
@@ -1284,7 +1289,7 @@
             if (modalUserFullName) modalUserFullName.textContent = userName;
             if (modalUserAvatar) {
                 modalUserAvatar.src = userAvatar;
-                modalUserAvatar.onerror = function() {
+                modalUserAvatar.onerror = function () {
                     this.src = '/images/default-avatar.svg';
                 };
             }
@@ -1397,8 +1402,9 @@
         fetch(url, {
             method: method,
             headers: {
-                'Content-Type': 'application/json'},
-            body: JSON.stringify({ statusId: statusId })
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({statusId: statusId})
         })
             .then(response => {
                 if (!response.ok) {
@@ -1479,7 +1485,7 @@
 
         fetch('/facebook/car/comment/add', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: new URLSearchParams({
                 statusId: currentStatusId,
                 content: content
@@ -1512,7 +1518,6 @@
             submitCommentButton();
         }
     }
-
 
 
     // Nhấn ESC để đóng

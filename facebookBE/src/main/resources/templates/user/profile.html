@@ -119,8 +119,6 @@
         }
 
 
-
-
         #cover-preview + .cropper-container .cropper-crop-box {
             border-radius: 0 !important;
         }
@@ -147,6 +145,7 @@
             cursor: grab;
             z-index: 1;
         }
+
         #cover-preview + .cropper-container:active::after {
             cursor: grabbing; /* Con trỏ khi đang kéo */
         }
@@ -157,10 +156,12 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
+
         #cover-preview-bar p,
         #cover-preview-bar i {
             color: #E4E6EB;
         }
+
         #cancel-cover-change {
             background-color: #4E4F50;
             color: #E4E6EB;
@@ -168,9 +169,11 @@
             border-radius: 6px;
             padding: 8px 16px;
         }
+
         #cancel-cover-change:hover {
             background-color: #65676B;
         }
+
         #save-cover-change {
             background-color: #0866FF;
             color: #FFFFFF;
@@ -178,6 +181,7 @@
             border-radius: 6px;
             padding: 8px 16px;
         }
+
         #save-cover-change:hover {
             background-color: #2176ff;
         }
@@ -185,6 +189,7 @@
         #cover-preview + .cropper-container .cropper-modal {
             opacity: 0;
         }
+
     </style>
 </head>
 <body class="bg-gray-100 " th:data-current-user-id="${currentUser.id}">
@@ -362,7 +367,9 @@
         </div>
         <div class="flex items-center gap-2">
             <button id="cancel-cover-change" type="button" class="font-bold py-2 px-4 rounded-md">Hủy</button>
-            <button id="save-cover-change" type="button" class="text-white font-bold py-2 px-4 rounded-md">Lưu thay đổi</button>
+            <button id="save-cover-change" type="button" class="text-white font-bold py-2 px-4 rounded-md">Lưu thay
+                đổi
+            </button>
         </div>
     </div>
 </div>
@@ -474,20 +481,41 @@
                     </div>
                 </div>
                 <button type="button"
-                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-9 rounded-md flex items-center justify-center">
-                    <i class="fas fa-ellipsis-h"></i></button>
+                        aria-label="Xem thêm"
+                        class="relative right-[-32px] bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-9 rounded-md flex items-center justify-center">
+                    <i aria-hidden="true"
+                       style="
+        background-image: url('https://static.xx.fbcdn.net/rsrc.php/v4/yq/r/vF5PHaJqqtm.png?_nc_eui2=AeFDkil-w-WfKhwrEe1wWB1K5LijgGAA9IzkuKOAYAD0jJwtW4UIYGBOVD6LANAakuVPrRHdT3y-461hadR1u4mY');
+        background-position: 0px -235px;
+        background-size: auto;
+        width: 16px;
+        height: 16px;
+        background-repeat: no-repeat;
+        display: inline-block;">
+                    </i>
+                </button>
+
+
+
+
             </div>
         </div>
     </div>
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-200 flex justify-between items-center">
         <div class="flex items-center space-x-1">
-            <a href="#" id="tab-post" class="py-3 px-4 text-blue-600 font-semibold border-b-4 border-blue-600">Bài viết</a>
-            <a href="#" id="tab-about" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Giới thiệu</a>
-            <a href="#" id="tab-friends" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Bạn bè</a>
-            <a href="#" id="tab-photos" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Ảnh</a>
-            <a href="#" id="tab-Reels" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Reels</a>
-            <a href="#" id="tab-CheckIn" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Check in</a>
+            <a href="#" id="tab-post" class="py-3 px-4 text-blue-600 font-semibold border-b-4 border-blue-600">Bài
+                viết</a>
+            <a href="#" id="tab-about" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Giới
+                thiệu</a>
+            <a href="#" id="tab-friends" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Bạn
+                bè</a>
+            <a href="#" id="tab-photos"
+               class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Ảnh</a>
+            <a href="#" id="tab-Reels"
+               class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Reels</a>
+            <a href="#" id="tab-CheckIn" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Check
+                in</a>
             <button class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold flex items-center gap-1">
                 <span>Xem thêm</span>
                 <i class="fas fa-caret-down"></i>
@@ -500,272 +528,297 @@
 
 
     <!-- Content -->
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 flex space-x-4">
+    <div class="bg-[#f2f4f7] py-6">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 flex space-x-4">
 
-        <!-- Left column -->
-        <div class="w-1/3 space-y-4">
-            <!-- Intro -->
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="font-semibold text-lg mb-4">Giới thiệu</h2>
+            <!-- Left column -->
+            <div class="w-1/3 space-y-4">
+                <!-- Intro -->
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h2 class="font-semibold text-lg mb-4">Giới thiệu</h2>
 
-                <div class="space-y-3 text-gray-700 text-sm">
-                    <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span>Ngày sinh:
+                    <div class="space-y-3 text-gray-700 text-sm">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 flex-shrink-0"
+                                 fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <span>Ngày sinh:
                 <span th:text="${user.birthDay != null && user.birthMonth != null && user.birthYear != null ? user.birthDay + '/' + user.birthMonth + '/' + user.birthYear : 'Chưa cập nhật'}">
                 Chưa cập nhật
                 </span>
             </span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 flex-shrink-0"
+                                 fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            <span>Email: <span th:text="${user.email != null ? user.email : 'Chưa cập nhật'}">Chưa cập nhật</span></span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-3">
+                        <div class="flex items-center gap-2 text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                            <span>Mối quan hệ: <span id="relationship-display"
+                                                     th:text="${user.relationship != null ? user.relationship : 'Chưa cập nhật'}">Chưa cập nhật</span></span>
+                        </div>
+                        <button th:if="${currentUser != null && currentUser.id == user.id}" id="edit-relationship-btn"
+                                class="text-blue-600 hover:underline text-sm">Chỉnh sửa
+                        </button>
                     </div>
 
-                    <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        <span>Email: <span th:text="${user.email != null ? user.email : 'Chưa cập nhật'}">Chưa cập nhật</span></span>
+                    <div id="relationship-edit" class="hidden mt-2">
+                        <select id="relationship-input"
+                                class="w-full border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">-- Chọn mối quan hệ --</option>
+                            <option value="Độc thân">Độc thân</option>
+                            <option value="Hẹn hò">Hẹn hò</option>
+                            <option value="Đã kết hôn">Đã kết hôn</option>
+                            <option value="Phức tạp">Phức tạp</option>
+                        </select>
+                        <button id="save-relationship-btn"
+                                class="bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm font-semibold ml-2 mt-2 hover:bg-blue-700">
+                            Lưu
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-3">
+                        <div class="flex items-center gap-2 text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                            <span>Số điện thoại: <span id="phone-display"
+                                                       th:text="${user.phoneNumber != null ? user.phoneNumber : 'Chưa cập nhật'}">Chưa cập nhật</span></span>
+                        </div>
+                        <button th:if="${currentUser != null && currentUser.id == user.id}" id="edit-phone-btn"
+                                class="text-blue-600 hover:underline text-sm">Chỉnh sửa
+                        </button>
+                    </div>
+
+                    <div id="phone-edit" class="hidden mt-2">
+                        <input id="phone-input" type="text" placeholder="Nhập số điện thoại..."
+                               class="w-full border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                        <button id="save-phone-btn"
+                                class="bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm font-semibold ml-2 mt-2 hover:bg-blue-700">
+                            Lưu
+                        </button>
                     </div>
                 </div>
-                <div class="flex items-center justify-between mt-3"> <div class="flex items-center gap-2 text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                    <span>Mối quan hệ: <span id="relationship-display" th:text="${user.relationship != null ? user.relationship : 'Chưa cập nhật'}">Chưa cập nhật</span></span>
-                </div>
-                    <button th:if="${currentUser != null && currentUser.id == user.id}" id="edit-relationship-btn" class="text-blue-600 hover:underline text-sm">Chỉnh sửa</button>
-                </div>
 
-                <div id="relationship-edit" class="hidden mt-2">
-                    <select id="relationship-input" class="w-full border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Chọn mối quan hệ --</option>
-                        <option value="Độc thân">Độc thân</option>
-                        <option value="Hẹn hò">Hẹn hò</option>
-                        <option value="Đã kết hôn">Đã kết hôn</option>
-                        <option value="Phức tạp">Phức tạp</option>
-                    </select>
-                    <button id="save-relationship-btn" class="bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm font-semibold ml-2 mt-2 hover:bg-blue-700">Lưu</button>
-                </div>
-
-                <div class="flex items-center justify-between mt-3">
-                    <div class="flex items-center gap-2 text-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                        <span>Số điện thoại: <span id="phone-display" th:text="${user.phoneNumber != null ? user.phoneNumber : 'Chưa cập nhật'}">Chưa cập nhật</span></span>
-                    </div>
-                    <button th:if="${currentUser != null && currentUser.id == user.id}" id="edit-phone-btn" class="text-blue-600 hover:underline text-sm">Chỉnh sửa</button>
-                </div>
-
-                <div id="phone-edit" class="hidden mt-2">
-                    <input id="phone-input" type="text" placeholder="Nhập số điện thoại..." class="w-full border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-                    <button id="save-phone-btn" class="bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm font-semibold ml-2 mt-2 hover:bg-blue-700">Lưu</button>
-                </div>
-            </div>
-
-            <script>
-                document.getElementById("edit-relationship-btn").addEventListener("click", () => {
-                    document.getElementById("relationship-edit").classList.toggle("hidden");
-                });
-
-                document.getElementById("save-relationship-btn").addEventListener("click", async () => {
-                    const relationship = document.getElementById("relationship-input").value;
-                    const res = await fetch("/facebook/user/updateRelationship", {
-                        method: "POST",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({relationship})
+                <script>
+                    document.getElementById("edit-relationship-btn").addEventListener("click", () => {
+                        document.getElementById("relationship-edit").classList.toggle("hidden");
                     });
-                    const data = await res.json();
-                    if (res.ok) {
-                        document.getElementById("relationship-display").innerText = data.relationship;
-                        document.getElementById("relationship-edit").classList.add("hidden");
-                    } else {
-                        alert(data.message || "Lỗi khi cập nhật!");
-                    }
-                });
 
-                document.getElementById("edit-phone-btn").addEventListener("click", () => {
-                    document.getElementById("phone-edit").classList.toggle("hidden");
-                });
-
-                document.getElementById("save-phone-btn").addEventListener("click", async () => {
-                    const phone = document.getElementById("phone-input").value;
-                    const res = await fetch("/facebook/user/updatePhone", {
-                        method: "POST",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({phone})
-                    });
-                    const data = await res.json();
-                    if (res.ok) {
-                        document.getElementById("phone-display").innerText = data.phone;
-                        document.getElementById("phone-edit").classList.add("hidden");
-                    } else {
-                        alert(data.message || "Lỗi khi cập nhật!");
-                    }
-                });
-            </script>
-
-
-
-
-
-            <!-- Photos -->
-            <div class="bg-white rounded-lg shadow p-4 ">
-                <h2 class="font-semibold text-lg mb-2">Ảnh</h2>
-                <div id="avatar-gallery" class="grid grid-cols-3 gap-1"></div>
-            </div>
-            <!-- Friends Block -->
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="font-semibold text-lg mb-2">Bạn bè</h2>
-                <div id="friend-gallery" class="grid grid-cols-3 gap-1">
-                    <!-- Bạn bè sẽ được fetch và append ở đây -->
-                </div>
-            </div>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", async () => {
-                    const container = document.getElementById("avatar-gallery");
-
-                    try {
-                        const response = await fetch("/facebook/user/api/avatars");
-                        const avatars = await response.json();
-
-                        if (!avatars || avatars.length === 0) {
-                            container.innerHTML = "<p class='text-gray-500 text-sm'>Chưa có ảnh đại diện nào</p>";
-                            return;
-                        }
-
-                        avatars.forEach(url => {
-                            const img = document.createElement("img");
-                            img.src = url;
-                            img.className = "w-full h-24 object-cover rounded";
-                            container.appendChild(img);
+                    document.getElementById("save-relationship-btn").addEventListener("click", async () => {
+                        const relationship = document.getElementById("relationship-input").value;
+                        const res = await fetch("/facebook/user/updateRelationship", {
+                            method: "POST",
+                            headers: {"Content-Type": "application/json"},
+                            body: JSON.stringify({relationship})
                         });
-                    } catch (error) {
-                        console.error("Lỗi khi tải danh sách avatar:", error);
-                    }
-                });
+                        const data = await res.json();
+                        if (res.ok) {
+                            document.getElementById("relationship-display").innerText = data.relationship;
+                            document.getElementById("relationship-edit").classList.add("hidden");
+                        } else {
+                            alert(data.message || "Lỗi khi cập nhật!");
+                        }
+                    });
+
+                    document.getElementById("edit-phone-btn").addEventListener("click", () => {
+                        document.getElementById("phone-edit").classList.toggle("hidden");
+                    });
+
+                    document.getElementById("save-phone-btn").addEventListener("click", async () => {
+                        const phone = document.getElementById("phone-input").value;
+                        const res = await fetch("/facebook/user/updatePhone", {
+                            method: "POST",
+                            headers: {"Content-Type": "application/json"},
+                            body: JSON.stringify({phone})
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            document.getElementById("phone-display").innerText = data.phone;
+                            document.getElementById("phone-edit").classList.add("hidden");
+                        } else {
+                            alert(data.message || "Lỗi khi cập nhật!");
+                        }
+                    });
+                </script>
 
 
+                <!-- Photos -->
+                <div class="bg-white rounded-lg shadow p-4 ">
+                    <h2 class="font-semibold text-lg mb-2">Ảnh</h2>
+                    <div id="avatar-gallery" class="grid grid-cols-3 gap-1"></div>
+                </div>
+                <!-- Friends Block -->
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h2 class="font-semibold text-lg mb-2">Bạn bè</h2>
+                    <div id="friend-gallery" class="grid grid-cols-3 gap-1">
+                        <!-- Bạn bè sẽ được fetch và append ở đây -->
+                    </div>
+                </div>
 
+                <script>
+                    document.addEventListener("DOMContentLoaded", async () => {
+                        const container = document.getElementById("avatar-gallery");
 
-            </script>
-<!--            fetch bạn bè-->
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const currentUserId = document.body.dataset.currentUserId; // Lấy từ <body data-current-user-id="...">
-                    const friendContainer = document.getElementById('friend-gallery');
+                        try {
+                            const response = await fetch("/facebook/user/api/avatars");
+                            const avatars = await response.json();
 
-                    if (!currentUserId) {
-                        console.error("Không tìm thấy ID người dùng hiện tại.");
-                        return;
-                    }
-
-                    fetch(`/facebook/user/api/list/${currentUserId}`)
-                        .then(res => res.json())
-                        .then(friends => {
-                            friendContainer.innerHTML = '';
-                            if (!friends || friends.length === 0) {
-                                friendContainer.innerHTML = `<p class="text-gray-500 text-sm">Chưa có bạn bè nào</p>`;
+                            if (!avatars || avatars.length === 0) {
+                                container.innerHTML = "<p class='text-gray-500 text-sm'>Chưa có ảnh đại diện nào</p>";
                                 return;
                             }
 
-                            friends.forEach(friend => {
-                                const avatarUrl = (!friend.avatar || friend.avatar === 'default.png')
-                                    ? '/images/default.jpg'
-                                    : `/uploads/${friend.avatar}`;
-                                const div = document.createElement('div');
-                                div.className = "flex flex-col items-center text-center";
+                            avatars.forEach(url => {
+                                const img = document.createElement("img");
+                                img.src = url;
+                                img.className = "w-full h-24 object-cover rounded";
+                                container.appendChild(img);
+                            });
+                        } catch (error) {
+                            console.error("Lỗi khi tải danh sách avatar:", error);
+                        }
+                    });
 
-                                div.innerHTML = `
+
+                </script>
+                <!--            fetch bạn bè-->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const currentUserId = document.body.dataset.currentUserId; // Lấy từ <body data-current-user-id="...">
+                        const friendContainer = document.getElementById('friend-gallery');
+
+                        if (!currentUserId) {
+                            console.error("Không tìm thấy ID người dùng hiện tại.");
+                            return;
+                        }
+
+                        fetch(`/facebook/user/api/list/${currentUserId}`)
+                            .then(res => res.json())
+                            .then(friends => {
+                                friendContainer.innerHTML = '';
+                                if (!friends || friends.length === 0) {
+                                    friendContainer.innerHTML = `<p class="text-gray-500 text-sm">Chưa có bạn bè nào</p>`;
+                                    return;
+                                }
+
+                                friends.forEach(friend => {
+                                    const avatarUrl = (!friend.avatar || friend.avatar === 'default.png')
+                                        ? '/images/default.jpg'
+                                        : `/uploads/${friend.avatar}`;
+                                    const div = document.createElement('div');
+                                    div.className = "flex flex-col items-center text-center";
+
+                                    div.innerHTML = `
                     <a href="/facebook/profile/${friend.id}" class="block w-full">
                         <img src="${avatarUrl}" class="w-24 h-24 object-cover rounded-full mb-1" alt="${friend.fullName}">
                         <span class="text-sm font-medium">${friend.fullName}</span>
                     </a>
                 `;
-                                friendContainer.appendChild(div);
+                                    friendContainer.appendChild(div);
+                                });
+                            })
+                            .catch(err => {
+                                console.error('Lỗi khi fetch danh sách bạn bè:', err);
+                                friendContainer.innerHTML = `<p class="text-gray-500 text-sm">Không thể tải danh sách bạn bè.</p>`;
                             });
-                        })
-                        .catch(err => {
-                            console.error('Lỗi khi fetch danh sách bạn bè:', err);
-                            friendContainer.innerHTML = `<p class="text-gray-500 text-sm">Không thể tải danh sách bạn bè.</p>`;
-                        });
-                });
-            </script>
+                    });
+                </script>
 
-        </div>
+            </div>
 
-        <!-- Right column -->
-        <div class="flex-1 space-y-4  ">
-            <!-- Create Post Box -->
-            <div class="bg-white rounded-lg shadow p-4 ">
-                <div class="flex items-center space-x-3">
-                    <div class="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
-                        <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
-                             alt="Avatar" class="w-full h-full object-cover">
-                    </div>
+            <!-- Right column -->
+            <div class="flex-1 space-y-4  ">
+                <!-- Create Post Box -->
+                <div class="bg-white rounded-lg shadow p-4 ">
+                    <div class="flex items-center space-x-3">
+                        <div class="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
+                            <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                                 alt="Avatar" class="w-full h-full object-cover">
+                        </div>
 
-                    <div class="flex-1 bg-[#f0f2f5] rounded-full px-4 py-2 text-gray-500 hover:bg-gray-200 cursor-pointer"
-                         onclick="openCreatePostModal()">
+                        <div class="flex-1 bg-[#f0f2f5] rounded-full px-4 py-2 text-gray-500 hover:bg-gray-200 cursor-pointer"
+                             onclick="openCreatePostModal()">
                 <span th:text="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'">
                     Bạn đang nghĩ gì thế?
                 </span>
-                    </div>
-                </div>
-
-                <hr class="my-3">
-
-                <div class="flex justify-around text-sm">
-                    <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                        <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yr/r/c0dWho49-X3.png" alt="Live Video Icon"
-                             class="w-6 h-6">
-                        <span class="font-semibold text-gray-600">Video trực tiếp</span>
-                    </div>
-
-                    <div onclick="document.getElementById('pictureFileInput').click(); openCreatePostModal()"
-                         class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                        <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png" alt="Photo/Video Icon"
-                             class="w-6 h-6">
-                        <span class="font-semibold text-gray-600">Ảnh/video</span>
-                    </div>
-
-                    <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                        <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png" alt="Feeling/Activity Icon"
-                             class="w-6 h-6">
-                        <span class="font-semibold text-gray-600">Cảm xúc/hoạt động</span>
-                    </div>
-                </div>
-            </div>
-
-            <div th:each="status : ${statuses}" class="bg-white rounded-lg shadow p-4 ">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-3">
-                        <img th:src="${status.user.avatar != null ? '/uploads/' + status.user.avatar : '/images/default-avatar.svg'}"
-                             alt="Avatar" class="h-10 w-10 rounded-full object-cover">
-
-                        <div>
-                            <p class="font-semibold" th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">User
-                                Name</p>
-                            <span class="text-xs text-gray-500"
-                                  th:text="${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')}">Just now</span>
                         </div>
                     </div>
-                    <i class="fa-solid fa-ellipsis-h text-gray-500 cursor-pointer"></i>
-                </div>
-                <p class="mb-2 text-gray-800" th:text="${status.content}">Post content here</p>
-                <!--      sửa ảnh-->
-                <div th:if="${status.picture != null and !status.picture.isEmpty()}" class="mt-2">
-                    <img th:src="@{/uploads/{filename}(filename=${status.picture})}" alt="Post Image" class="w-full">
-                </div>
-                <div class="flex justify-between text-gray-500 text-sm mt-3 border-t pt-2">
-                    <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
-                        <i class="far fa-thumbs-up"></i><span>Thích</span>
+
+                    <hr class="my-3">
+
+                    <div class="flex justify-around text-sm">
+                        <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yr/r/c0dWho49-X3.png"
+                                 alt="Live Video Icon"
+                                 class="w-6 h-6">
+                            <span class="font-semibold text-gray-600">Video trực tiếp</span>
+                        </div>
+
+                        <div onclick="document.getElementById('pictureFileInput').click(); openCreatePostModal()"
+                             class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png"
+                                 alt="Photo/Video Icon"
+                                 class="w-6 h-6">
+                            <span class="font-semibold text-gray-600">Ảnh/video</span>
+                        </div>
+
+                        <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                            <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png"
+                                 alt="Feeling/Activity Icon"
+                                 class="w-6 h-6">
+                            <span class="font-semibold text-gray-600">Cảm xúc/hoạt động</span>
+                        </div>
                     </div>
-                    <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
-                        <i class="far fa-comment"></i><span>Bình luận</span>
+                </div>
+
+                <div th:each="status : ${statuses}" class="bg-white rounded-lg shadow p-4 ">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <img th:src="${status.user.avatar != null ? '/uploads/' + status.user.avatar : '/images/default-avatar.svg'}"
+                                 alt="Avatar" class="h-10 w-10 rounded-full object-cover">
+
+                            <div>
+                                <p class="font-semibold"
+                                   th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">User
+                                    Name</p>
+                                <span class="text-xs text-gray-500"
+                                      th:text="${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')}">Just now</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-ellipsis-h text-gray-500 cursor-pointer"></i>
                     </div>
-                    <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
-                        <i class="fa fa-share"></i><span>Chia sẻ</span>
+                    <p class="mb-2 text-gray-800" th:text="${status.content}">Post content here</p>
+                    <!--      sửa ảnh-->
+                    <div th:if="${status.picture != null and !status.picture.isEmpty()}" class="mt-2">
+                        <img th:src="@{/uploads/{filename}(filename=${status.picture})}" alt="Post Image"
+                             class="w-full">
+                    </div>
+                    <div class="flex justify-between text-gray-500 text-sm mt-3 border-t pt-2">
+                        <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+                            <i class="far fa-thumbs-up"></i><span>Thích</span>
+                        </div>
+                        <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+                            <i class="far fa-comment"></i><span>Bình luận</span>
+                        </div>
+                        <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+                            <i class="fa fa-share"></i><span>Chia sẻ</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -900,7 +953,8 @@
     <div class="bg-white w-full max-w-2xl rounded-lg shadow-xl border flex flex-col">
         <div class="relative flex justify-center items-center p-4 border-b">
             <h2 class="text-xl font-bold">Chọn ảnh đại diện</h2>
-            <button id="modal-close-btn" class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-gray-600 text-2xl font-light">
+            <button id="modal-close-btn"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-gray-600 text-2xl font-light">
                 &times;
             </button>
         </div>
@@ -914,7 +968,8 @@
 
             <div class="flex items-center space-x-3">
                 <i class="fas fa-search-minus text-gray-500"></i>
-                <input id="zoom-slider" type="range" min="0" max="2" step="0.01" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                <input id="zoom-slider" type="range" min="0" max="2" step="0.01"
+                       class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                 <i class="fas fa-search-plus text-gray-500"></i>
             </div>
 
@@ -930,14 +985,18 @@
             </div>
 
             <p class="text-sm text-gray-500">
-                Hệ thống cũng sẽ cập nhật ảnh đại diện của bạn cho <b th:text="${user.firstName} + ' ' + ${user.lastName}">Binhh Le</b> trên Instagram.
+                Hệ thống cũng sẽ cập nhật ảnh đại diện của bạn cho <b
+                    th:text="${user.firstName} + ' ' + ${user.lastName}">Binhh Le</b> trên Instagram.
                 <a href="#" class="text-blue-600 hover:underline">Quản lý cài đặt đồng bộ</a>
             </p>
         </div>
 
         <div class="p-4 flex justify-end gap-x-3 border-t bg-gray-50 rounded-b-lg">
-            <button id="modal-cancel-btn" class="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy</button>
-            <button id="modal-save-btn" class="px-8 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Lưu</button>
+            <button id="modal-cancel-btn" class="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy
+            </button>
+            <button id="modal-save-btn"
+                    class="px-8 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Lưu
+            </button>
         </div>
     </div>
 </div>
@@ -1155,7 +1214,7 @@
     });
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const coverUploadInput = document.getElementById('cover-upload');
         const coverPreviewImg = document.getElementById('cover-preview');
         const previewBar = document.getElementById('cover-preview-bar');
@@ -1167,7 +1226,7 @@
         let coverCropper = null;
 
         if (coverUploadInput) {
-            coverUploadInput.addEventListener('change', function(event) {
+            coverUploadInput.addEventListener('change', function (event) {
                 const files = event.target.files;
                 if (files && files.length > 0) {
                     const file = files[0];
@@ -1177,11 +1236,11 @@
                         originalCoverSrc = coverPreviewImg.src;
                     }
 
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         coverPreviewImg.src = e.target.result;
 
 
-                        if(coverCropper) {
+                        if (coverCropper) {
                             coverCropper.destroy();
                         }
 
@@ -1210,7 +1269,7 @@
 
 
         if (cancelBtn) {
-            cancelBtn.addEventListener('click', function() {
+            cancelBtn.addEventListener('click', function () {
                 if (previewBar) previewBar.classList.add('hidden');
                 if (coverCropper) {
                     coverCropper.destroy();
@@ -1226,7 +1285,7 @@
 
 
         if (saveBtn) {
-            saveBtn.addEventListener('click', function() {
+            saveBtn.addEventListener('click', function () {
                 if (!coverCropper) return;
 
 
