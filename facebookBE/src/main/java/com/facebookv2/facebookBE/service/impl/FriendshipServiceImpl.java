@@ -172,6 +172,9 @@ public class FriendshipServiceImpl implements FriendshipService {
         friends1.addAll(friends2);
         return friends1;
     }
-
+    @Override
+    public long countAcceptedFriends(Long userId) {
+        return friendshipRepository.countAcceptedFriends(userId);
+    }
 
 }

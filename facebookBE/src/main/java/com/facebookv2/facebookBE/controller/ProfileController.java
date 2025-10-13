@@ -54,7 +54,8 @@ public class ProfileController {
 
 
         List<Status> statuses = statusService.getAllStatusesByUserIdOrderByCreatedTimeDesc(user.getId());
-
+        long friendCount = friendshipService.countAcceptedFriends(user.getId());
+        model.addAttribute("friendCount", friendCount);
         model.addAttribute("currentUser", user);
         model.addAttribute("user", user);
         model.addAttribute("statuses", statuses);
@@ -90,6 +91,8 @@ public class ProfileController {
         String email = authentication.getName();
         User currentUser = userService.getUserByEmail(email);
         friendshipService.checkFriendship1to1(currentUser, user, model);
+        long friendCount = friendshipService.countAcceptedFriends(user.getId());
+        model.addAttribute("friendCount", friendCount);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("user", user);
         model.addAttribute("statuses", statuses);

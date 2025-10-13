@@ -53,4 +53,7 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
     @Query("SELECT f FROM Friendship f WHERE (f.user.id = :userId OR f.friend.id = :userId) AND f.status = :status")
     List<Friendship> findUserFriendships(@Param("userId") Long userId, @Param("status") FriendshipStatus status);
 
+    @Query("SELECT COUNT(f) FROM Friendship f WHERE (f.user.id = :userId OR f.friend.id = :userId) AND f.status = com.facebookv2.facebookBE.model.FriendshipStatus.ACCEPTED")
+    long countAcceptedFriends(@Param("userId") Long userId);
+
 }

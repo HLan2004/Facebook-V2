@@ -404,8 +404,8 @@
                     </div>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:ml-6 text-center sm:text-left">
-                    <h1 class="text-3xl font-bold" th:text="${user.firstName} + ' ' + ${user.lastName}">Binhh Le</h1>
-                    <p class="text-gray-600 font-semibold" th:text="${friendCount} + ' người bạn'">350 người bạn</p>
+                    <h1 class="text-3xl font-bold" th:text="${user.firstName} + ' ' + ${user.lastName}"></h1>
+                    <p class="text-gray-600 font-semibold" th:text="${friendCount} + ' người bạn'"></p>
                 </div>
             </div>
 
@@ -533,7 +533,7 @@
                     </svg>
                     <span>Mối quan hệ: <span id="relationship-display" th:text="${user.relationship != null ? user.relationship : 'Chưa cập nhật'}">Chưa cập nhật</span></span>
                 </div>
-                    <button id="edit-relationship-btn" class="text-blue-600 hover:underline text-sm">Chỉnh sửa</button>
+                    <button th:if="${currentUser != null && currentUser.id == user.id}" id="edit-relationship-btn" class="text-blue-600 hover:underline text-sm">Chỉnh sửa</button>
                 </div>
 
                 <div id="relationship-edit" class="hidden mt-2">
@@ -554,7 +554,7 @@
                         </svg>
                         <span>Số điện thoại: <span id="phone-display" th:text="${user.phoneNumber != null ? user.phoneNumber : 'Chưa cập nhật'}">Chưa cập nhật</span></span>
                     </div>
-                    <button id="edit-phone-btn" class="text-blue-600 hover:underline text-sm">Chỉnh sửa</button>
+                    <button th:if="${currentUser != null && currentUser.id == user.id}" id="edit-phone-btn" class="text-blue-600 hover:underline text-sm">Chỉnh sửa</button>
                 </div>
 
                 <div id="phone-edit" class="hidden mt-2">

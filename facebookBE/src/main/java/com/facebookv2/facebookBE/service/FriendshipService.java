@@ -23,4 +23,6 @@ public interface FriendshipService {
     List<FriendDTO> getAccepted(Long currentUserId);
 
     List<User> getAcceptedFriends(Long userId);
+
+    long countAcceptedFriends(Long userId);
 }
