@@ -8,6 +8,7 @@ import com.facebookv2.facebookBE.model.dto.ConversationSummaryDTO;
 import com.facebookv2.facebookBE.model.dto.FriendDTO;
 import com.facebookv2.facebookBE.model.dto.UserDTO;
 import com.facebookv2.facebookBE.repository.FriendshipRepository;
+import com.facebookv2.facebookBE.repository.UserAvatarRepository;
 import com.facebookv2.facebookBE.service.*;
 import com.facebookv2.facebookBE.service.impl.StatusServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,8 @@ public class UserController {
     private FriendshipService friendshipService;
     @Autowired
     private FriendshipRepository friendshipRepository;
+    @Autowired
+    private UserAvatarRepository userAvatarRepository;
 
 
     @GetMapping("/home")
@@ -77,6 +80,22 @@ public ResponseEntity<List<FriendDTO>> getFriendList(@PathVariable Long userId) 
     List<FriendDTO> friends = friendshipService.getAccepted(userId);
     return ResponseEntity.ok(friends);
 }
+
+
+    @GetMapping("/api/avatars")
+    @ResponseBody
+    public ResponseEntity<List<String>> getAllAvatars(Authentication authentication) {
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email);
+
+        List<String> urls = userAvatarRepository.findByUserIdOrderByUploadedAtDesc(user.getId())
+                .stream()
+                .map(avatar -> "/uploads/" + avatar.getFileName())
+                .toList();
+
+        return ResponseEntity.ok(urls);
+    }
+
 }
 
 

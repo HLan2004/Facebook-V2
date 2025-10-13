@@ -43,7 +43,7 @@ public class MessengerController {
     public String messengerPage(Model model, Authentication authentication) {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
-
+        model.addAttribute("user", user);
         model.addAttribute("currentUserId", user.getId());
         model.addAttribute("currentUsername", user.getFirstName() + " " + user.getLastName());
         return "user/messenger";

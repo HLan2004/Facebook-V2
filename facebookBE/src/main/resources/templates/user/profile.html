@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <title>Facebook Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 
     <style>
         /*nav */
         .nav-icon-active {
-            color: #0866FF; /* Màu xanh dương mới của Facebook */
+            color: #0866FF;
         }
 
         .nav-icon-active::after {
@@ -110,6 +110,81 @@
         .remove-image-btn:hover {
             background-color: #f0f2f5;
         }
+
+
+        /* CSS tùy chỉnh cho cropper tròn và các style khác nếu có */
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 50%;
+        }
+
+
+
+
+        #cover-preview + .cropper-container .cropper-crop-box {
+            border-radius: 0 !important;
+        }
+
+
+        #cover-preview + .cropper-container .cropper-view-box,
+        #cover-preview + .cropper-container .cropper-face,
+        #cover-preview + .cropper-container .cropper-line,
+        #cover-preview + .cropper-container .cropper-point {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+
+        #cover-preview + .cropper-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-bottom-left-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+            cursor: grab;
+            z-index: 1;
+        }
+        #cover-preview + .cropper-container:active::after {
+            cursor: grabbing; /* Con trỏ khi đang kéo */
+        }
+
+
+        #cover-preview-bar {
+            background-color: rgba(40, 42, 45, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        #cover-preview-bar p,
+        #cover-preview-bar i {
+            color: #E4E6EB;
+        }
+        #cancel-cover-change {
+            background-color: #4E4F50;
+            color: #E4E6EB;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 8px 16px;
+        }
+        #cancel-cover-change:hover {
+            background-color: #65676B;
+        }
+        #save-cover-change {
+            background-color: #0866FF;
+            color: #FFFFFF;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 8px 16px;
+        }
+        #save-cover-change:hover {
+            background-color: #2176ff;
+        }
+
+        #cover-preview + .cropper-container .cropper-modal {
+            opacity: 0;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -183,7 +258,7 @@
         </a>
 
         <!-- Icon Messenger  -->
-        <a th:href="@{/facebook/user/messages}"
+        <a th:href="@{/facebook/messenger}"
            class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
             <svg fill="currentColor" viewBox="0 0 12 12" class="w-5 h-5">
                 <path d="m106.868 921.248-1.892 2.925a.32.32 0 0 1-.443.094l-1.753-1.134a.2.2 0 0 0-.222.003l-1.976 1.363c-.288.199-.64-.143-.45-.437l1.892-2.925a.32.32 0 0 1 .443-.095l1.753 1.134a.2.2 0 0 0 .222-.003l1.976-1.363c.288-.198.64.144.45.438m-3.368-4.251c-3.323 0-5.83 2.432-5.83 5.658 0 1.642.652 3.128 1.834 4.186a.331.331 0 0 1 .111.234l.03 1.01a.583.583 0 0 0 .82.519l1.13-.5a.32.32 0 0 1 .22-.015c.541.148 1.108.223 1.685.223 3.323 0 5.83-2.432 5.83-5.657 0-3.226-2.507-5.658-5.83-5.658"
@@ -279,124 +354,148 @@
     </div>
 </nav>
 
-<!-- Cover + Avatar -->
-<div class="bg-white shadow">
-    <form th:action="@{/facebook/profile/update-images}" method="post" enctype="multipart/form-data">
-        <div class="relative">
-            <div class="h-60 bg-gray-300 overflow-hidden relative group">
-                <img id="cover-preview"
-                     th:src="${user.backGround != null ? '/uploads/' + user.backGround : '/images/default-cover.jpg'}"
-                     alt="Cover Photo" class="w-full h-full object-cover">
-
-                <label for="cover-upload" class="absolute bottom-4 right-4 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md cursor-pointer flex items-center gap-2 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586l-1-1.414A2 2 0 0013 3H7a2 2 0 00-1.414.586L4.586 5H4zm10 4a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                        <path d="M10 11a1 1 0 100-2 1 1 0 000 2z" />
-                    </svg>
-                    <span>Chỉnh sửa ảnh bìa</span>
-                </label>
-                <input type="file" id="cover-upload" name="coverImage" accept="image/*" class="hidden">
-            </div>
-
-            <div class="absolute left-6 -bottom-16">
-                <div class="relative group h-40 w-40 rounded-full border-4 border-white overflow-hidden shadow-lg">
-                    <img id="avatar-preview"
-                         th:src="${user.avatar != null ? '/uploads/' + user.avatar : '/images/default-avatar.svg'}"
-                         alt="Avatar" class="w-full h-full object-cover">
-
-                    <label for="avatar-upload" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586l-1-1.414A2 2 0 0013 3H7a2 2 0 00-1.414.586L4.586 5H4zm10 4a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                            <path d="M10 11a1 1 0 100-2 1 1 0 000 2z" />
-                        </svg>
-                    </label>
-                    <input type="file" id="avatar-upload" name="avatarImage" accept="image/*" class="hidden">
-                </div>
-            </div>
-
-            <div class="absolute bottom-4 right-44"> <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors">
-                Lưu
-            </button>
-            </div>
+<div id="cover-preview-bar" class="hidden fixed top-14 left-0 right-0 z-40 transition-transform duration-300">
+    <div class="max-w-7xl mx-auto px-8 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-camera text-gray-200 text-xl"></i>
+            <p class="font-semibold text-white">Ảnh bìa của bạn hiển thị công khai.</p>
         </div>
-    </form>
-    <!-- Name + friends -->
-    <div class="ml-52 mt-4 pb-4">
-        <h1 class="text-2xl font-bold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</h1>
-        <p class="text-gray-500 text-sm">1000 bạn bè • 50 bạn chung</p>
-
-        <!-- Nút Kết bạn -->
-        <div th:if="${user.id != currentUser.id}">
-            <div th:switch="${statusMap[user.id]}">
-                <!-- Trường hợp đang PENDING -->
-                <span th:case="${T(com.facebookv2.facebookBE.model.FriendshipStatus).PENDING}">
-    <!-- Nếu mình là người gửi -->
-    <div th:if="${directionMap[user.id] == 'SENT'}">
-      <form th:action="@{/facebook/friendship/remove}" method="post">
-        <input type="hidden" name="friendId" th:value="${user.id}">
-        <button type="submit"
-                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg">
-          Hủy lời mời
-        </button>
-      </form>
-    </div>
-
-                    <!-- Nếu người khác gửi -->
-    <div th:if="${directionMap[user.id] == 'RECEIVED'}" class="flex gap-2">
-      <form th:action="@{/facebook/friendship/accept}" method="post">
-        <input type="hidden" name="friendId" th:value="${user.id}">
-        <button type="submit"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
-          Chấp nhận
-        </button>
-      </form>
-
-      <form th:action="@{/facebook/friendship/decline}" method="post">
-        <input type="hidden" name="friendId" th:value="${user.id}">
-        <button type="submit"
-                class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg">
-          Từ chối
-        </button>
-      </form>
-    </div>
-  </span>
-
-                <!-- Trường hợp đã là bạn -->
-                <span th:case="${T(com.facebookv2.facebookBE.model.FriendshipStatus).ACCEPTED}">
-    <form th:action="@{/facebook/friendship/remove}" method="post">
-      <input type="hidden" name="friendId" th:value="${user.id}">
-      <button type="submit"
-              class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg">
-        Hủy kết bạn
-      </button>
-    </form>
-  </span>
-
-                <!-- Mặc định: chưa kết bạn -->
-                <span th:case="*">
-    <form th:action="@{/facebook/friendship/add}" method="post">
-      <input type="hidden" name="friendId" th:value="${user.id}">
-      <button type="submit"
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
-        Kết bạn
-      </button>
-    </form>
-  </span>
-            </div>
-
+        <div class="flex items-center gap-2">
+            <button id="cancel-cover-change" type="button" class="font-bold py-2 px-4 rounded-md">Hủy</button>
+            <button id="save-cover-change" type="button" class="text-white font-bold py-2 px-4 rounded-md">Lưu thay đổi</button>
         </div>
     </div>
 </div>
+<!-- Cover + Avatar -->
+<div class="bg-white shadow-sm">
+    <form id="update-images-form-cover" th:action="@{/facebook/profile/update-images}" method="post"
+          enctype="multipart/form-data">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative h-[240px] sm:h-[350px] md:h-[450px] rounded-b-lg bg-gray-200 overflow-hidden group">
+                <img id="cover-preview"
+                     th:src="${user.backGround != null ? '/uploads/' + user.backGround : 'https://via.placeholder.com/1500x500.png/E5E7EB/4B5563?text=Cover+Photo'}"
+                     alt="Cover Photo" class="w-full h-full object-cover">
 
-<!-- Navigation -->
-<div class="bg-white mt-2 shadow px-6">
-    <div class="flex space-x-6 border-t border-gray-200">
-        <a href="#" class="py-3 px-2 text-blue-600 font-semibold border-b-2 border-blue-600">Bài viết</a>
-        <a href="#" class="py-3 px-2 text-gray-600 hover:text-blue-600">Giới thiệu</a>
-        <a href="#" class="py-3 px-2 text-gray-600 hover:text-blue-600">Bạn bè</a>
-        <a href="#" class="py-3 px-2 text-gray-600 hover:text-blue-600">Ảnh</a>
-        <a href="#" class="py-3 px-2 text-gray-600 hover:text-blue-600">Video</a>
-        <a href="#" class="py-3 px-2 text-gray-600 hover:text-blue-600">Xem thêm</a>
+                <div th:if="${user.id == currentUser.id}">
+                    <label for="cover-upload"
+                           class="absolute bottom-4 right-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-3 rounded-md shadow-md cursor-pointer flex items-center gap-2 transition-colors z-10">
+                        <i class="fas fa-camera"></i> <span>Thêm ảnh bìa</span>
+                    </label>
+                    <input type="file" id="cover-upload" name="coverImage" accept="image/*" class="hidden">
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row items-center sm:items-end justify-between px-4 sm:px-8 pt-4 pb-4">
+            <div class="flex flex-col sm:flex-row items-center sm:items-end -mt-24 sm:-mt-28">
+                <div class="relative flex-shrink-0">
+                    <div class="h-44 w-44 rounded-full border-4 border-white bg-gray-300 overflow-hidden shadow-lg">
+                        <img id="avatar-preview"
+                             th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                             alt="Avatar" class="w-full h-full object-cover">
+                    </div>
+                    <div th:if="${user.id == currentUser.id}">
+                        <label for="avatar-upload"
+                               class="absolute bottom-3 right-3 bg-gray-200 hover:bg-gray-300 h-9 w-9 rounded-full flex items-center justify-center cursor-pointer shadow">
+                            <i class="fas fa-camera text-xl text-gray-800"></i>
+                        </label>
+                        <input type="file" id="avatar-upload" name="avatarImage" accept="image/*" class="hidden">
+                    </div>
+                </div>
+                <div class="mt-4 sm:mt-0 sm:ml-6 text-center sm:text-left">
+                    <h1 class="text-3xl font-bold" th:text="${user.firstName} + ' ' + ${user.lastName}">Binhh Le</h1>
+                    <p class="text-gray-600 font-semibold" th:text="${friendCount} + ' người bạn'">350 người bạn</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 mt-4 sm:mt-0">
+                <div th:if="${user.id == currentUser.id}" class="flex items-center space-x-2">
+                    <button type="button"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-3 rounded-md flex items-center gap-1.5">
+                        <i class="fas fa-plus-circle text-lg"></i> <span>Thêm vào tin</span>
+                    </button>
+                    <button type="button"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-md flex items-center gap-1.5">
+                        <i class="fas fa-pen"></i> <span>Chỉnh sửa trang cá nhân</span>
+                    </button>
+                </div>
+
+                <div th:if="${user.id != currentUser.id}">
+                    <div th:switch="${statusMap[user.id]}" class="flex items-center space-x-2">
+                        <div th:case="${T(com.facebookv2.facebookBE.model.FriendshipStatus).PENDING}">
+                            <div th:if="${directionMap[user.id] == 'SENT'}">
+                                <form th:action="@{/facebook/friendship/remove}" method="post"><input type="hidden"
+                                                                                                      name="friendId"
+                                                                                                      th:value="${user.id}">
+                                    <button type="submit"
+                                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-md">
+                                        Hủy lời mời
+                                    </button>
+                                </form>
+                            </div>
+                            <div th:if="${directionMap[user.id] == 'RECEIVED'}" class="flex gap-2">
+                                <form th:action="@{/facebook/friendship/accept}" method="post"><input type="hidden"
+                                                                                                      name="friendId"
+                                                                                                      th:value="${user.id}">
+                                    <button type="submit"
+                                            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-3 rounded-md">
+                                        Chấp nhận
+                                    </button>
+                                </form>
+                                <form th:action="@{/facebook/friendship/decline}" method="post"><input type="hidden"
+                                                                                                       name="friendId"
+                                                                                                       th:value="${user.id}">
+                                    <button type="submit"
+                                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-md">
+                                        Từ chối
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div th:case="${T(com.facebookv2.facebookBE.model.FriendshipStatus).ACCEPTED}">
+                            <form th:action="@{/facebook/friendship/remove}" method="post"><input type="hidden"
+                                                                                                  name="friendId"
+                                                                                                  th:value="${user.id}">
+                                <button type="submit"
+                                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-md flex items-center gap-1.5">
+                                    <i class="fas fa-user-check"></i> <span>Bạn bè</span></button>
+                            </form>
+                        </div>
+                        <div th:case="*">
+                            <form th:action="@{/facebook/friendship/add}" method="post"><input type="hidden"
+                                                                                               name="friendId"
+                                                                                               th:value="${user.id}">
+                                <button type="submit"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-3 rounded-md flex items-center gap-1.5">
+                                    <i class="fas fa-user-plus"></i> <span>Kết bạn</span></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <button type="button"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-9 rounded-md flex items-center justify-center">
+                    <i class="fas fa-ellipsis-h"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-200 flex justify-between items-center">
+        <div class="flex items-center space-x-1">
+            <a href="#" class="py-3 px-4 text-blue-600 font-semibold border-b-4 border-blue-600">Bài viết</a>
+            <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Giới thiệu</a>
+            <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Bạn bè</a>
+            <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Ảnh</a>
+            <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Reels</a>
+            <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Check in</a>
+            <button class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold flex items-center gap-1">
+                <span>Xem thêm</span>
+                <i class="fas fa-caret-down"></i>
+            </button>
+        </div>
+        <button class="bg-gray-200 hover:bg-gray-300 rounded-md p-2 h-9 w-12 flex items-center justify-center">
+            <i class="fas fa-ellipsis-h"></i>
+        </button>
     </div>
 </div>
 
@@ -414,12 +513,32 @@
         <!-- Photos -->
         <div class="bg-white rounded-lg shadow p-4">
             <h2 class="font-semibold text-lg mb-2">Ảnh</h2>
-            <div class="grid grid-cols-3 gap-1">
-                <img src="https://via.placeholder.com/100" class="w-full h-24 object-cover" alt="photo">
-                <img src="https://via.placeholder.com/100" class="w-full h-24 object-cover" alt="photo">
-                <img src="https://via.placeholder.com/100" class="w-full h-24 object-cover" alt="photo">
-            </div>
+            <div id="avatar-gallery" class="grid grid-cols-3 gap-1"></div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", async () => {
+                const container = document.getElementById("avatar-gallery");
+
+                try {
+                    const response = await fetch("/facebook/user/api/avatars");
+                    const avatars = await response.json();
+
+                    if (!avatars || avatars.length === 0) {
+                        container.innerHTML = "<p class='text-gray-500 text-sm'>Chưa có ảnh đại diện nào</p>";
+                        return;
+                    }
+
+                    avatars.forEach(url => {
+                        const img = document.createElement("img");
+                        img.src = url;
+                        img.className = "w-full h-24 object-cover rounded";
+                        container.appendChild(img);
+                    });
+                } catch (error) {
+                    console.error("Lỗi khi tải danh sách avatar:", error);
+                }
+            });
+        </script>
     </div>
 
     <!-- Right column -->
@@ -618,6 +737,55 @@
         </div>
     </div>
 </div>
+
+
+<div id="avatar-modal" class="hidden fixed inset-0 bg-white bg-opacity-70 z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-2xl rounded-lg shadow-xl border flex flex-col">
+        <div class="relative flex justify-center items-center p-4 border-b">
+            <h2 class="text-xl font-bold">Chọn ảnh đại diện</h2>
+            <button id="modal-close-btn" class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-gray-600 text-2xl font-light">
+                &times;
+            </button>
+        </div>
+
+        <div class="p-6 space-y-4">
+            <textarea class="w-full border rounded-lg p-2 text-gray-700" placeholder="Mô tả"></textarea>
+
+            <div class="w-full h-80 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <img id="image-to-crop" src="" alt="Image preview">
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-search-minus text-gray-500"></i>
+                <input id="zoom-slider" type="range" min="0" max="2" step="0.01" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                <i class="fas fa-search-plus text-gray-500"></i>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-md flex items-center gap-2">
+                    <i class="fas fa-crop-alt"></i>
+                    <span>Cắt ảnh</span>
+                </button>
+                <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-md flex items-center gap-2">
+                    <i class="far fa-clock"></i>
+                    <span>Đặt tạm thời</span>
+                </button>
+            </div>
+
+            <p class="text-sm text-gray-500">
+                Hệ thống cũng sẽ cập nhật ảnh đại diện của bạn cho <b th:text="${user.firstName} + ' ' + ${user.lastName}">Binhh Le</b> trên Instagram.
+                <a href="#" class="text-blue-600 hover:underline">Quản lý cài đặt đồng bộ</a>
+            </p>
+        </div>
+
+        <div class="p-4 flex justify-end gap-x-3 border-t bg-gray-50 rounded-b-lg">
+            <button id="modal-cancel-btn" class="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy</button>
+            <button id="modal-save-btn" class="px-8 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Lưu</button>
+        </div>
+    </div>
+</div>
+
+
 <script>
     const createPostModal = document.getElementById('createPostModal');
     const privacyModal = document.getElementById('privacyModal');
@@ -718,6 +886,228 @@
             !profileDropdownMenu.contains(e.target) &&
             !profileMenuButton.contains(e.target)) {
             profileDropdownMenu.classList.add('hidden');
+        }
+    });
+</script>
+
+
+<script>
+
+    const avatarUploadInput = document.getElementById('avatar-upload');
+    const avatarModal = document.getElementById('avatar-modal');
+    const imageToCrop = document.getElementById('image-to-crop');
+    const zoomSlider = document.getElementById('zoom-slider');
+    const closeModalBtn = document.getElementById('modal-close-btn');
+    const cancelModalBtn = document.getElementById('modal-cancel-btn');
+    const saveModalBtn = document.getElementById('modal-save-btn');
+    const mainForm = document.getElementById('update-images-form');
+
+    let cropper = null;
+
+
+    avatarUploadInput.addEventListener('change', (event) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+
+                imageToCrop.src = e.target.result;
+                avatarModal.classList.remove('hidden');
+
+
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(imageToCrop, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    dragMode: 'move',
+                    background: false,
+                    autoCropArea: 0.8,
+                    cropBoxMovable: false,
+                    cropBoxResizable: false,
+                });
+
+
+                zoomSlider.value = 0.5;
+            };
+            reader.readAsDataURL(files[0]);
+        }
+    });
+
+
+    zoomSlider.addEventListener('input', (event) => {
+        if (cropper) {
+            cropper.zoomTo(event.target.value);
+        }
+    });
+
+
+    function closeModal() {
+        avatarModal.classList.add('hidden');
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+
+        avatarUploadInput.value = '';
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelModalBtn.addEventListener('click', closeModal);
+
+
+    saveModalBtn.addEventListener('click', () => {
+        if (!cropper) return;
+
+
+        const canvas = cropper.getCroppedCanvas({
+            width: 500,
+            height: 500,
+            imageSmoothingQuality: 'high',
+        });
+
+        canvas.toBlob((blob) => {
+            const formData = new FormData();
+            formData.append('avatarImage', blob, 'avatar.jpg');
+
+
+            const coverInput = document.getElementById('cover-upload');
+            if (coverInput && coverInput.files.length > 0) {
+                formData.append('coverImage', coverInput.files[0]);
+            }
+
+
+            fetch('/facebook/profile/update-images', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Đã có lỗi xảy ra. Vui lòng thử lại.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Đã có lỗi xảy ra.');
+                });
+
+        }, 'image/jpeg');
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const coverUploadInput = document.getElementById('cover-upload');
+        const coverPreviewImg = document.getElementById('cover-preview');
+        const previewBar = document.getElementById('cover-preview-bar');
+        const cancelBtn = document.getElementById('cancel-cover-change');
+        const saveBtn = document.getElementById('save-cover-change');
+        const coverForm = document.getElementById('update-images-form-cover');
+
+        let originalCoverSrc = '';
+        let coverCropper = null;
+
+        if (coverUploadInput) {
+            coverUploadInput.addEventListener('change', function(event) {
+                const files = event.target.files;
+                if (files && files.length > 0) {
+                    const file = files[0];
+                    const reader = new FileReader();
+
+                    if (!originalCoverSrc) {
+                        originalCoverSrc = coverPreviewImg.src;
+                    }
+
+                    reader.onload = function(e) {
+                        coverPreviewImg.src = e.target.result;
+
+
+                        if(coverCropper) {
+                            coverCropper.destroy();
+                        }
+
+
+                        coverCropper = new Cropper(coverPreviewImg, {
+                            aspectRatio: 16 / 6,
+                            viewMode: 1,
+                            dragMode: 'move',
+                            autoCropArea: 1,
+                            cropBoxResizable: false,
+                            cropBoxMovable: false,
+                            guides: false,
+                            center: false,
+                            background: false,
+                            toggleDragModeOnDblclick: false,
+                        });
+                    };
+                    reader.readAsDataURL(file);
+
+                    if (previewBar) {
+                        previewBar.classList.remove('hidden');
+                    }
+                }
+            });
+        }
+
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                if (previewBar) previewBar.classList.add('hidden');
+                if (coverCropper) {
+                    coverCropper.destroy();
+                    coverCropper = null;
+                }
+                if (originalCoverSrc) {
+                    coverPreviewImg.src = originalCoverSrc;
+                    originalCoverSrc = '';
+                }
+                if (coverUploadInput) coverUploadInput.value = '';
+            });
+        }
+
+
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function() {
+                if (!coverCropper) return;
+
+
+                saveBtn.textContent = 'Đang lưu...';
+                saveBtn.disabled = true;
+
+
+                const canvas = coverCropper.getCroppedCanvas({
+                    width: 1500,
+                    imageSmoothingQuality: 'high',
+                });
+
+                canvas.toBlob((blob) => {
+                    const formData = new FormData();
+                    formData.append('coverImage', blob, 'cover.jpg');
+
+
+                    fetch(coverForm.action, {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                window.location.reload();
+                            } else {
+                                alert('Lưu ảnh bìa thất bại!');
+                                saveBtn.textContent = 'Lưu thay đổi';
+                                saveBtn.disabled = false;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Lỗi khi lưu ảnh bìa:', error);
+                            saveBtn.textContent = 'Lưu thay đổi';
+                            saveBtn.disabled = false;
+                        });
+
+                }, 'image/jpeg');
+            });
         }
     });
 </script>

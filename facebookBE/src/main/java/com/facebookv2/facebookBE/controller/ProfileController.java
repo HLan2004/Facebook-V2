@@ -2,6 +2,7 @@ package com.facebookv2.facebookBE.controller;
 
 import com.facebookv2.facebookBE.model.Status;
 import com.facebookv2.facebookBE.model.User;
+import com.facebookv2.facebookBE.model.UserAvatar;
 import com.facebookv2.facebookBE.model.dto.FriendDTO;
 import com.facebookv2.facebookBE.repository.StatusRepository;
 import com.facebookv2.facebookBE.repository.UserRepository;
@@ -19,13 +20,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.facebookv2.facebookBE.repository.UserAvatarRepository;
+
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/facebook/profile")
 public class ProfileController {
+
+    @Autowired
+    private UserAvatarRepository userAvatarRepository;
 
     @Autowired
     private UserService userService;
@@ -61,10 +69,10 @@ public class ProfileController {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
 
-        // Gọi StorageService để lưu file và lấy lại tên file
+
         String generatedFileName = storageService.store(pictureFile);
 
-        // Nếu có file được tải lên, gán tên file vào đối tượng Status
+
         if (generatedFileName != null) {
             status.setPicture(generatedFileName);
         }
@@ -87,43 +95,48 @@ public class ProfileController {
         model.addAttribute("statuses", statuses);
         return "user/profile";
     }
-    // Dán code này vào ProfileController.java để thay thế phương thức cũ
+
 
     @PostMapping("/update-images")
-    public String updateProfileImages(@RequestParam("avatarImage") MultipartFile avatarFile,
-                                      @RequestParam("coverImage") MultipartFile coverFile,
-                                      Authentication authentication,
-                                      RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public Map<String, Object> updateProfileImages(
+            @RequestParam(name = "avatarImage", required = false) MultipartFile avatarFile,
+            @RequestParam(name = "coverImage", required = false) MultipartFile coverFile,
+            Authentication authentication) {
 
-        // 1. Lấy email của người dùng đang đăng nhập
         String email = authentication.getName();
-
-        // 2. Khởi tạo biến để lưu tên file mới, ban đầu là null
+        User currentUser = userService.getUserByEmail(email);
         String avatarFileName = null;
         String coverFileName = null;
 
-        // 3. Xử lý file avatar nếu người dùng có tải lên
-        if (!avatarFile.isEmpty()) {
-            // Lưu file và lấy lại tên duy nhất đã được tạo
+        if (avatarFile != null && !avatarFile.isEmpty()) {
             avatarFileName = storageService.store(avatarFile);
+
+            // ✅ Lưu vào bảng UserAvatar để ghi lại lịch sử avatar
+            UserAvatar avatarRecord = new UserAvatar();
+            avatarRecord.setFileName(avatarFileName);
+            avatarRecord.setUploadedAt(LocalDateTime.now());
+            avatarRecord.setUser(currentUser);
+            userAvatarRepository.save(avatarRecord);
         }
 
-        // 4. Xử lý file ảnh bìa nếu người dùng có tải lên
-        if (!coverFile.isEmpty()) {
-            // Lưu file và lấy lại tên duy nhất đã được tạo
+        if (coverFile != null && !coverFile.isEmpty()) {
             coverFileName = storageService.store(coverFile);
         }
 
-        // 5. Chỉ gọi update vào database khi có ít nhất 1 ảnh mới được tải lên
         if (avatarFileName != null || coverFileName != null) {
-            // GỌI PHƯƠNG THỨC MỚI, AN TOÀN HƠN MÀ BẠN VỪA TẠO
             userService.updateUserImages(email, avatarFileName, coverFileName);
         }
 
-        // 6. Gửi thông báo thành công và chuyển hướng
-        redirectAttributes.addFlashAttribute("success", "Cập nhật ảnh thành công!");
-        return "redirect:/facebook/profile";
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("avatarUrl", avatarFileName != null ? "/uploads/" + avatarFileName : null);
+        result.put("coverUrl", coverFileName != null ? "/uploads/" + coverFileName : null);
+
+        return result;
     }
+
+
 
 }
 

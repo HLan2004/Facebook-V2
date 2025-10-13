@@ -119,11 +119,14 @@
         </a>
 
         <!-- Icon Messenger  -->
-        <a th:href="@{/facebook/user/messages}" class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
+        <a th:href="@{/facebook/messenger}"
+           class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
             <svg fill="currentColor" viewBox="0 0 12 12" class="w-5 h-5">
-                <path d="m106.868 921.248-1.892 2.925a.32.32 0 0 1-.443.094l-1.753-1.134a.2.2 0 0 0-.222.003l-1.976 1.363c-.288.199-.64-.143-.45-.437l1.892-2.925a.32.32 0 0 1 .443-.095l1.753 1.134a.2.2 0 0 0 .222-.003l1.976-1.363c.288-.198.64.144.45.438m-3.368-4.251c-3.323 0-5.83 2.432-5.83 5.658 0 1.642.652 3.128 1.834 4.186a.331.331 0 0 1 .111.234l.03 1.01a.583.583 0 0 0 .82.519l1.13-.5a.32.32 0 0 1 .22-.015c.541.148 1.108.223 1.685.223 3.323 0 5.83-2.432 5.83-5.657 0-3.226-2.507-5.658-5.83-5.658" transform="translate(-97.5 -916.655)"></path>
+                <path d="m106.868 921.248-1.892 2.925a.32.32 0 0 1-.443.094l-1.753-1.134a.2.2 0 0 0-.222.003l-1.976 1.363c-.288.199-.64-.143-.45-.437l1.892-2.925a.32.32 0 0 1 .443-.095l1.753 1.134a.2.2 0 0 0 .222-.003l1.976-1.363c.288-.198.64.144.45.438m-3.368-4.251c-3.323 0-5.83 2.432-5.83 5.658 0 1.642.652 3.128 1.834 4.186a.331.331 0 0 1 .111.234l.03 1.01a.583.583 0 0 0 .82.519l1.13-.5a.32.32 0 0 1 .22-.015c.541.148 1.108.223 1.685.223 3.323 0 5.83-2.432 5.83-5.657 0-3.226-2.507-5.658-5.83-5.658"
+                      transform="translate(-97.5 -916.655)"></path>
             </svg>
-            <span class="icon-badge" th:if="${unreadMessages != null and unreadMessages > 0}" th:text="${unreadMessages}"></span>
+            <span class="icon-badge" th:if="${unreadMessages != null and unreadMessages > 0}"
+                  th:text="${unreadMessages}"></span>
         </a>
 
         <!-- Icon Chuông thông báo  -->
@@ -138,7 +141,10 @@
         <div class="relative">
             <button id="profile-menu-button" class="focus:outline-none relative">
                 <!-- Ảnh đại diện -->
-                <img th:src="@{/images/default-avatar.svg}" src="https://placehold.co/40x40/E4E6EB/7F7F7F?text=User" alt="Profile" class="h-10 w-10 rounded-full object-cover">
+                <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                     src="https://placehold.co/40x40/E4E6EB/7F7F7F?text=User"
+                     alt="Profile" class="h-10 w-10 rounded-full object-cover">
+
 
                 <!-- Vòng tròn chứa mũi tên dropdown -->
                 <div class="absolute -bottom-0.5 -right-0.5">
@@ -157,7 +163,11 @@
                 <div class="p-2 custom-scrollbar" style="max-height: 90vh; overflow-y: auto;">
                     <div class="p-2 rounded-lg shadow-md mb-2 bg-white">
                         <a href="/facebook/profile" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
-                            <img th:src="@{/images/default-avatar.svg}" src="https://placehold.co/60x60/E4E6EB/7F7F7F?text=User" alt="Profile" class="h-14 w-14 rounded-full object-cover">
+                            <!-- Ảnh đại diện -->
+                            <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                                 src="https://placehold.co/60x60/E4E6EB/7F7F7F?text=User"
+                                 alt="Profile" class="h-14 w-14 rounded-full object-cover">
+
                             <div>
                                 <!--                                <p class="font-semibold text-gray-800" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>-->
                                 <p class="font-semibold text-gray-800" th:text="${currentUsername}">User Name</p>
