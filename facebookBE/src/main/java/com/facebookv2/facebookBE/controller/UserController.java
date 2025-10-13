@@ -9,6 +9,7 @@ import com.facebookv2.facebookBE.model.dto.FriendDTO;
 import com.facebookv2.facebookBE.model.dto.UserDTO;
 import com.facebookv2.facebookBE.repository.FriendshipRepository;
 import com.facebookv2.facebookBE.repository.UserAvatarRepository;
+import com.facebookv2.facebookBE.repository.UserRepository;
 import com.facebookv2.facebookBE.service.*;
 import com.facebookv2.facebookBE.service.impl.CommentAndReactionService;
 import com.facebookv2.facebookBE.service.impl.StatusServiceImpl;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.security.Principal;
+
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -48,6 +51,8 @@ public class UserController {
     private CommentAndReactionService commentAndReactionService;
     @Autowired
     private UserAvatarRepository userAvatarRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @GetMapping("/home")
@@ -116,6 +121,43 @@ public ResponseEntity<List<FriendDTO>> getFriendList(@PathVariable Long userId) 
 
         return ResponseEntity.ok(urls);
     }
+
+    @PostMapping("/updatePhone")
+    public ResponseEntity<?> updatePhone(@RequestBody Map<String, String> body, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body("Chưa đăng nhập");
+        }
+
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Không tìm thấy người dùng");
+        }
+
+        String phone = body.get("phone");
+        user.setPhoneNumber(phone);
+        userRepository.save(user);
+        return ResponseEntity.ok(Map.of("message", "Cập nhật số điện thoại thành công", "phone", phone));
+    }
+
+    @PostMapping("/updateRelationship")
+    public ResponseEntity<?> updateRelationship(@RequestBody Map<String, String> body, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body("Chưa đăng nhập");
+        }
+
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Không tìm thấy người dùng");
+        }
+
+        String relationship = body.get("relationship");
+        user.setRelationship(relationship);
+        userRepository.save(user);
+        return ResponseEntity.ok(Map.of("message", "Cập nhật mối quan hệ thành công", "relationship", relationship));
+    }
+
 
 }
 

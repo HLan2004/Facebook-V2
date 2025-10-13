@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Facebook Clone Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="shortcut icon" th:href="@{/images/fbIcon.png}" href="/images/fbIcon.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
+  <style>
+    /*nav */
+    .nav-icon-active {
+      color: #0866FF;
+    }
+
+    .nav-icon-active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: #0866FF;
+    }
+
+    /* Tùy chỉnh thanh cuộn cho menu dropdown */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #a1a1aa;
+    }
+
+    /*nav*/
+
+    .preview-wrapper {
+      position: relative;
+      border: 1px solid #ccd0d5;
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .preview-wrapper img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    /* Các nút hành động trên ảnh */
+    .preview-actions {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .preview-actions .action-btn {
+      background-color: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .preview-actions .action-btn:hover {
+      background-color: #f0f2f5;
+    }
+
+    /* Nút xóa ảnh preview (dấu X) */
+    .remove-image-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background-color: #FFFFFF;
+      border: 1px solid #ccd0d5;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #606770;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .remove-image-btn:hover {
+      background-color: #f0f2f5;
+    }
+
+
+    /* CSS tùy chỉnh cho cropper tròn và các style khác nếu có */
+    .cropper-view-box,
+    .cropper-face {
+      border-radius: 50%;
+    }
+
+
+
+
+    #cover-preview + .cropper-container .cropper-crop-box {
+      border-radius: 0 !important;
+    }
+
+
+    #cover-preview + .cropper-container .cropper-view-box,
+    #cover-preview + .cropper-container .cropper-face,
+    #cover-preview + .cropper-container .cropper-line,
+    #cover-preview + .cropper-container .cropper-point {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+
+    #cover-preview + .cropper-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-bottom-left-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+      cursor: grab;
+      z-index: 1;
+    }
+    #cover-preview + .cropper-container:active::after {
+      cursor: grabbing; /* Con trỏ khi đang kéo */
+    }
+
+
+    #cover-preview-bar {
+      background-color: rgba(40, 42, 45, 0.2);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    #cover-preview-bar p,
+    #cover-preview-bar i {
+      color: #E4E6EB;
+    }
+    #cancel-cover-change {
+      background-color: #4E4F50;
+      color: #E4E6EB;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 8px 16px;
+    }
+    #cancel-cover-change:hover {
+      background-color: #65676B;
+    }
+    #save-cover-change {
+      background-color: #0866FF;
+      color: #FFFFFF;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 8px 16px;
+    }
+    #save-cover-change:hover {
+      background-color: #2176ff;
+    }
+
+    #cover-preview + .cropper-container .cropper-modal {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+<nav class="flex items-center justify-between bg-white px-4 h-14 shadow-md w-full fixed top-0 z-50">
+  <!-- Phần bên trái -->
+  <div class="flex items-center space-x-2">
+    <a th:href="@{/facebook/user/home}">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Logo"
+           class="h-10 w-10">
+    </a>
+    <div class="relative hidden lg:block">
+      <i class="fas fa-search absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500"></i>
+      <form th:action="@{/facebook/user/search}">
+        <input type="text" placeholder="Tìm kiếm trên Facebook" name="keyword"
+               class="bg-gray-100 rounded-full pl-10 pr-4 py-2 h-10 w-60 focus:outline-none">
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Phần giữa -->
+  <div class="flex-grow flex items-center justify-center h-full">
+    <div class="flex items-center h-full">
+      <!-- Icon Ngôi nhà -->
+      <a href="#" class="relative flex items-center justify-center w-[112px] h-full nav-icon-active">
+        <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
+          <path d="M9.464 1.286C10.294.803 11.092.5 12 .5c.908 0 1.707.303 2.537.786.795.462 1.7 1.142 2.815 1.977l2.232 1.675c1.391 1.042 2.359 1.766 2.888 2.826.53 1.059.53 2.268.528 4.006v4.3c0 1.355 0 2.471-.119 3.355-.124.928-.396 1.747-1.052 2.403-.657.657-1.476.928-2.404 1.053-.884.119-2 .119-3.354.119H7.93c-1.354 0-2.471 0-3.355-.119-.928-.125-1.747-.396-2.403-1.053-.656-.656-.928-1.475-1.053-2.403C1 18.541 1 17.425 1 16.07v-4.3c0-1.738-.002-2.947.528-4.006.53-1.06 1.497-1.784 2.888-2.826L6.65 3.263c1.114-.835 2.02-1.515 2.815-1.977zM10.5 13A1.5 1.5 0 0 0 9 14.5V21h6v-6.5a1.5 1.5 0 0 0-1.5-1.5h-3z"></path>
+        </svg>
+      </a>
+      <!-- Icon Video -->
+      <a href="#"
+         class="flex items-center justify-center w-[112px] h-[48px] text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+        <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
+          <path d="M10.996 8.132A1 1 0 0 0 9.5 9v4a1 1 0 0 0 1.496.868l3.5-2a1 1 0 0 0 0-1.736l-3.5-2z"></path>
+          <path d="M14.573 2H9.427c-1.824 0-3.293 0-4.45.155-1.2.162-2.21.507-3.013 1.31C1.162 4.266.817 5.277.655 6.477.5 7.634.5 9.103.5 10.927v.146c0 1.824 0 3.293.155 4.45.162 1.2.507 2.21 1.31 3.012.802.803 1.813 1.148 3.013 1.31C6.134 20 7.603 20 9.427 20h5.146c1.824 0 3.293 0 4.45-.155 1.2-.162 2.21-.507 3.012-1.31.803-.802 1.148-1.813 1.31-3.013.155-1.156.155-2.625.155-4.449v-.146c0-1.824 0-3.293-.155-4.45-.162-1.2-.507-2.21-1.31-3.013-.802-.802-1.813-1.147-3.013-1.309C17.866 2 16.397 2 14.573 2zM3.38 4.879c.369-.37.887-.61 1.865-.741C6.251 4.002 7.586 4 9.5 4h5c1.914 0 3.249.002 4.256.138.978.131 1.496.372 1.865.74.37.37.61.888.742 1.866.135 1.007.137 2.342.137 4.256 0 1.914-.002 3.249-.137 4.256-.132.978-.373 1.496-.742 1.865-.369.37-.887.61-1.865.742-1.007.135-2.342.137-4.256.137h-5c-1.914 0-3.249-.002-4.256-.137-.978-.132-1.496-.373-1.865-.742-.37-.369-.61-.887-.741-1.865C2.502 14.249 2.5 12.914 2.5 11c0-1.914.002-3.249.138-4.256.131-.978.372-1.496.74-1.865zM8 21.5a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8z"></path>
+        </svg>
+      </a>
+      <!-- Icon Marketplace -->
+      <a href="#"
+         class="flex items-center justify-center w-[112px] h-[48px] text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+        <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
+          <path d="M1.588 3.227A3.125 3.125 0 0 1 4.58 1h14.84c1.38 0 2.597.905 2.993 2.227l.816 2.719a6.47 6.47 0 0 1 .272 1.854A5.183 5.183 0 0 1 22 11.455v4.615c0 1.355 0 2.471-.119 3.355-.125.928-.396 1.747-1.053 2.403-.656.657-1.475.928-2.403 1.053-.884.12-2 .119-3.354.119H8.929c-1.354 0-2.47 0-3.354-.119-.928-.125-1.747-.396-2.403-1.053-.657-.656-.929-1.475-1.053-2.403-.12-.884-.119-2-.119-3.354V11.5l.001-.045A5.184 5.184 0 0 1 .5 7.8c0-.628.092-1.252.272-1.854l.816-2.719zM10 21h4v-3.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V21zm6-.002c.918-.005 1.608-.025 2.159-.099.706-.095 1.033-.262 1.255-.485.223-.222.39-.55.485-1.255.099-.735.101-1.716.101-3.159v-3.284a5.195 5.195 0 0 1-1.7.284 5.18 5.18 0 0 1-3.15-1.062A5.18 5.18 0 0 1 12 13a5.18 5.18 0 0 1-3.15-1.062A5.18 5.18 0 0 1 5.7 13a5.2 5.2 0 0 1-1.7-.284V16c0 1.442.002 2.424.1 3.159.096.706.263 1.033.486 1.255.222.223.55.39 1.255.485.551.074 1.24.094 2.159.1V17.5a2.5 2.5 0 0 1 2.5-2.5h3a2.5 2.5 0 0 1 2.5 2.5v3.498zM4.581 3c-.497 0-.935.326-1.078.802l-.815 2.72A4.45 4.45 0 0 0 2.5 7.8a3.2 3.2 0 0 0 5.6 2.117 1 1 0 0 1 1.5 0A3.19 3.19 0 0 0 12 11a3.19 3.19 0 0 0 2.4-1.083 1 1 0 0 1 1.5 0A3.2 3.2 0 0 0 21.5 7.8c0-.434-.063-.865-.188-1.28l-.816-2.72A1.125 1.125 0 0 0 19.42 3H4.58z"></path>
+        </svg>
+      </a>
+      <!-- Icon Nhóm -->
+      <a href="#"
+         class="flex items-center justify-center w-[112px] h-[48px] text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+        <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
+          <path d="M.5 12c0 6.351 5.149 11.5 11.5 11.5S23.5 18.351 23.5 12 18.351.5 12 .5.5 5.649.5 12zm2 0c0-.682.072-1.348.209-1.99a2 2 0 0 1 0 3.98A9.539 9.539 0 0 1 2.5 12zm.84-3.912A9.502 9.502 0 0 1 12 2.5a9.502 9.502 0 0 1 8.66 5.588 4.001 4.001 0 0 0 0 7.824 9.514 9.514 0 0 1-1.755 2.613A5.002 5.002 0 0 0 14 14.5h-4a5.002 5.002 0 0 0-4.905 4.025 9.515 9.515 0 0 1-1.755-2.613 4.001 4.001 0 0 0 0-7.824zM12 5a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm-2 4a2 2 0 1 0 4 0 2 2 0 0 0-4 0zm11.291 1.01a9.538 9.538 0 0 1 0 3.98 2 2 0 0 1 0-3.98zM16.99 20.087A9.455 9.455 0 0 1 12 21.5c-1.83 0-3.54-.517-4.99-1.414a1.004 1.004 0 0 1-.01-.148V19.5a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v.438a1 1 0 0 1-.01.148z"></path>
+        </svg>
+      </a>
+      <!-- Icon Trò chơi -->
+      <a href="#"
+         class="flex items-center justify-center w-[112px] h-[48px] text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+        <svg fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7">
+          <path d="M8 8a1 1 0 0 1 1 1v2h2a1 1 0 1 1 0 2H9v2a1 1 0 1 1-2 0v-2H5a1 1 0 1 1 0-2h2V9a1 1 0 0 1 1-1zm8 2a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0zm-2 4a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0z"></path>
+          <path d="M.5 11a7 7 0 0 1 7-7h9a7 7 0 0 1 7 7v2a7 7 0 0 1-7 7h-9a7 7 0 0 1-7-7v-2zm7-5a5 5 0 0 0-5 5v2a5 5 0 0 0 5 5h9a5 5 0 0 0 5-5v-2a5 5 0 0 0-5-5h-9z"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Phần bên phải -->
+  <div class="flex items-center space-x-2">
+    <!-- Icon Menu  -->
+    <a href="#"
+       class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
+      <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+        <path d="M18.5 1A1.5 1.5 0 0 0 17 2.5v3A1.5 1.5 0 0 0 18.5 7h3A1.5 1.5 0 0 0 23 5.5v-3A1.5 1.5 0 0 0 21.5 1h-3zm0 8a1.5 1.5 0 0 0-1.5 1.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 21.5 9h-3zm-16 8A1.5 1.5 0 0 0 1 18.5v3A1.5 1.5 0 0 0 2.5 23h3A1.5 1.5 0 0 0 7 21.5v-3A1.5 1.5 0 0 0 5.5 17h-3zm8 0A1.5 1.5 0 0 0 9 18.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3a1.5 1.5 0 0 0-1.5-1.5h-3zm8 0a1.5 1.5 0 0 0-1.5 1.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3a1.5 1.5 0 0 0-1.5-1.5h-3zm-16-8A1.5 1.5 0 0 0 1 10.5v3A1.5 1.5 0 0 0 2.5 15h3A1.5 1.5 0 0 0 7 13.5v-3A1.5 1.5 0 0 0 5.5 9h-3zm0-8A1.5 1.5 0 0 0 1 2.5v3A1.5 1.5 0 0 0 2.5 7h3A1.5 1.5 0 0 0 7 5.5v-3A1.5 1.5 0 0 0 5.5 1h-3zm8 0A1.5 1.5 0 0 0 9 2.5v3A1.5 1.5 0 0 0 10.5 7h3A1.5 1.5 0 0 0 15 5.5v-3A1.5 1.5 0 0 0 13.5 1h-3zm0 8A1.5 1.5 0 0 0 9 10.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 13.5 9h-3z"></path>
+      </svg>
+    </a>
+
+    <!-- Icon Messenger  -->
+    <a th:href="@{/facebook/messenger}"
+       class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
+      <svg fill="currentColor" viewBox="0 0 12 12" class="w-5 h-5">
+        <path d="m106.868 921.248-1.892 2.925a.32.32 0 0 1-.443.094l-1.753-1.134a.2.2 0 0 0-.222.003l-1.976 1.363c-.288.199-.64-.143-.45-.437l1.892-2.925a.32.32 0 0 1 .443-.095l1.753 1.134a.2.2 0 0 0 .222-.003l1.976-1.363c.288-.198.64.144.45.438m-3.368-4.251c-3.323 0-5.83 2.432-5.83 5.658 0 1.642.652 3.128 1.834 4.186a.331.331 0 0 1 .111.234l.03 1.01a.583.583 0 0 0 .82.519l1.13-.5a.32.32 0 0 1 .22-.015c.541.148 1.108.223 1.685.223 3.323 0 5.83-2.432 5.83-5.657 0-3.226-2.507-5.658-5.83-5.658"
+              transform="translate(-97.5 -916.655)"></path>
+      </svg>
+      <span class="icon-badge" th:if="${unreadMessages != null and unreadMessages > 0}"
+            th:text="${unreadMessages}"></span>
+    </a>
+
+    <!-- Icon Chuông thông báo  -->
+    <a href="#"
+       class="relative flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300 transition-colors">
+      <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+        <path d="M3 9.5a9 9 0 1 1 18 0v2.927c0 1.69.475 3.345 1.37 4.778a1.5 1.5 0 0 1-1.272 2.295h-4.625a4.5 4.5 0 0 1-8.946 0H2.902a1.5 1.5 0 0 1-1.272-2.295A9.01 9.01 0 0 0 3 12.43V9.5zm6.55 10a2.5 2.5 0 0 0 4.9 0h-4.9z"></path>
+      </svg>
+      <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">4</span>
+    </a>
+
+    <!-- Profile và Menu dropdown  -->
+    <div class="relative">
+      <button id="profile-menu-button" class="focus:outline-none relative">
+        <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+             alt="Profile" class="h-10 w-10 rounded-full object-cover">
+
+
+        <div class="absolute -bottom-0.5 -right-0.5">
+          <div class="bg-gray-200 rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+            <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" class="text-gray-800">
+              <g fill-rule="evenodd" transform="translate(-448 -544)">
+                <path fill-rule="nonzero"
+                      d="M452.707 549.293a1 1 0 0 0-1.414 1.414l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L456 552.586l-3.293-3.293z"></path>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </button>
+
+      <!-- Menu thả xuống  -->
+      <div id="profile-dropdown-menu"
+           class="hidden absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-xl z-50 overflow-hidden">
+        <div class="p-2 custom-scrollbar" style="max-height: 90vh; overflow-y: auto;">
+          <div class="p-2 rounded-lg shadow-md mb-2 bg-white">
+            <a href="/facebook/profile"
+               class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+
+              <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                   alt="Profile"
+                   class="h-14 w-14 rounded-full object-cover">
+
+              <div>
+                <p class="font-semibold text-gray-800"
+                   th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
+              </div>
+            </a>
+
+            <hr class="my-2">
+            <button class="w-full text-center py-2 text-blue-600 font-semibold bg-blue-50 rounded-lg hover:bg-blue-100">
+              Xem tất cả trang cá nhân
+            </button>
+          </div>
+          <ul class="text-gray-700">
+            <li>
+              <a href="/settings"
+                 class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
+                <div class="flex items-center space-x-3"><i
+                        class="fas fa-cog text-xl bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center"></i><span
+                        class="font-semibold">Cài đặt & quyền riêng tư</span></div>
+                <i class="fas fa-chevron-right text-gray-500"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
+                <div class="flex items-center space-x-3"><i
+                        class="fas fa-question-circle text-xl bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center"></i><span
+                        class="font-semibold">Trợ giúp & hỗ trợ</span></div>
+                <i class="fas fa-chevron-right text-gray-500"></i>
+              </a>
+            </li>
+            <li>
+              <form th:action="@{/logout}" method="post" class="block w-full">
+                <button type="submit"
+                        class="w-full flex items-center p-2 rounded-lg hover:bg-gray-100 text-left">
+                  <div class="flex items-center space-x-3"><i
+                          class="fas fa-sign-out-alt text-xl bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center"></i><span
+                          class="font-semibold">Đăng xuất</span></div>
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div id="cover-preview-bar" class="hidden fixed top-14 left-0 right-0 z-40 transition-transform duration-300">
+  <div class="max-w-7xl mx-auto px-8 py-3 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <i class="fas fa-camera text-gray-200 text-xl"></i>
+      <p class="font-semibold text-white">Ảnh bìa của bạn hiển thị công khai.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="cancel-cover-change" type="button" class="font-bold py-2 px-4 rounded-md">Hủy</button>
+      <button id="save-cover-change" type="button" class="text-white font-bold py-2 px-4 rounded-md">Lưu thay đổi</button>
+    </div>
+  </div>
+</div>
+<!-- Cover + Avatar -->
+<div class="bg-white shadow-sm">
+  <form id="update-images-form-cover" th:action="@{/facebook/profile/update-images}" method="post"
+        enctype="multipart/form-data">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="relative h-[240px] sm:h-[350px] md:h-[450px] rounded-b-lg bg-gray-200 overflow-hidden group">
+        <img id="cover-preview"
+             th:src="${user.backGround != null ? '/uploads/' + user.backGround : 'https://via.placeholder.com/1500x500.png/E5E7EB/4B5563?text=Cover+Photo'}"
+             alt="Cover Photo" class="w-full h-full object-cover">
+
+        <div th:if="${user.id == currentUser.id}">
+          <label for="cover-upload"
+                 class="absolute bottom-4 right-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-3 rounded-md shadow-md cursor-pointer flex items-center gap-2 transition-colors z-10">
+            <i class="fas fa-camera"></i> <span>Thêm ảnh bìa</span>
+          </label>
+          <input type="file" id="cover-upload" name="coverImage" accept="image/*" class="hidden">
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col sm:flex-row items-center sm:items-end justify-between px-4 sm:px-8 pt-4 pb-4">
+      <div class="flex flex-col sm:flex-row items-center sm:items-end -mt-24 sm:-mt-28">
+        <div class="relative flex-shrink-0">
+          <div class="h-44 w-44 rounded-full border-4 border-white bg-gray-300 overflow-hidden shadow-lg">
+            <img id="avatar-preview"
+                 th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+                 alt="Avatar" class="w-full h-full object-cover">
+          </div>
+          <div th:if="${user.id == currentUser.id}">
+            <label for="avatar-upload"
+                   class="absolute bottom-3 right-3 bg-gray-200 hover:bg-gray-300 h-9 w-9 rounded-full flex items-center justify-center cursor-pointer shadow">
+              <i class="fas fa-camera text-xl text-gray-800"></i>
+            </label>
+            <input type="file" id="avatar-upload" name="avatarImage" accept="image/*" class="hidden">
+          </div>
+        </div>
+        <div class="mt-4 sm:mt-0 sm:ml-6 text-center sm:text-left">
+          <h1 class="text-3xl font-bold" th:text="${user.firstName} + ' ' + ${user.lastName}">Binhh Le</h1>
+          <p class="text-gray-600 font-semibold" th:text="${friendCount} + ' người bạn'">350 người bạn</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 mt-4 sm:mt-0">
+        <div th:if="${user.id == currentUser.id}" class="flex items-center space-x-2">
+          <button type="button"
+                  class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-3 rounded-md flex items-center gap-1.5">
+            <i class="fas fa-plus-circle text-lg"></i> <span>Thêm vào tin</span>
+          </button>
+          <button type="button"
+                  class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-md flex items-center gap-1.5">
+            <i class="fas fa-pen"></i> <span>Chỉnh sửa trang cá nhân</span>
+          </button>
+        </div>
+
+        <div th:if="${user.id != currentUser.id}">
+          <div th:switch="${statusMap[user.id]}" class="flex items-center space-x-2">
+            <div th:case="${T(com.facebookv2.facebookBE.model.FriendshipStatus).PENDING}">
+              <div th:if="${directionMap[user.id] == 'SENT'}">
+                <form th:action="@{/facebook/friendship/remove}" method="post"><input type="hidden"
+                                                                                      name="friendId"
+                                                                                      th:value="${user.id}">
+                  <button type="submit"
+                          class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-md">
+                    Hủy lời mời
+                  </button>
+                </form>
+              </div>
+              <div th:if="${directionMap[user.id] == 'RECEIVED'}" class="flex gap-2">
+                <form th:action="@{/facebook/friendship/accept}" method="post"><input type="hidden"
+                                                                                      name="friendId"
+                                                                                      th:value="${user.id}">
+                  <button type="submit"
+                          class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-3 rounded-md">
+                    Chấp nhận
+                  </button>
+                </form>
+                <form th:action="@{/facebook/friendship/decline}" method="post"><input type="hidden"
+                                                                                       name="friendId"
+                                                                                       th:value="${user.id}">
+                  <button type="submit"
+                          class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-md">
+                    Từ chối
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div th:case="${T(com.facebookv2.facebookBE.model.FriendshipStatus).ACCEPTED}">
+              <form th:action="@{/facebook/friendship/remove}" method="post"><input type="hidden"
+                                                                                    name="friendId"
+                                                                                    th:value="${user.id}">
+                <button type="submit"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-md flex items-center gap-1.5">
+                  <i class="fas fa-user-check"></i> <span>Bạn bè</span></button>
+              </form>
+            </div>
+            <div th:case="*">
+              <form th:action="@{/facebook/friendship/add}" method="post"><input type="hidden"
+                                                                                 name="friendId"
+                                                                                 th:value="${user.id}">
+                <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-3 rounded-md flex items-center gap-1.5">
+                  <i class="fas fa-user-plus"></i> <span>Kết bạn</span></button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <button type="button"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-9 rounded-md flex items-center justify-center">
+          <i class="fas fa-ellipsis-h"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-200 flex justify-between items-center">
+    <div class="flex items-center space-x-1">
+      <a href="#" class="py-3 px-4 text-blue-600 font-semibold border-b-4 border-blue-600">Bài viết</a>
+      <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Giới thiệu</a>
+      <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Bạn bè</a>
+      <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Ảnh</a>
+      <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Reels</a>
+      <a href="#" class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold">Check in</a>
+      <button class="py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold flex items-center gap-1">
+        <span>Xem thêm</span>
+        <i class="fas fa-caret-down"></i>
+      </button>
+    </div>
+    <button class="bg-gray-200 hover:bg-gray-300 rounded-md p-2 h-9 w-12 flex items-center justify-center">
+      <i class="fas fa-ellipsis-h"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="max-w-5xl mx-auto mt-4 flex space-x-4">
+
+  <!-- Left column -->
+  <div class="w-1/3 space-y-4">
+    <!-- Intro -->
+    <div class="bg-white rounded-lg shadow p-4">
+      <h2 class="font-semibold text-lg mb-2">Giới thiệu</h2>
+      <p class="text-gray-600 text-sm">Thêm tiểu sử để mọi người biết về bạn hơn.</p>
+    </div>
+
+    <!-- Photos -->
+    <div class="bg-white rounded-lg shadow p-4">
+      <h2 class="font-semibold text-lg mb-2">Ảnh</h2>
+      <div id="avatar-gallery" class="grid grid-cols-3 gap-1"></div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const container = document.getElementById("avatar-gallery");
+
+        try {
+          const response = await fetch("/facebook/user/api/avatars");
+          const avatars = await response.json();
+
+          if (!avatars || avatars.length === 0) {
+            container.innerHTML = "<p class='text-gray-500 text-sm'>Chưa có ảnh đại diện nào</p>";
+            return;
+          }
+
+          avatars.forEach(url => {
+            const img = document.createElement("img");
+            img.src = url;
+            img.className = "w-full h-24 object-cover rounded";
+            container.appendChild(img);
+          });
+        } catch (error) {
+          console.error("Lỗi khi tải danh sách avatar:", error);
+        }
+      });
+    </script>
+  </div>
+
+  <!-- Right column -->
+  <div class="flex-1 space-y-4">
+    <!-- Create Post Box -->
+    <div class="bg-white rounded-lg shadow p-4">
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
+          <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+               alt="Avatar" class="w-full h-full object-cover">
+        </div>
+
+        <div class="flex-1 bg-[#f0f2f5] rounded-full px-4 py-2 text-gray-500 hover:bg-gray-200 cursor-pointer"
+             onclick="openCreatePostModal()">
+                <span th:text="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'">
+                    Bạn đang nghĩ gì thế?
+                </span>
+        </div>
+      </div>
+
+      <hr class="my-3">
+
+      <div class="flex justify-around text-sm">
+        <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yr/r/c0dWho49-X3.png" alt="Live Video Icon"
+               class="w-6 h-6">
+          <span class="font-semibold text-gray-600">Video trực tiếp</span>
+        </div>
+
+        <div onclick="document.getElementById('pictureFileInput').click(); openCreatePostModal()"
+             class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png" alt="Photo/Video Icon"
+               class="w-6 h-6">
+          <span class="font-semibold text-gray-600">Ảnh/video</span>
+        </div>
+
+        <div class="flex items-center justify-center gap-x-2 w-1/3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png" alt="Feeling/Activity Icon"
+               class="w-6 h-6">
+          <span class="font-semibold text-gray-600">Cảm xúc/hoạt động</span>
+        </div>
+      </div>
+    </div>
+
+    <div th:each="status : ${statuses}" class="bg-white rounded-lg shadow p-4">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center space-x-3">
+          <img th:src="${status.user.avatar != null ? '/uploads/' + status.user.avatar : '/images/default-avatar.svg'}"
+               alt="Avatar" class="h-10 w-10 rounded-full object-cover">
+
+          <div>
+            <p class="font-semibold" th:text="${status.user.firstName} + ' ' + ${status.user.lastName}">User
+              Name</p>
+            <span class="text-xs text-gray-500"
+                  th:text="${#temporals.format(status.createdTime, 'dd/MM/yyyy HH:mm')}">Just now</span>
+          </div>
+        </div>
+        <i class="fa-solid fa-ellipsis-h text-gray-500 cursor-pointer"></i>
+      </div>
+      <p class="mb-2 text-gray-800" th:text="${status.content}">Post content here</p>
+      <!--      sửa ảnh-->
+      <div th:if="${status.picture != null and !status.picture.isEmpty()}" class="mt-2">
+        <img th:src="@{/uploads/{filename}(filename=${status.picture})}" alt="Post Image" class="w-full">
+      </div>
+      <div class="flex justify-between text-gray-500 text-sm mt-3 border-t pt-2">
+        <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+          <i class="far fa-thumbs-up"></i><span>Thích</span>
+        </div>
+        <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+          <i class="far fa-comment"></i><span>Bình luận</span>
+        </div>
+        <div class="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
+          <i class="fa fa-share"></i><span>Chia sẻ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="createPostModal" class="fixed inset-0 bg-white bg-opacity-80 hidden items-center justify-center z-50 p-4">
+  <div class="bg-white w-full max-w-lg rounded-lg shadow-xl border border-gray-300 flex flex-col"
+       style="height: 500px;">
+    <div class="relative flex-shrink-0 flex justify-center items-center border-b p-3">
+      <h2 class="text-xl font-bold">Tạo bài viết</h2>
+      <button onclick="closeCreatePostModal()"
+              class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-gray-600 text-2xl">
+        &times;
+      </button>
+    </div>
+    <form th:action="@{/facebook/profile/profilepost}" method="post" enctype="multipart/form-data"
+          class="p-4 flex flex-col flex-grow overflow-y-auto">
+      <div class="flex-shrink-0 flex items-center space-x-3 mb-4">
+        <div class="h-10 w-10 rounded-full overflow-hidden">
+          <img th:src="${(user.avatar == null or user.avatar == 'default.png') ? '/images/default.jpg' : '/uploads/' + user.avatar}"
+               alt="Avatar">
+        </div>
+        <div>
+          <p class="font-semibold" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</p>
+          <button type="button" id="privacyButton" onclick="openPrivacyModal()"
+                  class="bg-gray-200 rounded px-2 py-0.5 text-xs font-semibold text-gray-700 flex items-center gap-x-1 hover:bg-gray-300">
+            <i class="fas fa-user-friends text-xs"></i>
+            <span id="privacyButtonText">Bạn bè</span>
+            <i class="fas fa-caret-down text-xs ml-1"></i>
+          </button>
+          <input type="hidden" id="privacyInput" name="privacy" value="friends">
+        </div>
+      </div>
+      <div class="flex-grow relative">
+                <textarea id="postContentTextarea" name="content"
+                          th:placeholder="${user.firstName} + ' ơi, bạn đang nghĩ gì thế?'"
+                          class="w-full h-full border-none focus:outline-none resize-none text-2xl placeholder-gray-500 p-0 bg-transparent overflow-y-auto"></textarea>
+        <i class="far fa-smile text-gray-400 text-2xl absolute bottom-6 right-0 cursor-pointer"></i>
+      </div>
+      <div id="imagePreviewContainer" class="flex-shrink-0 mt-3 hidden"></div>
+      <div class="flex-shrink-0 flex items-center justify-between border border-gray-300 rounded-lg p-3 mt-3">
+        <span class="font-semibold text-gray-600">Thêm vào bài viết của bạn</span>
+        <div class="flex items-center space-x-2">
+          <label for="pictureFileInput" class="cursor-pointer" title="Ảnh/video"><img
+                  src="https://static.xx.fbcdn.net/rsrc.php/v4/y7/r/Ivw7nhRtXyo.png" alt="Photo/Video"
+                  class="w-6 h-6"></label>
+          <input type="file" id="pictureFileInput" name="pictureFile" accept="image/*" class="hidden">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yq/r/b37mHA1PjfK.png" alt="Tag People"
+               class="w-6 h-6 cursor-pointer" title="Gắn thẻ người khác">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yd/r/Y4mYLVOhTwq.png" alt="Feeling/Activity"
+               class="w-6 h-6 cursor-pointer" title="Cảm xúc/hoạt động">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/y1/r/8zlaieBcZ72.png" alt="Check In"
+               class="w-6 h-6 cursor-pointer" title="Check in">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yT/r/q7MiRkL7MLC.png" alt="GIF"
+               class="w-6 h-6 cursor-pointer" title="GIF">
+          <i class="fas fa-ellipsis-h text-gray-500 cursor-pointer"></i>
+        </div>
+      </div>
+      <button id="postSubmitButton" type="submit" disabled
+              class="flex-shrink-0 w-full bg-gray-200 text-gray-400 font-bold py-2 px-4 rounded-lg mt-3 cursor-not-allowed">
+        Đăng
+      </button>
+    </form>
+  </div>
+</div>
+<div id="privacyModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+  <div class="bg-white w-full max-w-lg rounded-lg shadow-xl border">
+    <div class="relative flex justify-center items-center border-b p-3">
+      <button onclick="closePrivacyModal()"
+              class="absolute left-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="text-xl font-bold">Đối tượng của bài viết</h2>
+    </div>
+    <div class="p-4 space-y-2">
+      <div class="font-semibold">Ai có thể xem bài viết của bạn?</div>
+      <p class="text-sm text-gray-600">Bài viết của bạn sẽ hiển thị trên Bảng tin, trang cá nhân và kết quả tìm
+        kiếm.</p>
+      <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+        <div class="flex items-center gap-x-3">
+          <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i
+                  class="fas fa-globe-americas text-2xl"></i></div>
+          <div>
+            <div class="font-semibold">Công khai</div>
+            <p class="text-sm text-gray-600">Bất kỳ ai ở trên hoặc ngoài Facebook</p>
+          </div>
+        </div>
+        <input type="radio" name="privacy_option" value="public"
+               onchange="selectPrivacy('public', 'Công khai', 'fa-globe-americas')">
+      </label>
+      <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer bg-blue-100">
+        <div class="flex items-center gap-x-3">
+          <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i
+                  class="fas fa-user-friends text-2xl"></i></div>
+          <div>
+            <div class="font-semibold">Bạn bè</div>
+            <p class="text-sm text-gray-600">Bạn bè của bạn trên Facebook</p>
+          </div>
+        </div>
+        <input type="radio" name="privacy_option" value="friends"
+               onchange="selectPrivacy('friends', 'Bạn bè', 'fa-user-friends')" checked>
+      </label>
+      <label class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+        <div class="flex items-center gap-x-3">
+          <div class="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center"><i
+                  class="fas fa-lock text-2xl"></i></div>
+          <div>
+            <div class="font-semibold">Chỉ mình tôi</div>
+          </div>
+        </div>
+        <input type="radio" name="privacy_option" value="private"
+               onchange="selectPrivacy('private', 'Chỉ mình tôi', 'fa-lock')">
+      </label>
+    </div>
+    <div class="p-4 flex justify-end gap-x-2 border-t">
+      <button onclick="closePrivacyModal()"
+              class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy
+      </button>
+      <button onclick="closePrivacyModal()"
+              class="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Xong
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div id="avatar-modal" class="hidden fixed inset-0 bg-white bg-opacity-70 z-50 flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-2xl rounded-lg shadow-xl border flex flex-col">
+    <div class="relative flex justify-center items-center p-4 border-b">
+      <h2 class="text-xl font-bold">Chọn ảnh đại diện</h2>
+      <button id="modal-close-btn" class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-gray-600 text-2xl font-light">
+        &times;
+      </button>
+    </div>
+
+    <div class="p-6 space-y-4">
+      <textarea class="w-full border rounded-lg p-2 text-gray-700" placeholder="Mô tả"></textarea>
+
+      <div class="w-full h-80 bg-gray-100 flex items-center justify-center overflow-hidden">
+        <img id="image-to-crop" src="" alt="Image preview">
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <i class="fas fa-search-minus text-gray-500"></i>
+        <input id="zoom-slider" type="range" min="0" max="2" step="0.01" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+        <i class="fas fa-search-plus text-gray-500"></i>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-md flex items-center gap-2">
+          <i class="fas fa-crop-alt"></i>
+          <span>Cắt ảnh</span>
+        </button>
+        <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-md flex items-center gap-2">
+          <i class="far fa-clock"></i>
+          <span>Đặt tạm thời</span>
+        </button>
+      </div>
+
+      <p class="text-sm text-gray-500">
+        Hệ thống cũng sẽ cập nhật ảnh đại diện của bạn cho <b th:text="${user.firstName} + ' ' + ${user.lastName}">Binhh Le</b> trên Instagram.
+        <a href="#" class="text-blue-600 hover:underline">Quản lý cài đặt đồng bộ</a>
+      </p>
+    </div>
+
+    <div class="p-4 flex justify-end gap-x-3 border-t bg-gray-50 rounded-b-lg">
+      <button id="modal-cancel-btn" class="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-semibold">Hủy</button>
+      <button id="modal-save-btn" class="px-8 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold">Lưu</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const createPostModal = document.getElementById('createPostModal');
+  const privacyModal = document.getElementById('privacyModal');
+  const privacyButtonText = document.getElementById('privacyButtonText');
+  const privacyButton = document.getElementById('privacyButton');
+  const privacyInput = document.getElementById('privacyInput');
+  const pictureFileInput = document.getElementById('pictureFileInput');
+  const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+  const postContentTextarea = document.getElementById('postContentTextarea');
+  const postSubmitButton = document.getElementById('postSubmitButton');
+
+  function openCreatePostModal() {
+    createPostModal.classList.remove('hidden');
+    createPostModal.classList.add('flex');
+  }
+
+  function closeCreatePostModal() {
+    createPostModal.classList.add('hidden');
+    createPostModal.classList.remove('flex');
+    removeImagePreview();
+    postContentTextarea.value = '';
+  }
+
+  function openPrivacyModal() {
+    privacyModal.classList.remove('hidden');
+    privacyModal.classList.add('flex');
+  }
+
+  function closePrivacyModal() {
+    privacyModal.classList.add('hidden');
+    privacyModal.classList.remove('flex');
+  }
+
+  function selectPrivacy(value, text, iconClass) {
+    privacyInput.value = value;
+    privacyButtonText.textContent = text;
+    const icon = privacyButton.querySelector('i');
+    icon.className = `fas ${iconClass} text-xs`;
+    closePrivacyModal();
+  }
+
+  function updatePostButtonState() {
+    const hasText = postContentTextarea.value.trim() !== '';
+    const hasImage = pictureFileInput.files.length > 0;
+    if (hasText || hasImage) {
+      postSubmitButton.disabled = false;
+      postSubmitButton.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+      postSubmitButton.classList.add('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+    } else {
+      postSubmitButton.disabled = true;
+      postSubmitButton.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+      postSubmitButton.classList.remove('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+    }
+  }
+
+  pictureFileInput.addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const previewHtml = `<div class="preview-wrapper"><img src="${e.target.result}" alt="Image Preview"><div class="preview-actions"><button type="button" class="action-btn"><i class="fas fa-edit"></i> Chỉnh sửa</button></div><button type="button" class="remove-image-btn" onclick="removeImagePreview()">&times;</button></div>`;
+        imagePreviewContainer.innerHTML = previewHtml;
+        imagePreviewContainer.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+    updatePostButtonState();
+  });
+
+  function removeImagePreview() {
+    imagePreviewContainer.innerHTML = '';
+    imagePreviewContainer.classList.add('hidden');
+    pictureFileInput.value = null;
+    updatePostButtonState();
+  }
+
+  postContentTextarea.addEventListener('input', updatePostButtonState);
+</script>
+
+
+<script>
+
+  const profileMenuButton = document.getElementById('profile-menu-button');
+  const profileDropdownMenu = document.getElementById('profile-dropdown-menu');
+
+  if (profileMenuButton && profileDropdownMenu) {
+
+    profileMenuButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdownMenu.classList.toggle('hidden');
+    });
+  }
+
+
+  window.addEventListener('click', (e) => {
+    if (profileDropdownMenu &&
+            !profileDropdownMenu.classList.contains('hidden') &&
+            !profileDropdownMenu.contains(e.target) &&
+            !profileMenuButton.contains(e.target)) {
+      profileDropdownMenu.classList.add('hidden');
+    }
+  });
+</script>
+
+
+<script>
+
+  const avatarUploadInput = document.getElementById('avatar-upload');
+  const avatarModal = document.getElementById('avatar-modal');
+  const imageToCrop = document.getElementById('image-to-crop');
+  const zoomSlider = document.getElementById('zoom-slider');
+  const closeModalBtn = document.getElementById('modal-close-btn');
+  const cancelModalBtn = document.getElementById('modal-cancel-btn');
+  const saveModalBtn = document.getElementById('modal-save-btn');
+  const mainForm = document.getElementById('update-images-form');
+
+  let cropper = null;
+
+
+  avatarUploadInput.addEventListener('change', (event) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+
+        imageToCrop.src = e.target.result;
+        avatarModal.classList.remove('hidden');
+
+
+        if (cropper) {
+          cropper.destroy();
+        }
+        cropper = new Cropper(imageToCrop, {
+          aspectRatio: 1,
+          viewMode: 1,
+          dragMode: 'move',
+          background: false,
+          autoCropArea: 0.8,
+          cropBoxMovable: false,
+          cropBoxResizable: false,
+        });
+
+
+        zoomSlider.value = 0.5;
+      };
+      reader.readAsDataURL(files[0]);
+    }
+  });
+
+
+  zoomSlider.addEventListener('input', (event) => {
+    if (cropper) {
+      cropper.zoomTo(event.target.value);
+    }
+  });
+
+
+  function closeModal() {
+    avatarModal.classList.add('hidden');
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+
+    avatarUploadInput.value = '';
+  }
+
+  closeModalBtn.addEventListener('click', closeModal);
+  cancelModalBtn.addEventListener('click', closeModal);
+
+
+  saveModalBtn.addEventListener('click', () => {
+    if (!cropper) return;
+
+
+    const canvas = cropper.getCroppedCanvas({
+      width: 500,
+      height: 500,
+      imageSmoothingQuality: 'high',
+    });
+
+    canvas.toBlob((blob) => {
+      const formData = new FormData();
+      formData.append('avatarImage', blob, 'avatar.jpg');
+
+
+      const coverInput = document.getElementById('cover-upload');
+      if (coverInput && coverInput.files.length > 0) {
+        formData.append('coverImage', coverInput.files[0]);
+      }
+
+
+      fetch('/facebook/profile/update-images', {
+        method: 'POST',
+        body: formData,
+      })
+              .then(response => {
+                if (response.ok) {
+                  window.location.reload();
+                } else {
+                  alert('Đã có lỗi xảy ra. Vui lòng thử lại.');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert('Đã có lỗi xảy ra.');
+              });
+
+    }, 'image/jpeg');
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const coverUploadInput = document.getElementById('cover-upload');
+    const coverPreviewImg = document.getElementById('cover-preview');
+    const previewBar = document.getElementById('cover-preview-bar');
+    const cancelBtn = document.getElementById('cancel-cover-change');
+    const saveBtn = document.getElementById('save-cover-change');
+    const coverForm = document.getElementById('update-images-form-cover');
+
+    let originalCoverSrc = '';
+    let coverCropper = null;
+
+    if (coverUploadInput) {
+      coverUploadInput.addEventListener('change', function(event) {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+          const file = files[0];
+          const reader = new FileReader();
+
+          if (!originalCoverSrc) {
+            originalCoverSrc = coverPreviewImg.src;
+          }
+
+          reader.onload = function(e) {
+            coverPreviewImg.src = e.target.result;
+
+
+            if(coverCropper) {
+              coverCropper.destroy();
+            }
+
+
+            coverCropper = new Cropper(coverPreviewImg, {
+              aspectRatio: 16 / 6,
+              viewMode: 1,
+              dragMode: 'move',
+              autoCropArea: 1,
+              cropBoxResizable: false,
+              cropBoxMovable: false,
+              guides: false,
+              center: false,
+              background: false,
+              toggleDragModeOnDblclick: false,
+            });
+          };
+          reader.readAsDataURL(file);
+
+          if (previewBar) {
+            previewBar.classList.remove('hidden');
+          }
+        }
+      });
+    }
+
+
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', function() {
+        if (previewBar) previewBar.classList.add('hidden');
+        if (coverCropper) {
+          coverCropper.destroy();
+          coverCropper = null;
+        }
+        if (originalCoverSrc) {
+          coverPreviewImg.src = originalCoverSrc;
+          originalCoverSrc = '';
+        }
+        if (coverUploadInput) coverUploadInput.value = '';
+      });
+    }
+
+
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function() {
+        if (!coverCropper) return;
+
+
+        saveBtn.textContent = 'Đang lưu...';
+        saveBtn.disabled = true;
+
+
+        const canvas = coverCropper.getCroppedCanvas({
+          width: 1500,
+          imageSmoothingQuality: 'high',
+        });
+
+        canvas.toBlob((blob) => {
+          const formData = new FormData();
+          formData.append('coverImage', blob, 'cover.jpg');
+
+
+          fetch(coverForm.action, {
+            method: 'POST',
+            body: formData,
+          })
+                  .then(response => {
+                    if (response.ok) {
+                      window.location.reload();
+                    } else {
+                      alert('Lưu ảnh bìa thất bại!');
+                      saveBtn.textContent = 'Lưu thay đổi';
+                      saveBtn.disabled = false;
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Lỗi khi lưu ảnh bìa:', error);
+                    saveBtn.textContent = 'Lưu thay đổi';
+                    saveBtn.disabled = false;
+                  });
+
+        }, 'image/jpeg');
+      });
+    }
+  });
+</script>
+</body>
+</html>

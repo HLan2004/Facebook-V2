@@ -39,6 +39,13 @@ public class User {
     // Gender: male, female, custom
     private String gender;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "relationship")
+    private String relationship;
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
