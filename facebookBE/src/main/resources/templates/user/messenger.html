@@ -257,6 +257,105 @@
         </div>
     </div>
 
+    <!-- Sidebar thông tin nhóm (panel bên phải) -->
+    <div class="group-info-panel" id="group-info-panel">
+        <div class="group-info-body">
+
+            <!-- Profile section -->
+            <div class="group-profile">
+                <div class="group-avatar">
+                    <img id="group-avatar-img" src="/images/default-group.png" alt="Group Avatar">
+                </div>
+                <h3 id="group-title">Tên nhóm</h3>
+            </div>
+
+            <!-- Accordion kiểu Messenger -->
+            <div class="accordion">
+
+                <!-- 1. Đổi tên nhóm -->
+                <div class="accordion-item" id="accordion-rename-group">
+                    <div class="accordion-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <!-- Icon đổi tên nhóm -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708L4.207 14.5H1v-3.207L12.146.854z"/>
+                            </svg>
+                            <span>Đổi tên nhóm</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="rename-container">
+                            <input type="text" id="rename-group-input" placeholder="Nhập tên mới...">
+                            <button id="rename-group-btn">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Đổi ảnh nhóm -->
+                <div class="accordion-item" id="accordion-change-avatar">
+                    <div class="accordion-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <!-- Icon ảnh nhóm -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M14.002 3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2.002a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12zm-12 1a1 1 0 0 0-1 1v7.002a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-12z"/>
+                                <path d="M10 8.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                            </svg>
+                            <span>Đổi ảnh nhóm</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="group-avatar-edit">
+                            <input type="file" id="group-avatar-upload" accept="image/*" hidden>
+                            <button id="change-group-avatar-btn">Chọn ảnh</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Thêm thành viên -->
+                <div class="accordion-item" id="accordion-add-member">
+                    <div class="accordion-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <!-- Icon thêm thành viên -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                <path fill-rule="evenodd" d="M8 8a5 5 0 0 0-4.546 2.916C3.217 11.99 4.05 13 5 13h6c.95 0 1.783-1.01 1.546-2.084A5 5 0 0 0 8 8z"/>
+                                <path d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                            <span>Thành viên nhóm</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <!-- Danh sách thành viên hiện tại -->
+                        <div id="group-members-list" class="members-list" style="margin-bottom: 12px;"></div>
+
+                        <!-- Thanh tìm bạn bè để thêm -->
+                        <input type="text" id="add-member-input" placeholder="Nhập tên bạn bè...">
+                        <div id="add-member-suggestions"></div>
+                    </div>
+                </div>
+
+
+                <!-- 4. Rời nhóm / Xóa chat -->
+                <div class="accordion-item" id="accordion-leave-group">
+                    <div class="accordion-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <!-- Icon cảnh báo -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8.982 1.566a.5.5 0 0 0-.964 0l-6.857 12a.5.5 0 0 0 .432.734h13.71a.5.5 0 0 0 .432-.734l-6.857-12zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1-2.002 0 1 1 0 0 1 2.002 0z"/>
+                            </svg>
+                            <span>Rời nhóm / Xóa chat</span>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <button id="leave-group-btn" class="danger-btn">Rời nhóm / Xóa đoạn chat</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
     <!-- Thông báo nếu chưa chọn conversation -->
     <div class="no-conversation-selected" id="no-conversation">
         <div>
@@ -300,44 +399,6 @@
         </div>
     </div>
 </div>
-
-<!-- Modal Group Info -->
-<div class="modal-overlay group-info-modal" id="group-info-modal">
-    <div class="modal-container">
-        <div class="modal-header">
-            <h3>Thông tin nhóm</h3>
-            <button class="modal-close-btn" id="close-group-info-modal" aria-label="Đóng">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                     stroke="#65676b" width="20" height="20">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
-
-        <div class="modal-body">
-            <!-- Danh sách thành viên -->
-            <div id="group-members-list"></div>
-
-            <!-- Thêm thành viên -->
-            <div id="add-member-section">
-                <h4>Thêm thành viên</h4>
-                <input type="text" id="add-member-input" placeholder="Nhập tên bạn bè...">
-                <div id="add-member-suggestions"></div>
-            </div>
-
-            <hr class="modal-divider">
-
-            <!-- Rời nhóm -->
-            <button id="leave-group-btn">Rời nhóm / Xóa đoạn chat</button>
-        </div>
-
-        <div class="modal-footer">
-            <button class="cancel-btn" id="close-group-info">Đóng</button>
-        </div>
-    </div>
-</div>
-
-
 
 <!-- Scripts -->
 <script th:inline="javascript">
@@ -410,16 +471,18 @@
         const friendSearchInput = document.getElementById('friend-search');
         const friendSuggestions = document.getElementById('friend-suggestions');
         const selectedFriendsContainer = document.getElementById('selected-friends');
-        const groupInfoBtn = document.getElementById('group-info-btn');
-        const groupInfoModal = document.getElementById('group-info-modal');
         const groupMembersList = document.getElementById('group-members-list');
-        const closeGroupInfoBtns = [
-            document.getElementById('close-group-info-modal'),
-            document.getElementById('close-group-info')
-        ];
         const addMemberInput = document.getElementById('add-member-input');
         const addMemberSuggestions = document.getElementById('add-member-suggestions');
         const leaveGroupBtn = document.getElementById('leave-group-btn');
+        const groupInfoBtn = document.getElementById('group-info-btn');
+        const groupInfoPanel = document.getElementById('group-info-panel');
+        const closeGroupInfoBtn = document.getElementById('close-group-info-btn');
+        const mainContainer = document.querySelector('.main-container');
+        const renameGroupBtn = document.getElementById('rename-group-btn');
+        const changeGroupAvatarBtn = document.getElementById('change-group-avatar-btn');
+        const groupAvatarUploadInput = document.getElementById('group-avatar-upload');
+
 
         let allFriendsCache = [];
 
@@ -511,6 +574,12 @@
                 });
         }
 
+        function getAvatarSrc(avatar, isGroup = false) {
+            if (avatar && avatar !== 'null' && avatar.trim() !== '') return avatar;
+            return isGroup ? '/images/default-group.png' : '/images/default.jpg';
+        }
+
+
         // ===== Function: Hiển thị danh sách conversations =====
         function displayConversations(conversations) {
             const conversationsList = document.querySelector('.conversations-list');
@@ -527,13 +596,24 @@
                 }
 
                 conversationItem.dataset.conversationId = conv.conversationId;
+
+                const avatarSrc = getAvatarSrc(conv.avatar, conv.isGroup);
+
                 conversationItem.innerHTML = `
           <div style="display:flex; text-decoration:none; color:inherit; cursor:pointer; width:100%;">
             <div class="conversation-avatar">
-              <span>${conv.conversationName && conv.conversationName.length >= 2
+                  <img
+                    src="${avatarSrc}"
+                    alt="Avatar"
+                    class="avatar-img"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  >
+                  <span class="avatar-fallback" style="display:none;">
+                    ${conv.conversationName && conv.conversationName.length >= 2
                     ? conv.conversationName.substring(0, 2)
-                    : conv.conversationName}</span>
-              <div class="online-dot"></div>
+                    : conv.conversationName}
+                  </span>
+                  <div class="online-dot"></div>
             </div>
             <div class="conversation-content">
               <div class="conversation-name">${conv.conversationName}</div>
@@ -547,7 +627,6 @@
           </div>
         `;
 
-                // Thêm event listener để load tin nhắn khi click
                 conversationItem.addEventListener('click', function() {
                     selectConversation(conv.conversationId, conversationItem, conv);
                 });
@@ -574,6 +653,11 @@
             loadMessages(conversationId);
             setupConversationConnection();
 
+            // Nếu panel đang mở → fetch thông tin nhóm mới luôn
+            if (groupInfoPanel.classList.contains('open')) {
+                fetchAndLoadGroupInfo(currentConversationId);
+            }
+
             window.history.pushState({}, '', '/facebook/messenger/' + conversationId);
         }
 
@@ -582,18 +666,29 @@
             const chatHeaderContent = document.getElementById('chat-header-content');
             if (!chatHeaderContent || !conversationData) return;
 
+            const avatarSrc = getAvatarSrc(conversationData.avatar, conversationData.isGroup);
+
+
             chatHeaderContent.innerHTML = `
         <div class="chat-avatar">
-          <span>${conversationData.conversationName && conversationData.conversationName.length >= 2
-                ? conversationData.conversationName.substring(0, 2)
-                : conversationData.conversationName}</span>
+          <img
+          src="${avatarSrc}"
+          alt="Avatar"
+          class="avatar-img"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <span class="avatar-fallback" style="display:none;">
+          ${conversationData.conversationName ? conversationData.conversationName.substring(0,2) : ''}
+        </span>
+
           <div class="online-dot"></div>
         </div>
+
         <div class="chat-info">
-          <h3>${conversationData.conversationName}</h3>
+          <h3 class="chat-name">${conversationData.conversationName}</h3>
           <div class="chat-status">Đang hoạt động</div>
         </div>
-      `;
+    `;
         }
 
         // ===== Function: Load tin nhắn =====
@@ -621,12 +716,12 @@
 
                 messageEl.className = 'message ' + (isMine ? 'sent' : 'received');
                 messageEl.innerHTML = `
-          <div class="message-bubble">
-            ${!isMine ? `<div class="message-sender">${message.sender.firstName} ${message.sender.lastName}</div>` : ''}
-            <div>${message.content}</div>
-            <small class="message-time">${formatTime(message.timestamp)}</small>
-          </div>
-        `;
+                  <div class="message-bubble">
+                    ${!isMine ? `<div class="message-sender">${message.sender.firstName} ${message.sender.lastName}</div>` : ''}
+                    <div>${message.content}</div>
+                    <small class="message-time">${formatTime(message.timestamp)}</small>
+                  </div>
+                `;
                 messagesContainer.appendChild(messageEl);
             });
 
@@ -791,12 +886,12 @@
             messageEl.className = 'message ' + (isMine ? 'sent' : 'received');
             messageEl.dataset.messageId = msg.id || Date.now().toString();
             messageEl.innerHTML = `
-        <div class="message-bubble">
-          ${!isMine ? `<div class="message-sender">${msg.senderFullName}</div>` : ''}
-          <div>${msg.content}</div>
-          <small class="message-time">${formattedTime}</small>
-        </div>
-      `;
+                <div class="message-bubble">
+                  ${!isMine ? `<div class="message-sender">${msg.senderFullName}</div>` : ''}
+                  <div>${msg.content}</div>
+                  <small class="message-time">${formattedTime}</small>
+                </div>
+              `;
             messagesContainer.appendChild(messageEl);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
@@ -920,12 +1015,12 @@
 
             friendSuggestions.innerHTML = filtered
                 .map(f => `
-          <div class="suggest-item" data-id="${f.id}"
-               style="display:flex; align-items:center; gap:8px; padding:8px; cursor:pointer; border-radius:6px;">
-            <img src="${f.avatar}" alt="${f.name}" style="width:32px; height:32px; border-radius:50%;">
-            <span style="font-size:14px;">${f.name}</span>
-          </div>
-        `).join('');
+              <div class="suggest-item" data-id="${f.id}"
+                   style="display:flex; align-items:center; gap:8px; padding:8px; cursor:pointer; border-radius:6px;">
+                <img src="${f.avatar}" alt="${f.name}" style="width:32px; height:32px; border-radius:50%;">
+                <span style="font-size:14px;">${f.name}</span>
+              </div>
+            `).join('');
 
             friendSuggestions.style.display = 'block';
 
@@ -945,13 +1040,13 @@
 
         function renderSelectedFriends() {
             selectedFriendsContainer.innerHTML = selectedFriends.map(f => `
-        <div style="display:flex; align-items:center; gap:6px; background:#fff; border:1px solid #e4e6ea; border-radius:20px; padding:4px 8px;">
-          <img src="${f.avatar}" style="width:24px; height:24px; border-radius:50%;">
-          <span style="font-size:13px;">${f.name}</span>
-          <button class="remove-friend" data-id="${f.id}"
-                  style="background:none; border:none; color:#ff3b30; font-size:16px; line-height:1; cursor:pointer;">×</button>
-        </div>
-      `).join('');
+                <div style="display:flex; align-items:center; gap:6px; background:#fff; border:1px solid #e4e6ea; border-radius:20px; padding:4px 8px;">
+                  <img src="${f.avatar}" style="width:24px; height:24px; border-radius:50%;">
+                  <span style="font-size:13px;">${f.name}</span>
+                  <button class="remove-friend" data-id="${f.id}"
+                          style="background:none; border:none; color:#ff3b30; font-size:16px; line-height:1; cursor:pointer;">×</button>
+                </div>
+              `).join('');
 
             document.querySelectorAll('.remove-friend').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -962,25 +1057,154 @@
             });
         }
 
-        if (groupInfoBtn) {
-            groupInfoBtn.addEventListener('click', async () => {
-                if (!currentConversationId || currentConversationId === "null") {
-                    alert("Không tìm thấy nhóm hiện tại!");
-                    return;
-                }
-                await loadGroupMembers(currentConversationId);
-                groupInfoModal.style.display = 'flex';
+        // ===== Group Info Panel =====
+        if (closeGroupInfoBtn) {
+            closeGroupInfoBtn.addEventListener('click', () => {
+                groupInfoPanel.classList.remove('open');
+                mainContainer.classList.remove('show-group-info');
             });
         }
 
-        closeGroupInfoBtns.forEach(btn => {
-            if (btn) btn.addEventListener('click', () => groupInfoModal.style.display = 'none');
-        });
-        if (groupInfoModal) {
-            groupInfoModal.addEventListener('click', e => {
-                if (e.target === groupInfoModal) groupInfoModal.style.display = 'none';
+        async function fetchAndLoadGroupInfo(conversationId) {
+            try {
+                const res = await fetch(`/facebook/messenger/api/conversations/${conversationId}/info`);
+                if (!res.ok) throw new Error('Không lấy được thông tin nhóm');
+                const group = await res.json();
+
+                // Cập nhật sidebar
+                const avatarImg = document.getElementById('group-avatar-img');
+                const titleEl = document.getElementById('group-title');
+
+                avatarImg.src = group.avatar;
+                titleEl.textContent = group.groupName;
+
+                console.log('Group info loaded:', group);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+
+
+        // Toggle panel khi click nút ℹ️
+        if (groupInfoBtn) {
+            groupInfoBtn.addEventListener('click', async () => {
+                const isOpen = groupInfoPanel.classList.toggle('open');
+                mainContainer.classList.toggle('show-group-info', isOpen);
+
+                if (isOpen) {
+                    // Nếu panel vừa mở → fetch dữ liệu
+                    await fetchAndLoadGroupInfo(currentConversationId);
+                }
             });
         }
+
+        async function updateGroupInfo() {
+            if (!currentConversationId) {
+                showToast('Không xác định nhóm', 'error');
+                return;
+            }
+
+            const groupNameInput = document.getElementById('rename-group-input');
+            const groupAvatarInput = document.getElementById('group-avatar-upload');
+
+            const formData = new FormData();
+            if (groupNameInput && groupNameInput.value.trim()) {
+                formData.append('groupName', groupNameInput.value.trim());
+            }
+            if (groupAvatarInput && groupAvatarInput.files.length > 0) {
+                formData.append('file', groupAvatarInput.files[0]);
+            }
+
+            if (!formData.has('groupName') && !formData.has('file')) {
+                showToast('Vui lòng nhập tên hoặc chọn ảnh để cập nhật', 'info');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/facebook/messenger/api/conversations/${currentConversationId}/update`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Cập nhật nhóm thành công!', 'success');
+
+                    const groupInfo = data.groupInfo;
+                    const sidebarAvatarContainer = document.querySelector(`.conversation-item[data-conversation-id="${currentConversationId}"] .conversation-avatar`);
+                    const sidebarNameEl = document.querySelector(`.conversation-item[data-conversation-id="${currentConversationId}"] .conversation-name`);
+                    const chatNameEl = document.querySelector('.chat-name');
+                    const chatAvatarContainer = document.querySelector('.chat-avatar');
+
+                    // Sidebar avatar
+                    if (sidebarAvatarContainer) {
+                        let img = sidebarAvatarContainer.querySelector('img.avatar-img');
+                        let fallback = sidebarAvatarContainer.querySelector('span.avatar-fallback');
+
+                        if (!img) {
+                            img = document.createElement('img');
+                            img.className = 'avatar-img';
+                            img.alt = 'Avatar';
+                            img.src = groupInfo.avatar || '/images/default-group.png';
+                            img.onerror = function() { this.style.display='none'; fallback.style.display='flex'; };
+                            sidebarAvatarContainer.prepend(img);
+                        } else {
+                            img.src = groupInfo.avatar || '/images/default-group.png';
+                        }
+                        if (fallback) fallback.style.display = img.src ? 'none' : 'flex';
+                    }
+
+                    // Sidebar name
+                    if (sidebarNameEl && groupInfo.name) sidebarNameEl.textContent = groupInfo.name;
+
+                    // Chat header
+                    if (chatNameEl && groupInfo.name) chatNameEl.textContent = groupInfo.name;
+
+                    if (chatAvatarContainer) {
+                        let img = chatAvatarContainer.querySelector('img.avatar-img');
+                        let fallback = chatAvatarContainer.querySelector('span.avatar-fallback');
+
+                        if (!img) {
+                            img = document.createElement('img');
+                            img.className = 'avatar-img';
+                            img.alt = 'Avatar';
+                            img.src = groupInfo.avatar || '/images/default-group.png';
+                            img.onerror = function() { this.style.display='none'; fallback.style.display='flex'; };
+                            chatAvatarContainer.prepend(img);
+                        } else {
+                            img.src = groupInfo.avatar || '/images/default-group.png';
+                        }
+                        if (fallback) fallback.style.display = img.src ? 'none' : 'flex';
+                    }
+
+                    // Reload group info panel
+                    await fetchAndLoadGroupInfo(currentConversationId);
+
+                } else {
+                    showToast(data.message || 'Cập nhật nhóm thất bại', 'error');
+                }
+            } catch (err) {
+                console.error('Lỗi khi cập nhật nhóm:', err);
+                showToast('Lỗi khi cập nhật nhóm', 'error');
+            }
+        }
+
+
+
+        if (renameGroupBtn) {
+            renameGroupBtn.addEventListener('click', updateGroupInfo);
+        }
+
+        if (changeGroupAvatarBtn && groupAvatarUploadInput) {
+            changeGroupAvatarBtn.addEventListener('click', () => groupAvatarUploadInput.click());
+        }
+
+        // Khi chọn ảnh xong → tự động update
+        if (groupAvatarUploadInput) {
+            groupAvatarUploadInput.addEventListener('change', updateGroupInfo);
+        }
+
 
         // ===== Hàm load danh sách thành viên nhóm =====
         async function loadGroupMembers(convId) {
@@ -1146,6 +1370,15 @@
                 }
             });
         }
+
+        // Accordion toggle behavior
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+
         // ===== Kết nối WebSocket khi load xong =====
         connect();
     });

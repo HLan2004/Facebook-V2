@@ -5,11 +5,9 @@ import com.facebookv2.facebookBE.model.Conversation;
 import com.facebookv2.facebookBE.model.User;
 import com.facebookv2.facebookBE.model.dto.ConversationSummaryDTO;
 import com.facebookv2.facebookBE.model.dto.CreateGroupChatRequest;
+import com.facebookv2.facebookBE.model.dto.GroupInfoDTO;
 import com.facebookv2.facebookBE.model.dto.UserSummaryDTO;
-import com.facebookv2.facebookBE.service.ChatMessageService;
-import com.facebookv2.facebookBE.service.ConversationService;
-import com.facebookv2.facebookBE.service.FriendshipService;
-import com.facebookv2.facebookBE.service.UserService;
+import com.facebookv2.facebookBE.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +37,9 @@ public class MessengerController {
 
     @Autowired
     private FriendshipService friendshipService;
+
+    @Autowired
+    private StorageService storageService;
 
     // Trang Messenger chính — chỉ load layout
     @GetMapping
@@ -68,8 +70,6 @@ public class MessengerController {
 
 
     // Thêm endpoint này vào MessengerController.java
-
-
     @PostMapping("/api/conversations/group")
     @ResponseBody
     public ResponseEntity<?> createGroupConversation(@RequestBody CreateGroupChatRequest request,
@@ -135,7 +135,10 @@ public class MessengerController {
                     .map(friend -> new UserSummaryDTO(
                             friend.getId(),
                             friend.getFirstName() + " " + friend.getLastName(),
-                            friend.getAvatar() != null ? friend.getAvatar() : "/images/default-avatar.png"
+                            friend.getAvatar() != null && !friend.getAvatar().isEmpty() && !friend.getAvatar().equals("default.png")
+                                    ? "/uploads/" + friend.getAvatar()
+                                    : "/images/default.jpg"
+
                     ))
                     .collect(Collectors.toList());
 
@@ -203,7 +206,10 @@ public class MessengerController {
                     .map(u -> new UserSummaryDTO(
                             u.getId(),
                             u.getFirstName() + " " + u.getLastName(),
-                            u.getAvatar() != null ? u.getAvatar() : "/images/default-avatar.png"
+                            u.getAvatar() != null && !u.getAvatar().isEmpty() && !u.getAvatar().equals("default.png")
+                                    ? "/uploads/" + u.getAvatar()
+                                    : "/images/default.jpg"
+
                     ))
                     .collect(Collectors.toList());
 
@@ -279,4 +285,70 @@ public class MessengerController {
         }
     }
 
+    // Lấy info conversation
+    @GetMapping("/api/conversations/{conversationId}/info")
+    @ResponseBody
+    public ResponseEntity<?> getConversationInfo(@PathVariable Long conversationId) {
+        Conversation conversation = conversationService.findById(conversationId);
+        if (conversation == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "Không tìm thấy cuộc trò chuyện"));
+        }
+
+        GroupInfoDTO dto = new GroupInfoDTO(
+                conversation.getId(),
+                conversation.getName() != null ? conversation.getName() : "Cuộc trò chuyện",
+                conversation.getAvatar() != null && !conversation.getAvatar().isEmpty()
+                        ? "/uploads/" + conversation.getAvatar()
+                        : (conversation.isGroup() ? "/images/default-group.png" : "/images/default.jpg"),
+                conversation.isGroup()
+        );
+
+        return ResponseEntity.ok(dto);
+    }
+
+    // Cập nhật nhóm
+    @PostMapping("/api/conversations/{conversationId}/update")
+    @ResponseBody
+    public ResponseEntity<?> updateGroupInfo(@PathVariable Long conversationId,
+                                             @RequestParam(value = "file", required = false) MultipartFile file,
+                                             @RequestParam(value = "groupName", required = false) String groupName) {
+        Conversation conversation = conversationService.findById(conversationId);
+        if (conversation == null || !conversation.isGroup()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "Không tìm thấy nhóm"));
+        }
+
+        boolean updated = false;
+
+        if (file != null && !file.isEmpty()) {
+            String filename = storageService.store(file);
+            conversation.setAvatar(filename); // Lưu chỉ filename
+            updated = true;
+        }
+
+        if (groupName != null && !groupName.trim().isEmpty()) {
+            conversation.setName(groupName.trim());
+            updated = true;
+        }
+
+        if (updated) {
+            conversationService.save(conversation);
+        }
+
+        GroupInfoDTO dto = new GroupInfoDTO(
+                conversation.getId(),
+                conversation.getName(),
+                conversation.getAvatar() != null && !conversation.getAvatar().isEmpty()
+                        ? "/uploads/" + conversation.getAvatar()
+                        : "/images/default-group.png",
+                conversation.isGroup()
+        );
+
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "groupInfo", dto,
+                "message", "Cập nhật nhóm thành công"
+        ));
+    }
 }

@@ -22,6 +22,8 @@ public class Conversation {
     private String name; // null nếu là chat riêng
     private boolean isGroup;
 
+    private String avatar;
+
     @ManyToMany
     @JoinTable(
             name = "conversation_participants",

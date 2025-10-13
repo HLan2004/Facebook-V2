@@ -32,32 +32,49 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public List<ConversationSummaryDTO> getConversationSummaries(User user) {
         List<Conversation> conversations = conversationRepo.findByParticipantsContaining(user);
-
         List<ConversationSummaryDTO> summaries = new ArrayList<>();
+
         for (Conversation conversation : conversations) {
             ChatMessage lastMessage = chatMessageRepo.findTopByConversationOrderByTimestampDesc(conversation);
 
             String displayName;
+            String avatarUrl;
+
             if (conversation.isGroup()) {
                 displayName = conversation.getName();
+                avatarUrl = (conversation.getAvatar() != null && !conversation.getAvatar().isEmpty())
+                        ? "/uploads/" + conversation.getAvatar()
+                        : "/images/default-group.png";
             } else {
-                // Lấy user còn lại trong conversation
-                displayName = conversation.getParticipants().stream()
+                User otherUser = conversation.getParticipants().stream()
                         .filter(u -> !u.getId().equals(user.getId()))
                         .findFirst()
-                        .map(u -> u.getFirstName() + " " + u.getLastName())
-                        .orElse("Unknown");
+                        .orElse(null);
+
+                if (otherUser != null) {
+                    displayName = otherUser.getFirstName() + " " + otherUser.getLastName();
+                    avatarUrl = (otherUser.getAvatar() != null && !otherUser.getAvatar().isEmpty())
+                            ? "/uploads/" + otherUser.getAvatar()
+                            : "/images/default.jpg";
+
+                } else {
+                    displayName = "Unknown";
+                    avatarUrl = "/images/default.jpg";
+                }
             }
 
             summaries.add(new ConversationSummaryDTO(
                     conversation.getId(),
                     displayName,
                     lastMessage != null ? lastMessage.getContent() : "",
-                    lastMessage != null ? lastMessage.getTimestamp() : null
+                    lastMessage != null ? lastMessage.getTimestamp() : null,
+                    avatarUrl
             ));
         }
+
         return summaries;
     }
+
 
     public boolean removeParticipant(Long conversationId, User member) {
         Conversation conversation = conversationRepo.findById(conversationId).orElse(null);

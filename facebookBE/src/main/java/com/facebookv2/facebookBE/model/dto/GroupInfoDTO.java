@@ -5,16 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConversationSummaryDTO {
+public class GroupInfoDTO {
     private Long conversationId;
-    private String conversationName;
-    private String lastMessage;
-    private LocalDateTime lastMessageTime;
+    private String groupName;
     private String avatar;
+    private boolean isGroup;
 }
+

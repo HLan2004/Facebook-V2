@@ -70,7 +70,7 @@ public class AuthController {
             user.setBirthMonth(userDTO.getBirthMonth());
             user.setBirthYear(userDTO.getBirthYear());
             user.setGender(userDTO.getGender());
-            user.setAvatar("default.png");
+            user.setAvatar(null);
 
             // Lấy ROLE_USER từ DB hoặc tạo nếu chưa có
             Role roleUser = roleRepo.findByName("ROLE_USER");
