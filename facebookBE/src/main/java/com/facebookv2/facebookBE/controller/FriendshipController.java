@@ -32,7 +32,7 @@ public class FriendshipController {
     }
 
 
-    @PostMapping("/remove")
+    @PostMapping({"/remove", "/decline"})
     public String cancel(@RequestParam Long friendId, Authentication authentication){
         // xoá bản ghi của 2 người này trong friendship
         User currentUser = userRepository.findByEmail(authentication.getName());
@@ -45,14 +45,6 @@ public class FriendshipController {
         // chuyển status từ pending sang accepted
         User currentUser = userRepository.findByEmail(authentication.getName());
         friendshipService.acceptFriendRequest(currentUser.getId(), friendId);
-        return "redirect:/facebook/user/home";
-    }
-
-    @PostMapping("/decline")
-    public String decline(@RequestParam Long friendId, Authentication authentication){
-        // chuyển status từ pending sang declined
-        User currentUser = userRepository.findByEmail(authentication.getName());
-        friendshipService.declineFriendRequest(currentUser.getId(), friendId);
         return "redirect:/facebook/user/home";
     }
 }

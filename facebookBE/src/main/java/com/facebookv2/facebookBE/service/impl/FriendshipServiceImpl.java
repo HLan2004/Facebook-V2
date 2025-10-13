@@ -144,10 +144,6 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     @Override
-    public void declineFriendRequest(Long currentUserId, Long friendId) {
-        friendshipRepository.declineFriendRequest(currentUserId, friendId);
-    }
-    @Override
     public List<FriendDTO> getAccepted(Long currentUserId) {
         // 1. Lấy tất cả mối quan hệ bạn bè đã ACCEPTED từ repository
         //    (Điều này yêu cầu bạn phải thêm query `findUserFriendships` vào FriendshipRepository như hướng dẫn trước)

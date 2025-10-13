@@ -20,8 +20,6 @@ public interface FriendshipService {
 
     void acceptFriendRequest(Long currentUserId, Long friendId);
 
-    void declineFriendRequest(Long currentUserId, Long friendId);
-
     List<FriendDTO> getAccepted(Long currentUserId);
 
     List<User> getAcceptedFriends(Long userId);

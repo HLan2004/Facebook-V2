@@ -59,4 +59,16 @@ public class ConversationServiceImpl implements ConversationService {
         return summaries;
     }
 
+    public boolean removeParticipant(Long conversationId, User member) {
+        Conversation conversation = conversationRepo.findById(conversationId).orElse(null);
+        if (conversation == null) return false;
+
+        if (conversation.getParticipants().removeIf(u -> u.getId().equals(member.getId()))) {
+            conversationRepo.save(conversation);
+            return true;
+        }
+        return false;
+    }
+
+
 }

@@ -10,5 +10,8 @@ public interface ConversationService {
     Conversation findById(Long id);
     Conversation save(Conversation conv);
 
+
     List<ConversationSummaryDTO> getConversationSummaries(User user);
+
+    boolean removeParticipant(Long conversationId, User member);
 }

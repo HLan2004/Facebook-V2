@@ -10,6 +10,7 @@ import com.facebookv2.facebookBE.model.dto.UserDTO;
 import com.facebookv2.facebookBE.repository.FriendshipRepository;
 import com.facebookv2.facebookBE.repository.UserAvatarRepository;
 import com.facebookv2.facebookBE.service.*;
+import com.facebookv2.facebookBE.service.impl.CommentAndReactionService;
 import com.facebookv2.facebookBE.service.impl.StatusServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,8 @@ public class UserController {
     @Autowired
     private FriendshipRepository friendshipRepository;
     @Autowired
+    private CommentAndReactionService commentAndReactionService;
+    @Autowired
     private UserAvatarRepository userAvatarRepository;
 
 
@@ -52,9 +55,27 @@ public class UserController {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
         List<Status> statuses = statusService.getAllStatuses();
+        // ✅ Map lưu bài nào đã được like
+        Map<Long, Boolean> likedMap = new HashMap<>();
+        // Map lưu số lượt like
+        Map<Long, Long> likeCountMap = new HashMap<>();
+        // Map lưu số lượt comment
+        Map<Long, Long> commentCountMap = new HashMap<>();
+        for (Status status : statuses) {
+            boolean liked = commentAndReactionService.existsByUserAndStatus(user, status);
+            likedMap.put(status.getId(), liked);
+            Long likeCount = Optional.ofNullable(commentAndReactionService.countReactionByStatus(status)).orElse(0L);
+            System.out.println("likeCount: " + likeCount + "status: " + status.getId());
+            likeCountMap.put(status.getId(), likeCount);
+            Long commentCount = Optional.ofNullable(commentAndReactionService.countCommentByStatus(status)).orElse(0L);
+            commentCountMap.put(status.getId(), commentCount);
+        }
         model.addAttribute("user", user);
         model.addAttribute("statuses", statuses);
         model.addAttribute("newStatus", new Status());
+        model.addAttribute("likedMap", likedMap);
+        model.addAttribute("likeCountMap", likeCountMap);
+        model.addAttribute("commentCountMap", commentCountMap);
         return "user/home";
     }
 
