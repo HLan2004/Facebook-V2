@@ -1075,7 +1075,7 @@
                 const avatarImg = document.getElementById('group-avatar-img');
                 const titleEl = document.getElementById('group-title');
 
-                avatarImg.src = group.avatar;
+                avatarImg.src = group.avatar + '?t=' + new Date().getTime();
                 titleEl.textContent = group.groupName;
 
                 console.log('Group info loaded:', group);
@@ -1083,8 +1083,6 @@
                 console.error(err);
             }
         }
-
-
 
         // Toggle panel khi click nút ℹ️
         if (groupInfoBtn) {
@@ -1101,7 +1099,6 @@
                 }
             });
         }
-
 
         async function updateGroupInfo() {
             if (!currentConversationId) {
@@ -1146,22 +1143,27 @@
                         let img = sidebarAvatarContainer.querySelector('img.avatar-img');
                         let fallback = sidebarAvatarContainer.querySelector('span.avatar-fallback');
 
+                        const newAvatarSrc = groupInfo.avatar
+                            ? groupInfo.avatar + '?t=' + Date.now()
+                            : '/images/default-group.png';
+
                         if (!img) {
                             img = document.createElement('img');
                             img.className = 'avatar-img';
                             img.alt = 'Avatar';
-                            img.src = groupInfo.avatar || '/images/default-group.png';
+                            img.src = newAvatarSrc;
                             img.onerror = function() { this.style.display='none'; fallback.style.display='flex'; };
                             sidebarAvatarContainer.prepend(img);
                         } else {
-                            img.src = groupInfo.avatar || '/images/default-group.png';
+                            img.src = newAvatarSrc;
+                            img.style.display = 'block';
                         }
-                        if (fallback) fallback.style.display = img.src ? 'none' : 'flex';
+
+                        if (fallback) fallback.style.display = groupInfo.avatar ? 'none' : 'flex';
                     }
 
                     // Sidebar name
                     if (sidebarNameEl && groupInfo.name) sidebarNameEl.textContent = groupInfo.name;
-
                     // Chat header
                     if (chatNameEl && groupInfo.name) chatNameEl.textContent = groupInfo.name;
 
@@ -1169,18 +1171,25 @@
                         let img = chatAvatarContainer.querySelector('img.avatar-img');
                         let fallback = chatAvatarContainer.querySelector('span.avatar-fallback');
 
+                        const newAvatarSrc = groupInfo.avatar
+                            ? groupInfo.avatar + '?t=' + Date.now()
+                            : '/images/default-group.png';
+
                         if (!img) {
                             img = document.createElement('img');
                             img.className = 'avatar-img';
                             img.alt = 'Avatar';
-                            img.src = groupInfo.avatar || '/images/default-group.png';
+                            img.src = newAvatarSrc;
                             img.onerror = function() { this.style.display='none'; fallback.style.display='flex'; };
                             chatAvatarContainer.prepend(img);
                         } else {
-                            img.src = groupInfo.avatar || '/images/default-group.png';
+                            img.src = newAvatarSrc;
+                            img.style.display = 'block';
                         }
-                        if (fallback) fallback.style.display = img.src ? 'none' : 'flex';
+
+                        if (fallback) fallback.style.display = groupInfo.avatar ? 'none' : 'flex';
                     }
+
 
                     // Reload group info panel
                     await fetchAndLoadGroupInfo(currentConversationId);
