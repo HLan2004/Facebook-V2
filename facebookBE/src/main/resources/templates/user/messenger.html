@@ -1093,11 +1093,15 @@
                 mainContainer.classList.toggle('show-group-info', isOpen);
 
                 if (isOpen) {
-                    // Nếu panel vừa mở → fetch dữ liệu
+                    // Nếu panel vừa mở → fetch dữ liệu nhóm
                     await fetchAndLoadGroupInfo(currentConversationId);
+
+                    // 🧩 Thêm dòng này để load luôn danh sách thành viên
+                    await loadGroupMembers(currentConversationId);
                 }
             });
         }
+
 
         async function updateGroupInfo() {
             if (!currentConversationId) {
@@ -1208,17 +1212,19 @@
 
         // ===== Hàm load danh sách thành viên nhóm =====
         async function loadGroupMembers(convId) {
+            console.log("🔍 Gọi loadGroupMembers với convId =", convId);
             try {
                 const res = await fetch(`/facebook/messenger/api/conversations/${convId}/members`);
-                const members = await res.json();
+                const data = await res.json();
 
                 groupMembersList.innerHTML = '';
 
-                if (!Array.isArray(members) || members.length === 0) {
-                    groupMembersList.innerHTML =
-                        '<p class="text-center" style="color:#65676b; font-size:14px;">Không có thành viên nào.</p>';
+                if (!Array.isArray(data)) {
+                    console.error('Response không phải mảng:', data);
+                    groupMembersList.innerHTML = `<p style="color:red;text-align:center;">${data.message || 'Lỗi tải thành viên'}</p>`;
                     return;
                 }
+                const members = data;
 
                 members.forEach(m => {
                     const memberItem = document.createElement('div');
